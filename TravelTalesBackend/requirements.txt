@@ -1,0 +1,8 @@
+requests
+scikit-learn
+dotenv
+fastapi
+uvicorn
+SQLAlchemy
+psycopg2-binary
+pydantic
