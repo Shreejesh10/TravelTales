@@ -1,6 +1,6 @@
 requests
 scikit-learn
-dotenv
+python-dotenv
 fastapi
 uvicorn
 SQLAlchemy

@@ -1,13 +1,20 @@
+import os
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker, declarative_base
+from dotenv import load_dotenv
 
-SQLALCHEMY_DATABASE_URL = "postgresql://postgres:test123@localhost:5432/traveltales"
+load_dotenv()
 
-engine = create_engine(SQLALCHEMY_DATABASE_URL)
+DATABASE_URL = os.getenv("DATABASE_URL")
+
+if not DATABASE_URL:
+    raise ValueError("Database URL is missing")
+
+engine = create_engine(DATABASE_URL)
 
 SessionLocal = sessionmaker(autocommit = False, autoflush=False, bind = engine)
 
-base = declarative_base()
+Base = declarative_base()
 
 def get_db():
     db = SessionLocal()
@@ -18,5 +25,5 @@ def get_db():
 
 def create_table():
     
-    base.metadata.create_all(bind=engine)
+    Base.metadata.create_all(bind=engine)
 
