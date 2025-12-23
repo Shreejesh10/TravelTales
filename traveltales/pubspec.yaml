@@ -61,6 +61,13 @@ dev_dependencies:
 flutter:
   assets:
     - lib/core/ui/resources/drawable/TravelTalesFull.png
+  fonts:
+    - family: Poppins
+      fonts:
+        - asset: lib/core/ui/resources/fonts/Poppins-Regular.ttf
+        - asset: lib/core/ui/resources/fonts/Poppins-Medium.ttf
+        - asset: lib/core/ui/resources/fonts/Poppins-Bold.ttf
+
 
   # The following line ensures that the Material Icons font is
   # included with your application, so that you can use the icons in

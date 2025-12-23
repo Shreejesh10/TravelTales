@@ -1,3 +1,18 @@
 {
-  "welcome": "स्वागत छ"
+  "@@locale": "ne",
+  "welcome": "स्वागत छ",
+  "email": "इमेल",
+  "enterEmail": "आफ्नो इमेल प्रविष्ट गर्नुहोस्",
+  "emailRequired": "इमेल आवश्यक छ",
+  "enterValidEmail": "वैध इमेल ठेगाना प्रविष्ट गर्नुहोस्",
+
+
+  "password": "पासवर्ड",
+  "enterPassword": "आफ्नो पासवर्ड प्रविष्ट गर्नुहोस्",
+  "passwordRequired": "पासवर्ड आवश्यक छ",
+  "passwordMustBeAtLeast6Characters": "पासवर्ड कम्तिमा ६ वर्णको हुनुपर्छ",
+
+  "dont_have_an_account": "खाता छैन?",
+  "signup": "साइन अप",
+  "login": "लग इन गर्नुहोस्"
 }

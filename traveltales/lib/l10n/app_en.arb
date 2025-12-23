@@ -1,3 +1,19 @@
 {
-  "welcome": "Welcome"
+  "@@locale":"en",
+  "welcome": "Welcome",
+
+  "email": "Email",
+  "enterEmail": "Enter your Email",
+  "emailRequired": "Email is required",
+  "enterValidEmail": "Enter a valid email address",
+
+  "password": "Password",
+  "enterPassword": "Enter your Password",
+  "passwordRequired": "Password is required",
+  "passwordMustBeAtLeast6Characters": "Password must be at least 6 characters",
+
+  "dont_have_an_account": "Don't have an Account?",
+  "signup": "Sign Up",
+  "login": "Log in"
+
 }
