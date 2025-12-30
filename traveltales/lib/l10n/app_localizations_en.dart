@@ -36,7 +36,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get passwordMustBeAtLeast6Characters => 'Password must be at least 6 characters';
 
   @override
-  String get dont_have_an_account => 'Don\'t have an Account?';
+  String get noAccount => 'Don\'t have an Account?';
 
   @override
   String get signup => 'Sign Up';

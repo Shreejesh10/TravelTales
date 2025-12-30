@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:traveltales/core/route_config/route_names.dart';
+import 'package:traveltales/features/auth/homeScreen/homeScreen.dart';
 import 'package:traveltales/features/auth/login/loginScreen.dart';
 
 class RouteConfig {
@@ -12,6 +13,9 @@ class RouteConfig {
     switch (screenName) {
       case AuthRouteName.loginScreen:
         return MaterialPageRoute(builder: (_) => const LoginScreen());
+      case RouteName.homeScreen:
+        return MaterialPageRoute(builder: (_) => const HomeScreen());
+
 
       default:
         return _errorRoute();

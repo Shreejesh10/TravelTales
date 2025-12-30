@@ -12,7 +12,7 @@
   "passwordRequired": "पासवर्ड आवश्यक छ",
   "passwordMustBeAtLeast6Characters": "पासवर्ड कम्तिमा ६ वर्णको हुनुपर्छ",
 
-  "dont_have_an_account": "खाता छैन?",
+  "noAccount": "खाता छैन?",
   "signup": "साइन अप",
   "login": "लग इन गर्नुहोस्"
 }

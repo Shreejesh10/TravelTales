@@ -7,5 +7,6 @@ class AuthRouteName {
 
 class RouteName{
   RouteName._();
+  static const String homeScreen = '/home-screen';
 
 }

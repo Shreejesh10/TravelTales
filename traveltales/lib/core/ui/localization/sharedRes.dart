@@ -27,7 +27,7 @@ class Strings {
   String get enterPassword => _l10n.enterPassword;
   String get passwordRequired => _l10n.passwordRequired;
   String get passwordMustBeAtLeast6Characters => _l10n.passwordMustBeAtLeast6Characters;
-  String get dont_have_an_account => _l10n.dont_have_an_account;
+  String get noAccount => _l10n.noAccount;
   String get signup => _l10n.signup;
   String get login => _l10n.login;
 }

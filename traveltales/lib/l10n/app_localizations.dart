@@ -149,11 +149,11 @@ abstract class AppLocalizations {
   /// **'Password must be at least 6 characters'**
   String get passwordMustBeAtLeast6Characters;
 
-  /// No description provided for @dont_have_an_account.
+  /// No description provided for @noAccount.
   ///
   /// In en, this message translates to:
   /// **'Don\'t have an Account?'**
-  String get dont_have_an_account;
+  String get noAccount;
 
   /// No description provided for @signup.
   ///

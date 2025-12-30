@@ -12,7 +12,7 @@
   "passwordRequired": "Password is required",
   "passwordMustBeAtLeast6Characters": "Password must be at least 6 characters",
 
-  "dont_have_an_account": "Don't have an Account?",
+  "noAccount": "Don't have an Account?",
   "signup": "Sign Up",
   "login": "Log in"
 

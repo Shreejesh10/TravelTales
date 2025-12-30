@@ -36,7 +36,7 @@ class AppLocalizationsNe extends AppLocalizations {
   String get passwordMustBeAtLeast6Characters => 'पासवर्ड कम्तिमा ६ वर्णको हुनुपर्छ';
 
   @override
-  String get dont_have_an_account => 'खाता छैन?';
+  String get noAccount => 'खाता छैन?';
 
   @override
   String get signup => 'साइन अप';
