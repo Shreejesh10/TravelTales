@@ -12,7 +12,24 @@
   "passwordRequired": "पासवर्ड आवश्यक छ",
   "passwordMustBeAtLeast6Characters": "पासवर्ड कम्तिमा ६ वर्णको हुनुपर्छ",
 
+  "confirmPassword": "पासवर्ड पुष्टि गर्नुहोस्",
+  "enterConfirmPassword": "आफ्नो पासवर्ड पुष्टि गर्नुहोस्",
+  "confirmPasswordRequired": "पासवर्ड पुष्टि गर्नुहोस् आवश्यक छ",
+  "passwordAndConfirmPasswordMustMatch": "पासवर्ड र पासवर्ड पुष्टि गर्नुहोस् मिल्नु पर्छ",
+
+  "recommendedForYou": "तपाईंको लागि सिफारिस गरिएको",
+  "viewAll": "सबै हेर्नुहोस्",
+  "searchDestination": "गन्तव्य खोज्नुहोस्",
+  "mountain": "पहाड",
+  "camping": "क्याम्पिङ",
+  "trekking": "ट्रेकिङ",
+  "hiking": "हाइकिंग",
+  "bestPlaceToVisit": "अहिले घुम्नका लागि उत्तम ठाउँहरू",
+  "adventureAwaitsLetsGo": "एडभेन्चर अवेट्स, लेट्स गो ",
+  "explore": "एक्सप्लोर!",
+
   "noAccount": "खाता छैन?",
+  "alreadyGotAnAccount": "पहिले नै खाता छ?",
   "signup": "साइन अप",
   "login": "लग इन गर्नुहोस्"
 }

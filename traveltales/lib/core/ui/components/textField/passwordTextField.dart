@@ -3,18 +3,20 @@ import 'package:traveltales/core/ui/localization/sharedRes.dart';
 
 class PasswordTextField extends StatefulWidget {
   final TextEditingController controller;
+  final TextEditingController? compareWithController;
   final String labelText;
   final String hintText;
   final bool enabled;
-  final ValueChanged<String>? onChanged;
+  final bool isConfirmPassword;
 
   const PasswordTextField({
     super.key,
     required this.controller,
+    this.compareWithController,
     this.labelText = 'Password',
     this.hintText = 'Enter your password',
     this.enabled = true,
-    this.onChanged,
+    this.isConfirmPassword = false,
   });
 
   @override
@@ -24,13 +26,28 @@ class PasswordTextField extends StatefulWidget {
 class _PasswordTextFieldState extends State<PasswordTextField> {
   bool _obscureText = true;
 
-  String? _validatePassword( BuildContext context, String? value) {
+  String? _validator(BuildContext context, String? value) {
     if (value == null || value.trim().isEmpty) {
       return SharedRes.strings(context).passwordRequired;
     }
-    if (value.trim().length < 6) {
-      return SharedRes.strings(context).passwordMustBeAtLeast6Characters;
+
+    // Main password rules
+    if (!widget.isConfirmPassword && value.length < 6) {
+      return SharedRes
+          .strings(context)
+          .passwordMustBeAtLeast6Characters;
     }
+
+    // Confirm password rule
+    if (widget.isConfirmPassword) {
+      final originalPassword = widget.compareWithController?.text ?? '';
+      if (value != originalPassword) {
+        return SharedRes
+            .strings(context)
+            .passwordAndConfirmPasswordMustMatch;
+      }
+    }
+
     return null;
   }
 
@@ -39,7 +56,6 @@ class _PasswordTextFieldState extends State<PasswordTextField> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-
         Text(
           widget.labelText,
           style: const TextStyle(
@@ -48,13 +64,11 @@ class _PasswordTextFieldState extends State<PasswordTextField> {
           ),
         ),
         const SizedBox(height: 6),
-
         TextFormField(
           controller: widget.controller,
           enabled: widget.enabled,
           obscureText: _obscureText,
-          validator: (value) => _validatePassword(context, value),
-          onChanged: widget.onChanged,
+          validator: (value) => _validator(context, value),
           decoration: InputDecoration(
             hintText: widget.hintText,
             border: const OutlineInputBorder(),

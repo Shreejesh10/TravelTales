@@ -11,8 +11,24 @@
   "enterPassword": "Enter your Password",
   "passwordRequired": "Password is required",
   "passwordMustBeAtLeast6Characters": "Password must be at least 6 characters",
+  "confirmPassword": "Confirm Password",
+  "enterConfirmPassword": "Enter Confirm Password",
+  "confirmPasswordRequired": "Confirm Password is required",
+  "passwordAndConfirmPasswordMustMatch": "Password and Confirm Password must match",
+
+  "recommendedForYou": "Recommended for You",
+  "viewAll": "View All",
+  "searchDestination": "Search Destination",
+  "mountain": "Mountain",
+  "camping": "Camping",
+  "trekking": "Trekking",
+  "hiking": "Hiking",
+  "bestPlaceToVisit": "Best Places to Visit Now",
+  "adventureAwaitsLetsGo": "Adventure Awaits Let's Go",
+  "explore": "Explore!",
 
   "noAccount": "Don't have an Account?",
+  "alreadyGotAnAccount": "Already got an account?",
   "signup": "Sign Up",
   "login": "Log in"
 

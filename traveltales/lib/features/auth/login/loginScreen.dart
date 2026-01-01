@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:traveltales/api/api.dart';
 import 'package:traveltales/core/route_config/route_names.dart';
@@ -57,6 +58,10 @@ class LoginScreenState extends State<LoginScreen> {
   Widget build(BuildContext context) {
     return PopScope(
       canPop: false,
+      onPopInvokedWithResult: (didPop, result) {
+        if (didPop) return;
+        SystemNavigator.pop();
+      },
       child: Scaffold(
         body: SingleChildScrollView(
           child: Padding(
@@ -74,7 +79,7 @@ class LoginScreenState extends State<LoginScreen> {
                       'assets/images/TravelTalesFull.png',
                       width: compactDimens.loginImageSize,
                     ),
-          
+
                   ),
                   Padding(
                     padding: const EdgeInsets.symmetric(vertical: 24),
@@ -87,7 +92,7 @@ class LoginScreenState extends State<LoginScreen> {
                         ),
                       )
                   ),
-          
+
                   EmailTextField(
                     controller: _emailController,
                     enabled: true,
@@ -107,7 +112,7 @@ class LoginScreenState extends State<LoginScreen> {
                     onPressed: _submit
                   ),
                   const SizedBox(height: 4),
-          
+
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
@@ -119,7 +124,9 @@ class LoginScreenState extends State<LoginScreen> {
                         ),
                       ),
                       TextButton(
-                          onPressed: (){},
+                          onPressed: (){
+                            Navigator.pushNamed(context, AuthRouteName.signupScreen);
+                          },
                           child: Text(
                             SharedRes.strings(context).signup,
                             style: TextStyle(

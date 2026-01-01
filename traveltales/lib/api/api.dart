@@ -124,7 +124,36 @@ Future<void> login(String email, String password) async {
     }
   } catch (e) {
     log("Error during login: $e");
-    throw e;
+    rethrow;
+  }
+}
+Future<void> signup(String email, String password) async {
+  final url = Uri.parse('$API_URL/users/signup');
+  final body = jsonEncode({
+    "email": email,
+    "password": password,
+  });
+
+  try{
+    final response = await http.post(
+      url,
+      headers: {"Content-Type": "application/json"},
+      body: body,
+
+    );
+
+    if (response.statusCode == 201){
+      final data = jsonDecode(response.body);
+      log("Sign up successfully $data");
+
+    }else{
+      final error = jsonDecode(response.body);
+      log("Sign up failed: ${response.statusCode} $error");
+      throw Exception("Sign up failed: ${response.body}");
+    }
+  }catch(e){
+    log("Error during signup: $e");
+    rethrow;
   }
 }
 

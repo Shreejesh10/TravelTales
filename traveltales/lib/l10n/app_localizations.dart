@@ -149,11 +149,101 @@ abstract class AppLocalizations {
   /// **'Password must be at least 6 characters'**
   String get passwordMustBeAtLeast6Characters;
 
+  /// No description provided for @confirmPassword.
+  ///
+  /// In en, this message translates to:
+  /// **'Confirm Password'**
+  String get confirmPassword;
+
+  /// No description provided for @enterConfirmPassword.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter Confirm Password'**
+  String get enterConfirmPassword;
+
+  /// No description provided for @confirmPasswordRequired.
+  ///
+  /// In en, this message translates to:
+  /// **'Confirm Password is required'**
+  String get confirmPasswordRequired;
+
+  /// No description provided for @passwordAndConfirmPasswordMustMatch.
+  ///
+  /// In en, this message translates to:
+  /// **'Password and Confirm Password must match'**
+  String get passwordAndConfirmPasswordMustMatch;
+
+  /// No description provided for @recommendedForYou.
+  ///
+  /// In en, this message translates to:
+  /// **'Recommended for You'**
+  String get recommendedForYou;
+
+  /// No description provided for @viewAll.
+  ///
+  /// In en, this message translates to:
+  /// **'View All'**
+  String get viewAll;
+
+  /// No description provided for @searchDestination.
+  ///
+  /// In en, this message translates to:
+  /// **'Search Destination'**
+  String get searchDestination;
+
+  /// No description provided for @mountain.
+  ///
+  /// In en, this message translates to:
+  /// **'Mountain'**
+  String get mountain;
+
+  /// No description provided for @camping.
+  ///
+  /// In en, this message translates to:
+  /// **'Camping'**
+  String get camping;
+
+  /// No description provided for @trekking.
+  ///
+  /// In en, this message translates to:
+  /// **'Trekking'**
+  String get trekking;
+
+  /// No description provided for @hiking.
+  ///
+  /// In en, this message translates to:
+  /// **'Hiking'**
+  String get hiking;
+
+  /// No description provided for @bestPlaceToVisit.
+  ///
+  /// In en, this message translates to:
+  /// **'Best Places to Visit Now'**
+  String get bestPlaceToVisit;
+
+  /// No description provided for @adventureAwaitsLetsGo.
+  ///
+  /// In en, this message translates to:
+  /// **'Adventure Awaits Let\'s Go'**
+  String get adventureAwaitsLetsGo;
+
+  /// No description provided for @explore.
+  ///
+  /// In en, this message translates to:
+  /// **'Explore!'**
+  String get explore;
+
   /// No description provided for @noAccount.
   ///
   /// In en, this message translates to:
   /// **'Don\'t have an Account?'**
   String get noAccount;
+
+  /// No description provided for @alreadyGotAnAccount.
+  ///
+  /// In en, this message translates to:
+  /// **'Already got an account?'**
+  String get alreadyGotAnAccount;
 
   /// No description provided for @signup.
   ///

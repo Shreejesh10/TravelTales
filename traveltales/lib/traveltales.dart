@@ -47,7 +47,7 @@ class TravelTales extends StatelessWidget {
 
             iconButtonTheme: IconButtonThemeData(
               style: ButtonStyle(
-                iconColor: WidgetStateProperty.all(Color(0xFF95B1CC)),
+                iconColor: WidgetStateProperty.all(Color(0xFF0A2A4A)),
               ),
             ),
 
@@ -103,7 +103,7 @@ class TravelTales extends StatelessWidget {
 
             iconButtonTheme: IconButtonThemeData(
               style: ButtonStyle(
-                iconColor: WidgetStateProperty.all(Color(0xFF95B1CC)),
+                iconColor: WidgetStateProperty.all(Color(0xFFF7FCFF)),
               ),
             ),
             elevatedButtonTheme: ElevatedButtonThemeData(
