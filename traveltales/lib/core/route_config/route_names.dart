@@ -7,7 +7,10 @@ class AuthRouteName {
 
 class RouteName{
   RouteName._();
+  static const String dashBoardScreen = '/dashboard-screen';
   static const String homeScreen = '/home-screen';
+  static const String viewAllScreen = '/view-all-screen';
+
 
 
 }

@@ -23,6 +23,7 @@ class SearchFilterBar extends StatelessWidget {
         children: [
           const Icon(
             Icons.search,
+              color: Color(0xFF0A2A4A)
           ),
       const SizedBox(width: 10),
        Expanded(
@@ -37,6 +38,7 @@ class SearchFilterBar extends StatelessWidget {
             onPressed: (){},
             icon: const Icon(
               Icons.tune,
+              color: Color(0xFF0A2A4A)
 
             ),
           ),

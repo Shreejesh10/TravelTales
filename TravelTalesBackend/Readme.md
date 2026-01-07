@@ -18,6 +18,7 @@ pip install -r requirements.txt
 
 ### Run the Server
 uvicorn app.main:app --reload
+uvicorn app.main:app --host 0.0.0.0 --port 8000 --reload
 
 📚 API Documentation
 FastAPI provides interactive API docs out of the box:

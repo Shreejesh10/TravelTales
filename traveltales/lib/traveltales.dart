@@ -45,6 +45,10 @@ class TravelTales extends StatelessWidget {
               ),
             ),
 
+            dividerTheme: DividerThemeData(
+                color: Colors.grey[200]
+            ),
+
             iconButtonTheme: IconButtonThemeData(
               style: ButtonStyle(
                 iconColor: WidgetStateProperty.all(Color(0xFF0A2A4A)),
@@ -117,6 +121,10 @@ class TravelTales extends StatelessWidget {
                 ),
                   foregroundColor: Colors.white
               ),
+            ),
+
+            dividerTheme: DividerThemeData(
+              color: Color(0xFF184A6A)
             ),
 
             textTheme: TextTheme(

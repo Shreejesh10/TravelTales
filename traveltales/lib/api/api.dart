@@ -2,12 +2,17 @@ import 'dart:convert';
 import 'dart:developer';
 import 'package:http/http.dart' as http;
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
-
+import 'dart:io';
 final storage = FlutterSecureStorage();
-const String API_URL = 'http://10.0.2.2:8000';
+// const String API_URL = 'http://10.0.2.2:8000';
 
 
-// const String API_URL = 'http://192.168.1.80:8000/users';
+
+
+final String API_URL = Platform.isAndroid
+    ? 'http://192.168.1.80:8000'
+    : 'http://localhost:8000';
+
 
 
 Future<Map<String, String>> getHeaders() async {

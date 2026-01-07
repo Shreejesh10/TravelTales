@@ -2,21 +2,16 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:traveltales/core/ui/localization/sharedRes.dart';
 
-class ViewAllRow extends StatefulWidget {
+class ViewAllRow extends StatelessWidget {
   final String firstText;
   final VoidCallback? onPressed;
 
   const ViewAllRow({
     super.key,
     this.firstText = "Recommended for You",
-    this.onPressed
+    required this.onPressed
   });
 
-  @override
-  State<ViewAllRow> createState() => _ViewAllRowState();
-}
-
-class _ViewAllRowState extends State<ViewAllRow> {
 
   @override
   Widget build(BuildContext context) {
@@ -24,19 +19,19 @@ class _ViewAllRowState extends State<ViewAllRow> {
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
         Text(
-          widget.firstText,
+          firstText,
           style: TextStyle(
             fontSize: 16.sp,
             fontWeight: FontWeight.w500,
           ),
         ),
         TextButton(
-          onPressed: widget.onPressed,
+          onPressed: onPressed,
           child: Text(
               SharedRes.strings(context).viewAll,
               style: TextStyle(
                 color: Theme.of(context).colorScheme.primary,
-                fontSize: 14.sp,
+                fontSize: 13.sp,
               )
           )
         ),

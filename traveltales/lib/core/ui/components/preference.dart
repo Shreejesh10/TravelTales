@@ -23,7 +23,7 @@ class _DestinationPreferenceState extends State<DestinationPreference> {
   @override
   Widget build(BuildContext context) {
     return SizedBox(
-      height: 32,
+      height: 28,
       child: ListView.builder(
         scrollDirection: Axis.horizontal,
 
@@ -37,7 +37,7 @@ class _DestinationPreferenceState extends State<DestinationPreference> {
                 setState(() {
                   selectedIndex = index;
                 });
-                // Call the callback if provided
+
                 widget.onGenreSelected?.call(widget.genres[index]);
               },
               child: AnimatedContainer(

@@ -42,7 +42,7 @@ class LoginScreenState extends State<LoginScreen> {
 
       Navigator.pushReplacementNamed(
         context,
-        RouteName.homeScreen,
+        RouteName.dashBoardScreen,
       );
     } catch (e) {
       if (!mounted) return;
