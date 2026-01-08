@@ -1,0 +1,829 @@
+{
+  "places": [
+    {
+      "place_name": "Boudhanath Stupa",
+      "location": "Kathmandu, Nepal",
+      "description": "One of the largest Buddhist stupas in the world and a UNESCO World Heritage Site.",
+      "highlights": ["UNESCO World Heritage Site", "Buddhist culture", "Spiritual atmosphere"],
+      "attractions": ["Main Stupa", "Monasteries", "Local cafes"],
+      "best_time_to_visit": "October to April",
+      "transportation": "Taxi or local bus from Kathmandu",
+      "accommodation": "Hotels and guesthouses nearby",
+      "safety_tips": ["Respect religious customs", "Watch belongings"],
+      "photos": []
+    },
+    {
+      "place_name": "Pashupatinath Temple",
+      "location": "Kathmandu, Nepal",
+      "description": "A sacred Hindu temple complex dedicated to Lord Shiva.",
+      "highlights": ["Religious significance", "Bagmati River cremations"],
+      "attractions": ["Main Temple", "Aryaghat", "Sadhus"],
+      "best_time_to_visit": "February to May",
+      "transportation": "Taxi or bus",
+      "accommodation": "Hotels in Kathmandu",
+      "safety_tips": ["Dress modestly", "Non-Hindus restricted"],
+      "photos": []
+    },
+    {
+      "place_name": "Pokhara",
+      "location": "Kaski, Nepal",
+      "description": "A scenic city famous for lakes, adventure sports, and Himalayan views.",
+      "highlights": ["Phewa Lake", "Annapurna range"],
+      "attractions": ["Phewa Lake", "Davis Falls", "World Peace Pagoda"],
+      "best_time_to_visit": "September to November",
+      "transportation": "Flight or tourist bus",
+      "accommodation": "Lakeside hotels",
+      "safety_tips": ["Use life jackets while boating"],
+      "photos": []
+    },
+    {
+      "place_name": "Bhaktapur Durbar Square",
+      "location": "Bhaktapur, Nepal",
+      "description": "A historic palace complex showcasing Newari architecture.",
+      "highlights": ["UNESCO site", "Traditional art"],
+      "attractions": ["Nyatapola Temple", "55-Window Palace"],
+      "best_time_to_visit": "October to March",
+      "transportation": "Bus or taxi",
+      "accommodation": "Heritage hotels",
+      "safety_tips": ["Walk carefully on brick paths"],
+      "photos": []
+    },
+    {
+      "place_name": "Patan Durbar Square",
+      "location": "Lalitpur, Nepal",
+      "description": "Ancient royal palace with fine craftsmanship and temples.",
+      "highlights": ["Newari architecture", "Museums"],
+      "attractions": ["Krishna Mandir", "Patan Museum"],
+      "best_time_to_visit": "October to March",
+      "transportation": "Taxi or bus",
+      "accommodation": "Hotels in Lalitpur",
+      "safety_tips": ["Avoid crowded areas during festivals"],
+      "photos": []
+    },
+    {
+      "place_name": "Lumbini",
+      "location": "Rupandehi, Nepal",
+      "description": "Birthplace of Lord Buddha and a major pilgrimage destination.",
+      "highlights": ["Peaceful environment", "Monasteries"],
+      "attractions": ["Maya Devi Temple", "Sacred Garden"],
+      "best_time_to_visit": "October to March",
+      "transportation": "Flight or bus",
+      "accommodation": "Pilgrim lodges",
+      "safety_tips": ["Stay hydrated", "Respect silence zones"],
+      "photos": []
+    },
+    {
+      "place_name": "Chitwan National Park",
+      "location": "Chitwan, Nepal",
+      "description": "A wildlife reserve famous for jungle safaris.",
+      "highlights": ["One-horned rhino", "Bengal tiger"],
+      "attractions": ["Elephant safari", "Canoeing"],
+      "best_time_to_visit": "October to March",
+      "transportation": "Bus or flight",
+      "accommodation": "Jungle resorts",
+      "safety_tips": ["Follow guide instructions"],
+      "photos": []
+    },
+    {
+      "place_name": "Nagarkot",
+      "location": "Bhaktapur, Nepal",
+      "description": "Hill station known for sunrise and Himalayan views.",
+      "highlights": ["Mountain views", "Sunrise"],
+      "attractions": ["View tower", "Nature walks"],
+      "best_time_to_visit": "October to April",
+      "transportation": "Taxi",
+      "accommodation": "Resorts and hotels",
+      "safety_tips": ["Carry warm clothing"],
+      "photos": []
+    },
+    {
+      "place_name": "Bandipur",
+      "location": "Tanahun, Nepal",
+      "description": "A preserved hilltop town with cultural heritage.",
+      "highlights": ["Traditional houses", "Scenic views"],
+      "attractions": ["Bandipur Bazaar", "Siddha Cave"],
+      "best_time_to_visit": "September to April",
+      "transportation": "Bus + short hike",
+      "accommodation": "Boutique hotels",
+      "safety_tips": ["Wear comfortable shoes"],
+      "photos": []
+    },
+    {
+      "place_name": "Janakpur",
+      "location": "Dhanusha, Nepal",
+      "description": "Religious city associated with Goddess Sita.",
+      "highlights": ["Hindu pilgrimage", "Cultural festivals"],
+      "attractions": ["Janaki Mandir", "Sacred ponds"],
+      "best_time_to_visit": "October to March",
+      "transportation": "Flight or bus",
+      "accommodation": "Hotels in city",
+      "safety_tips": ["Dress modestly"],
+      "photos": []
+    },
+
+    {
+      "place_name": "Ilam",
+      "location": "Ilam, Nepal",
+      "description": "A hill town famous for tea gardens.",
+      "highlights": ["Tea estates", "Cool climate"],
+      "attractions": ["Kanyam Tea Garden"],
+      "best_time_to_visit": "March to May",
+      "transportation": "Bus or jeep",
+      "accommodation": "Local hotels",
+      "safety_tips": ["Carry rain gear"],
+      "photos": []
+    },
+
+    {
+      "place_name": "Gosaikunda",
+      "location": "Rasuwa, Nepal",
+      "description": "A sacred alpine lake located in Langtang region.",
+      "highlights": ["Holy lake", "Mountain scenery"],
+      "attractions": ["Gosaikunda Lake"],
+      "best_time_to_visit": "August to October",
+      "transportation": "Drive + hike",
+      "accommodation": "Tea houses",
+      "safety_tips": ["Acclimatize properly"],
+      "photos": []
+    },
+
+    {
+      "place_name": "Rara Lake",
+      "location": "Mugu, Nepal",
+      "description": "Largest and deepest lake in Nepal.",
+      "highlights": ["Crystal clear water", "Remote beauty"],
+      "attractions": ["Rara National Park"],
+      "best_time_to_visit": "September to October",
+      "transportation": "Flight + trek",
+      "accommodation": "Local lodges",
+      "safety_tips": ["Travel with guide"],
+      "photos": []
+    },
+
+    {
+      "place_name": "Mustang",
+      "location": "Mustang, Nepal",
+      "description": "Ancient Himalayan kingdom with desert landscapes.",
+      "highlights": ["Tibetan culture", "Caves"],
+      "attractions": ["Lo Manthang"],
+      "best_time_to_visit": "March to October",
+      "transportation": "Flight or jeep",
+      "accommodation": "Tea houses",
+      "safety_tips": ["Carry permits"],
+      "photos": []
+    },
+
+    {
+      "place_name": "Dharan",
+      "location": "Sunsari, Nepal",
+      "description": "A gateway city to eastern hills.",
+      "highlights": ["Religious sites", "Hill views"],
+      "attractions": ["Budha Subba Temple"],
+      "best_time_to_visit": "October to March",
+      "transportation": "Bus",
+      "accommodation": "City hotels",
+      "safety_tips": ["Avoid heat during summer"],
+      "photos": []
+    },
+
+    {
+      "place_name": "Everest Base Camp Trek",
+      "location": "Solukhumbu, Nepal",
+      "description": "World-famous trek leading to the base of Mount Everest.",
+      "highlights": [
+        "Mount Everest views",
+        "Sherpa culture",
+        "Namche Bazaar"
+      ],
+      "attractions": [
+        "Kala Patthar",
+        "Tengboche Monastery"
+      ],
+      "best_time_to_visit": "March\u2013May, September\u2013November",
+      "transportation": "Flight to Lukla, then trekking",
+      "accommodation": "Teahouses",
+      "safety_tips": "Acclimatize properly, watch for altitude sickness",
+      "photos": []
+    },
+    {
+      "place_name": "Annapurna Base Camp Trek",
+      "location": "Kaski, Nepal",
+      "description": "Scenic trek into the Annapurna sanctuary.",
+      "highlights": [
+        "Annapurna massif",
+        "Hot springs",
+        "Rhododendron forests"
+      ],
+      "attractions": [
+        "Machapuchare Base Camp"
+      ],
+      "best_time_to_visit": "March\u2013May, September\u2013November",
+      "transportation": "Drive to Nayapul, then trekking",
+      "accommodation": "Teahouses",
+      "safety_tips": "Check weather forecasts regularly",
+      "photos": []
+    },
+    {
+      "place_name": "Langtang Valley Trek",
+      "location": "Nepal",
+      "description": "Langtang Valley Trek is a popular trekking destination in Nepal.",
+      "highlights": [
+        "Mountain views",
+        "Cultural villages",
+        "Nature"
+      ],
+      "attractions": [
+        "Lakes",
+        "Passes",
+        "Peaks"
+      ],
+      "best_time_to_visit": "March\u2013May, September\u2013November",
+      "transportation": "Road/Flight + trekking",
+      "accommodation": "Teahouses/Camping",
+      "safety_tips": "Hire a guide, prepare for altitude",
+      "photos": []
+    },
+    {
+      "place_name": "Manaslu Circuit Trek",
+      "location": "Nepal",
+      "description": "Manaslu Circuit Trek is a popular trekking destination in Nepal.",
+      "highlights": [
+        "Mountain views",
+        "Cultural villages",
+        "Nature"
+      ],
+      "attractions": [
+        "Lakes",
+        "Passes",
+        "Peaks"
+      ],
+      "best_time_to_visit": "March\u2013May, September\u2013November",
+      "transportation": "Road/Flight + trekking",
+      "accommodation": "Teahouses/Camping",
+      "safety_tips": "Hire a guide, prepare for altitude",
+      "photos": []
+    },
+    {
+      "place_name": "Upper Mustang Trek",
+      "location": "Nepal",
+      "description": "Upper Mustang Trek is a popular trekking destination in Nepal.",
+      "highlights": [
+        "Mountain views",
+        "Cultural villages",
+        "Nature"
+      ],
+      "attractions": [
+        "Lakes",
+        "Passes",
+        "Peaks"
+      ],
+      "best_time_to_visit": "March\u2013May, September\u2013November",
+      "transportation": "Road/Flight + trekking",
+      "accommodation": "Teahouses/Camping",
+      "safety_tips": "Hire a guide, prepare for altitude",
+      "photos": []
+    },
+    {
+      "place_name": "Gokyo Lakes Trek",
+      "location": "Nepal",
+      "description": "Gokyo Lakes Trek is a popular trekking destination in Nepal.",
+      "highlights": [
+        "Mountain views",
+        "Cultural villages",
+        "Nature"
+      ],
+      "attractions": [
+        "Lakes",
+        "Passes",
+        "Peaks"
+      ],
+      "best_time_to_visit": "March\u2013May, September\u2013November",
+      "transportation": "Road/Flight + trekking",
+      "accommodation": "Teahouses/Camping",
+      "safety_tips": "Hire a guide, prepare for altitude",
+      "photos": []
+    },
+    {
+      "place_name": "Mardi Himal Trek",
+      "location": "Nepal",
+      "description": "Mardi Himal Trek is a popular trekking destination in Nepal.",
+      "highlights": [
+        "Mountain views",
+        "Cultural villages",
+        "Nature"
+      ],
+      "attractions": [
+        "Lakes",
+        "Passes",
+        "Peaks"
+      ],
+      "best_time_to_visit": "March\u2013May, September\u2013November",
+      "transportation": "Road/Flight + trekking",
+      "accommodation": "Teahouses/Camping",
+      "safety_tips": "Hire a guide, prepare for altitude",
+      "photos": []
+    },
+    {
+      "place_name": "Kanchenjunga Base Camp Trek",
+      "location": "Nepal",
+      "description": "Kanchenjunga Base Camp Trek is a popular trekking destination in Nepal.",
+      "highlights": [
+        "Mountain views",
+        "Cultural villages",
+        "Nature"
+      ],
+      "attractions": [
+        "Lakes",
+        "Passes",
+        "Peaks"
+      ],
+      "best_time_to_visit": "March\u2013May, September\u2013November",
+      "transportation": "Road/Flight + trekking",
+      "accommodation": "Teahouses/Camping",
+      "safety_tips": "Hire a guide, prepare for altitude",
+      "photos": []
+    },
+    {
+      "place_name": "Makalu Base Camp Trek",
+      "location": "Nepal",
+      "description": "Makalu Base Camp Trek is a popular trekking destination in Nepal.",
+      "highlights": [
+        "Mountain views",
+        "Cultural villages",
+        "Nature"
+      ],
+      "attractions": [
+        "Lakes",
+        "Passes",
+        "Peaks"
+      ],
+      "best_time_to_visit": "March\u2013May, September\u2013November",
+      "transportation": "Road/Flight + trekking",
+      "accommodation": "Teahouses/Camping",
+      "safety_tips": "Hire a guide, prepare for altitude",
+      "photos": []
+    },
+    {
+      "place_name": "Dolpo Trek",
+      "location": "Nepal",
+      "description": "Dolpo Trek is a popular trekking destination in Nepal.",
+      "highlights": [
+        "Mountain views",
+        "Cultural villages",
+        "Nature"
+      ],
+      "attractions": [
+        "Lakes",
+        "Passes",
+        "Peaks"
+      ],
+      "best_time_to_visit": "March\u2013May, September\u2013November",
+      "transportation": "Road/Flight + trekking",
+      "accommodation": "Teahouses/Camping",
+      "safety_tips": "Hire a guide, prepare for altitude",
+      "photos": []
+    },
+    {
+      "place_name": "Poon Hill Trek",
+      "location": "Nepal",
+      "description": "Poon Hill Trek is a popular trekking destination in Nepal.",
+      "highlights": [
+        "Mountain views",
+        "Cultural villages",
+        "Nature"
+      ],
+      "attractions": [
+        "Lakes",
+        "Passes",
+        "Peaks"
+      ],
+      "best_time_to_visit": "March\u2013May, September\u2013November",
+      "transportation": "Road/Flight + trekking",
+      "accommodation": "Teahouses/Camping",
+      "safety_tips": "Hire a guide, prepare for altitude",
+      "photos": []
+    },
+    {
+      "place_name": "Tamang Heritage Trail",
+      "location": "Nepal",
+      "description": "Tamang Heritage Trail is a popular trekking destination in Nepal.",
+      "highlights": [
+        "Mountain views",
+        "Cultural villages",
+        "Nature"
+      ],
+      "attractions": [
+        "Lakes",
+        "Passes",
+        "Peaks"
+      ],
+      "best_time_to_visit": "March\u2013May, September\u2013November",
+      "transportation": "Road/Flight + trekking",
+      "accommodation": "Teahouses/Camping",
+      "safety_tips": "Hire a guide, prepare for altitude",
+      "photos": []
+    },
+    {
+      "place_name": "Helambu Trek",
+      "location": "Nepal",
+      "description": "Helambu Trek is a popular trekking destination in Nepal.",
+      "highlights": [
+        "Mountain views",
+        "Cultural villages",
+        "Nature"
+      ],
+      "attractions": [
+        "Lakes",
+        "Passes",
+        "Peaks"
+      ],
+      "best_time_to_visit": "March\u2013May, September\u2013November",
+      "transportation": "Road/Flight + trekking",
+      "accommodation": "Teahouses/Camping",
+      "safety_tips": "Hire a guide, prepare for altitude",
+      "photos": []
+    },
+    {
+      "place_name": "Rara Lake Trek",
+      "location": "Nepal",
+      "description": "Rara Lake Trek is a popular trekking destination in Nepal.",
+      "highlights": [
+        "Mountain views",
+        "Cultural villages",
+        "Nature"
+      ],
+      "attractions": [
+        "Lakes",
+        "Passes",
+        "Peaks"
+      ],
+      "best_time_to_visit": "March\u2013May, September\u2013November",
+      "transportation": "Road/Flight + trekking",
+      "accommodation": "Teahouses/Camping",
+      "safety_tips": "Hire a guide, prepare for altitude",
+      "photos": []
+    },
+    {
+      "place_name": "Khaptad National Park Trek",
+      "location": "Nepal",
+      "description": "Khaptad National Park Trek is a popular trekking destination in Nepal.",
+      "highlights": [
+        "Mountain views",
+        "Cultural villages",
+        "Nature"
+      ],
+      "attractions": [
+        "Lakes",
+        "Passes",
+        "Peaks"
+      ],
+      "best_time_to_visit": "March\u2013May, September\u2013November",
+      "transportation": "Road/Flight + trekking",
+      "accommodation": "Teahouses/Camping",
+      "safety_tips": "Hire a guide, prepare for altitude",
+      "photos": []
+    },
+    {
+      "place_name": "Dhaulagiri Circuit Trek",
+      "location": "Nepal",
+      "description": "Dhaulagiri Circuit Trek is a popular trekking destination in Nepal.",
+      "highlights": [
+        "Mountain views",
+        "Cultural villages",
+        "Nature"
+      ],
+      "attractions": [
+        "Lakes",
+        "Passes",
+        "Peaks"
+      ],
+      "best_time_to_visit": "March\u2013May, September\u2013November",
+      "transportation": "Road/Flight + trekking",
+      "accommodation": "Teahouses/Camping",
+      "safety_tips": "Hire a guide, prepare for altitude",
+      "photos": []
+    },
+    {
+      "place_name": "Api Base Camp Trek",
+      "location": "Nepal",
+      "description": "Api Base Camp Trek is a popular trekking destination in Nepal.",
+      "highlights": [
+        "Mountain views",
+        "Cultural villages",
+        "Nature"
+      ],
+      "attractions": [
+        "Lakes",
+        "Passes",
+        "Peaks"
+      ],
+      "best_time_to_visit": "March\u2013May, September\u2013November",
+      "transportation": "Road/Flight + trekking",
+      "accommodation": "Teahouses/Camping",
+      "safety_tips": "Hire a guide, prepare for altitude",
+      "photos": []
+    },
+    {
+      "place_name": "Saipal Base Camp Trek",
+      "location": "Nepal",
+      "description": "Saipal Base Camp Trek is a popular trekking destination in Nepal.",
+      "highlights": [
+        "Mountain views",
+        "Cultural villages",
+        "Nature"
+      ],
+      "attractions": [
+        "Lakes",
+        "Passes",
+        "Peaks"
+      ],
+      "best_time_to_visit": "March\u2013May, September\u2013November",
+      "transportation": "Road/Flight + trekking",
+      "accommodation": "Teahouses/Camping",
+      "safety_tips": "Hire a guide, prepare for altitude",
+      "photos": []
+    },
+    {
+      "place_name": "Tilicho Lake Trek",
+      "location": "Nepal",
+      "description": "Tilicho Lake Trek is a popular trekking destination in Nepal.",
+      "highlights": [
+        "Mountain views",
+        "Cultural villages",
+        "Nature"
+      ],
+      "attractions": [
+        "Lakes",
+        "Passes",
+        "Peaks"
+      ],
+      "best_time_to_visit": "March\u2013May, September\u2013November",
+      "transportation": "Road/Flight + trekking",
+      "accommodation": "Teahouses/Camping",
+      "safety_tips": "Hire a guide, prepare for altitude",
+      "photos": []
+    },
+    {
+      "place_name": "Nar Phu Valley Trek",
+      "location": "Nepal",
+      "description": "Nar Phu Valley Trek is a popular trekking destination in Nepal.",
+      "highlights": [
+        "Mountain views",
+        "Cultural villages",
+        "Nature"
+      ],
+      "attractions": [
+        "Lakes",
+        "Passes",
+        "Peaks"
+      ],
+      "best_time_to_visit": "March\u2013May, September\u2013November",
+      "transportation": "Road/Flight + trekking",
+      "accommodation": "Teahouses/Camping",
+      "safety_tips": "Hire a guide, prepare for altitude",
+      "photos": []
+    },
+    {
+      "place_name": "Ruby Valley Trek",
+      "location": "Nepal",
+      "description": "Ruby Valley Trek is a popular trekking destination in Nepal.",
+      "highlights": [
+        "Mountain views",
+        "Cultural villages",
+        "Nature"
+      ],
+      "attractions": [
+        "Lakes",
+        "Passes",
+        "Peaks"
+      ],
+      "best_time_to_visit": "March\u2013May, September\u2013November",
+      "transportation": "Road/Flight + trekking",
+      "accommodation": "Teahouses/Camping",
+      "safety_tips": "Hire a guide, prepare for altitude",
+      "photos": []
+    },
+    {
+      "place_name": "Panch Pokhari Trek",
+      "location": "Nepal",
+      "description": "Panch Pokhari Trek is a popular trekking destination in Nepal.",
+      "highlights": [
+        "Mountain views",
+        "Cultural villages",
+        "Nature"
+      ],
+      "attractions": [
+        "Lakes",
+        "Passes",
+        "Peaks"
+      ],
+      "best_time_to_visit": "March\u2013May, September\u2013November",
+      "transportation": "Road/Flight + trekking",
+      "accommodation": "Teahouses/Camping",
+      "safety_tips": "Hire a guide, prepare for altitude",
+      "photos": []
+    },
+    {
+      "place_name": "Milke Danda Trek",
+      "location": "Nepal",
+      "description": "Milke Danda Trek is a popular trekking destination in Nepal.",
+      "highlights": [
+        "Mountain views",
+        "Cultural villages",
+        "Nature"
+      ],
+      "attractions": [
+        "Lakes",
+        "Passes",
+        "Peaks"
+      ],
+      "best_time_to_visit": "March\u2013May, September\u2013November",
+      "transportation": "Road/Flight + trekking",
+      "accommodation": "Teahouses/Camping",
+      "safety_tips": "Hire a guide, prepare for altitude",
+      "photos": []
+    },
+    {
+      "place_name": "Kapuche Lake Trek",
+      "location": "Nepal",
+      "description": "Kapuche Lake Trek is a popular trekking destination in Nepal.",
+      "highlights": [
+        "Mountain views",
+        "Cultural villages",
+        "Nature"
+      ],
+      "attractions": [
+        "Lakes",
+        "Passes",
+        "Peaks"
+      ],
+      "best_time_to_visit": "March\u2013May, September\u2013November",
+      "transportation": "Road/Flight + trekking",
+      "accommodation": "Teahouses/Camping",
+      "safety_tips": "Hire a guide, prepare for altitude",
+      "photos": []
+    },
+    {
+      "place_name": "Lower Mustang Trek",
+      "location": "Nepal",
+      "description": "Lower Mustang Trek is a popular trekking destination in Nepal.",
+      "highlights": [
+        "Mountain views",
+        "Cultural villages",
+        "Nature"
+      ],
+      "attractions": [
+        "Lakes",
+        "Passes",
+        "Peaks"
+      ],
+      "best_time_to_visit": "March\u2013May, September\u2013November",
+      "transportation": "Road/Flight + trekking",
+      "accommodation": "Teahouses/Camping",
+      "safety_tips": "Hire a guide, prepare for altitude",
+      "photos": []
+    },
+    {
+      "place_name": "Mohare Danda Trek",
+      "location": "Nepal",
+      "description": "Mohare Danda Trek is a popular trekking destination in Nepal.",
+      "highlights": [
+        "Mountain views",
+        "Cultural villages",
+        "Nature"
+      ],
+      "attractions": [
+        "Lakes",
+        "Passes",
+        "Peaks"
+      ],
+      "best_time_to_visit": "March\u2013May, September\u2013November",
+      "transportation": "Road/Flight + trekking",
+      "accommodation": "Teahouses/Camping",
+      "safety_tips": "Hire a guide, prepare for altitude",
+      "photos": []
+    },
+    {
+      "place_name": "Kori Village Trek",
+      "location": "Nepal",
+      "description": "Kori Village Trek is a popular trekking destination in Nepal.",
+      "highlights": [
+        "Mountain views",
+        "Cultural villages",
+        "Nature"
+      ],
+      "attractions": [
+        "Lakes",
+        "Passes",
+        "Peaks"
+      ],
+      "best_time_to_visit": "March\u2013May, September\u2013November",
+      "transportation": "Road/Flight + trekking",
+      "accommodation": "Teahouses/Camping",
+      "safety_tips": "Hire a guide, prepare for altitude",
+      "photos": []
+    },
+    {
+      "place_name": "Badimalika Trek",
+      "location": "Nepal",
+      "description": "Badimalika Trek is a popular trekking destination in Nepal.",
+      "highlights": [
+        "Mountain views",
+        "Cultural villages",
+        "Nature"
+      ],
+      "attractions": [
+        "Lakes",
+        "Passes",
+        "Peaks"
+      ],
+      "best_time_to_visit": "March\u2013May, September\u2013November",
+      "transportation": "Road/Flight + trekking",
+      "accommodation": "Teahouses/Camping",
+      "safety_tips": "Hire a guide, prepare for altitude",
+      "photos": []
+    },
+    {
+      "place_name": "Shey Phoksundo Trek",
+      "location": "Nepal",
+      "description": "Shey Phoksundo Trek is a popular trekking destination in Nepal.",
+      "highlights": [
+        "Mountain views",
+        "Cultural villages",
+        "Nature"
+      ],
+      "attractions": [
+        "Lakes",
+        "Passes",
+        "Peaks"
+      ],
+      "best_time_to_visit": "March\u2013May, September\u2013November",
+      "transportation": "Road/Flight + trekking",
+      "accommodation": "Teahouses/Camping",
+      "safety_tips": "Hire a guide, prepare for altitude",
+      "photos": []
+    },
+    {
+      "place_name": "Upper Dolpo Trek",
+      "location": "Nepal",
+      "description": "Upper Dolpo Trek is a popular trekking destination in Nepal.",
+      "highlights": [
+        "Mountain views",
+        "Cultural villages",
+        "Nature"
+      ],
+      "attractions": [
+        "Lakes",
+        "Passes",
+        "Peaks"
+      ],
+      "best_time_to_visit": "March\u2013May, September\u2013November",
+      "transportation": "Road/Flight + trekking",
+      "accommodation": "Teahouses/Camping",
+      "safety_tips": "Hire a guide, prepare for altitude",
+      "photos": []
+    },
+    {
+      "place_name": "Limi Valley Trek",
+      "location": "Nepal",
+      "description": "Limi Valley Trek is a popular trekking destination in Nepal.",
+      "highlights": [
+        "Mountain views",
+        "Cultural villages",
+        "Nature"
+      ],
+      "attractions": [
+        "Lakes",
+        "Passes",
+        "Peaks"
+      ],
+      "best_time_to_visit": "March\u2013May, September\u2013November",
+      "transportation": "Road/Flight + trekking",
+      "accommodation": "Teahouses/Camping",
+      "safety_tips": "Hire a guide, prepare for altitude",
+      "photos": []
+    },
+    {
+      "place_name": "Tsho Rolpa Trek",
+      "location": "Nepal",
+      "description": "Tsho Rolpa Trek is a popular trekking destination in Nepal.",
+      "highlights": [
+        "Mountain views",
+        "Cultural villages",
+        "Nature"
+      ],
+      "attractions": [
+        "Lakes",
+        "Passes",
+        "Peaks"
+      ],
+      "best_time_to_visit": "March\u2013May, September\u2013November",
+      "transportation": "Road/Flight + trekking",
+      "accommodation": "Teahouses/Camping",
+      "safety_tips": "Hire a guide, prepare for altitude",
+      "photos": []
+    }
+
+  
+  ]
+}

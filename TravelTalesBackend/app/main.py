@@ -1,5 +1,5 @@
 from fastapi import FastAPI
-from app.routes import user_route
+from app.routes import destination_route, user_route
 from fastapi.middleware.cors import CORSMiddleware
 
 
@@ -19,9 +19,9 @@ app.add_middleware(
 )
 
 app.include_router(user_route.router)
+app.include_router(destination_route.router)
 
 
 @app.get("/")
 async def main():
-    """ this is the entry point of the application. """
     return {"Message" : "Application successfully loaded."}

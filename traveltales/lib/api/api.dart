@@ -3,16 +3,20 @@ import 'dart:developer';
 import 'package:http/http.dart' as http;
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'dart:io';
+
 final storage = FlutterSecureStorage();
 // const String API_URL = 'http://10.0.2.2:8000';
 
 
 
 
-final String API_URL = Platform.isAndroid
-    ? 'http://192.168.1.80:8000'
-    : 'http://localhost:8000';
+// final String API_URL = Platform.isAndroid
+//     ? 'http://192.168.1.80:8000'
+//     : 'http://localhost:8000';
 
+final String API_URL = Platform.isAndroid
+    ? 'http://10.0.2.2:8000' // Android emulator → maps to PC localhost
+    : 'http://192.168.1.80:8000'; // physical device on same LAN
 
 
 Future<Map<String, String>> getHeaders() async {
@@ -159,6 +163,29 @@ Future<void> signup(String email, String password) async {
   }catch(e){
     log("Error during signup: $e");
     rethrow;
+  }
+}
+Future<Map<String, dynamic>?> getDestination(int destinationId) async{
+  final url = Uri.parse('$API_URL/destinations/$destinationId');
+  final headers = await getHeaders();
+
+  try{
+    final response = await http.get(url, headers: headers,);
+
+    if (response.statusCode == 200){
+      final data = jsonDecode(response.body);
+      log("✅ Destination fetched: ${data['place_name']}");
+
+      return data;
+      // return List<Map<String, dynamic>>.from(data);
+      // log("Destination fetched successfully $data");
+    } else{
+      log("Destination fetch failed: ${response.statusCode} ${response.body}");
+      return null;
+    }
+  }catch(e){
+    log("Error during fetching destination: $e");
+    return null;
   }
 }
 
