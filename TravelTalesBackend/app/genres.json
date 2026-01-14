@@ -1,0 +1,60 @@
+{
+    "genres": [
+        {
+            "id": 100,
+            "name": "Hiking"
+        },
+        {
+            "id": 101,
+            "name": "Trekking"
+        },
+        {
+            "id": 102,
+            "name": "Camping"
+        },
+        {
+            "id": 103,
+            "name": "Sunset"
+        },
+        {
+            "id": 104,
+            "name": "Sunrise"
+        },
+        {
+            "id": 105,
+            "name": "Jungle"
+        },
+        {
+            "id": 106,
+            "name": "Mountain"
+        },
+        {
+            "id": 107,
+            "name": "Lakeside"
+        },
+        {
+            "id": 108,
+            "name": "Waterfall"
+        },
+        {
+            "id": 109,
+            "name": "Religious"
+        },
+        {
+            "id": 113,
+            "name": "Wildlife"
+        },
+        {
+            "id": 114,
+            "name": "Rafting"
+        },
+        {
+            "id": 115,
+            "name": "Paragliding"
+        },
+        {
+            "id": 116,
+            "name": "Photography Spot"
+        }
+    ]
+}

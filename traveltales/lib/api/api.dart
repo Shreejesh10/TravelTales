@@ -9,11 +9,6 @@ final storage = FlutterSecureStorage();
 
 
 
-
-// final String API_URL = Platform.isAndroid
-//     ? 'http://192.168.1.80:8000'
-//     : 'http://localhost:8000';
-
 final String API_URL = Platform.isAndroid
     ? 'http://10.0.2.2:8000' // Android emulator → maps to PC localhost
     : 'http://192.168.1.80:8000'; // physical device on same LAN
@@ -174,7 +169,7 @@ Future<Map<String, dynamic>?> getDestination(int destinationId) async{
 
     if (response.statusCode == 200){
       final data = jsonDecode(response.body);
-      log("✅ Destination fetched: ${data['place_name']}");
+      log("Destination fetched: ${data['place_name']}");
 
       return data;
       // return List<Map<String, dynamic>>.from(data);

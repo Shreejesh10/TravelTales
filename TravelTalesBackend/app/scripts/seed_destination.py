@@ -56,7 +56,8 @@ def seed_destinations(db: Session, destinations_data: list):
                 'transportation': dest_data.get('transportation'),
                 'accommodation': dest_data.get('accommodation'),
                 'safety_tips': dest_data.get('safety_tips', []),
-                'photos': dest_data.get('photos', [])
+                'photos': dest_data.get('photos', []),
+                'genre_vector': dest_data.get('genre_vector', [])
             }
             
             existing = db.query(Destination).filter(

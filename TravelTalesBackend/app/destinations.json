@@ -10,7 +10,8 @@
       "transportation": "Taxi or local bus from Kathmandu",
       "accommodation": "Hotels and guesthouses nearby",
       "safety_tips": ["Respect religious customs", "Watch belongings"],
-      "photos": []
+      "photos": [],
+      "genre_vector": [0,0,0,0,0,0,0,0,0,1,0,0,0,1]
     },
     {
       "place_name": "Pashupatinath Temple",
@@ -22,7 +23,8 @@
       "transportation": "Taxi or bus",
       "accommodation": "Hotels in Kathmandu",
       "safety_tips": ["Dress modestly", "Non-Hindus restricted"],
-      "photos": []
+      "photos": [],
+      "genre_vector": [0,0,0,0,0,0,0,0,0,1,0,0,0,1]
     },
     {
       "place_name": "Pokhara",
@@ -34,7 +36,8 @@
       "transportation": "Flight or tourist bus",
       "accommodation": "Lakeside hotels",
       "safety_tips": ["Use life jackets while boating"],
-      "photos": []
+      "photos": [],
+      "genre_vector": [1,1,0,1,1,0,1,1,1,0,0,1,1,1]
     },
     {
       "place_name": "Bhaktapur Durbar Square",
@@ -46,7 +49,8 @@
       "transportation": "Bus or taxi",
       "accommodation": "Heritage hotels",
       "safety_tips": ["Walk carefully on brick paths"],
-      "photos": []
+      "photos": [],
+      "genre_vector": [0,0,0,0,0,0,0,0,0,1,0,0,0,1]
     },
     {
       "place_name": "Patan Durbar Square",
@@ -58,7 +62,8 @@
       "transportation": "Taxi or bus",
       "accommodation": "Hotels in Lalitpur",
       "safety_tips": ["Avoid crowded areas during festivals"],
-      "photos": []
+      "photos": [],
+      "genre_vector": [0,0,0,0,0,0,0,0,0,1,0,0,0,1]
     },
     {
       "place_name": "Lumbini",
@@ -70,7 +75,8 @@
       "transportation": "Flight or bus",
       "accommodation": "Pilgrim lodges",
       "safety_tips": ["Stay hydrated", "Respect silence zones"],
-      "photos": []
+      "photos": [],
+      "genre_vector": [0,0,0,0,1,0,0,0,0,1,0,0,0,1]
     },
     {
       "place_name": "Chitwan National Park",
@@ -82,7 +88,8 @@
       "transportation": "Bus or flight",
       "accommodation": "Jungle resorts",
       "safety_tips": ["Follow guide instructions"],
-      "photos": []
+      "photos": [],
+      "genre_vector": [0,0,0,0,0,1,0,0,0,0,1,0,0,1]
     },
     {
       "place_name": "Nagarkot",
@@ -94,7 +101,8 @@
       "transportation": "Taxi",
       "accommodation": "Resorts and hotels",
       "safety_tips": ["Carry warm clothing"],
-      "photos": []
+      "photos": [],
+      "genre_vector": [1,0,0,0,1,0,1,0,0,0,0,0,0,1]
     },
     {
       "place_name": "Bandipur",
@@ -106,7 +114,8 @@
       "transportation": "Bus + short hike",
       "accommodation": "Boutique hotels",
       "safety_tips": ["Wear comfortable shoes"],
-      "photos": []
+      "photos": [],
+      "genre_vector": [1,0,0,1,1,0,1,0,0,0,0,0,0,1]
     },
     {
       "place_name": "Janakpur",
@@ -118,9 +127,9 @@
       "transportation": "Flight or bus",
       "accommodation": "Hotels in city",
       "safety_tips": ["Dress modestly"],
-      "photos": []
+      "photos": [],
+      "genre_vector": [0,0,0,0,0,0,0,0,0,1,0,0,0,1]
     },
-
     {
       "place_name": "Ilam",
       "location": "Ilam, Nepal",
@@ -131,9 +140,9 @@
       "transportation": "Bus or jeep",
       "accommodation": "Local hotels",
       "safety_tips": ["Carry rain gear"],
-      "photos": []
+      "photos": [],
+      "genre_vector": [1,0,0,1,1,0,1,0,0,0,0,0,0,1]
     },
-
     {
       "place_name": "Gosaikunda",
       "location": "Rasuwa, Nepal",
@@ -144,9 +153,9 @@
       "transportation": "Drive + hike",
       "accommodation": "Tea houses",
       "safety_tips": ["Acclimatize properly"],
-      "photos": []
+      "photos": [],
+      "genre_vector": [1,1,0,0,0,0,1,1,0,1,0,0,0,1]
     },
-
     {
       "place_name": "Rara Lake",
       "location": "Mugu, Nepal",
@@ -157,9 +166,9 @@
       "transportation": "Flight + trek",
       "accommodation": "Local lodges",
       "safety_tips": ["Travel with guide"],
-      "photos": []
+      "photos": [],
+      "genre_vector": [1,1,0,0,0,1,1,1,0,0,1,0,0,1]
     },
-
     {
       "place_name": "Mustang",
       "location": "Mustang, Nepal",
@@ -170,9 +179,9 @@
       "transportation": "Flight or jeep",
       "accommodation": "Tea houses",
       "safety_tips": ["Carry permits"],
-      "photos": []
+      "photos": [],
+      "genre_vector": [1,1,1,0,0,0,1,0,0,1,0,0,0,1]
     },
-
     {
       "place_name": "Dharan",
       "location": "Sunsari, Nepal",
@@ -183,9 +192,9 @@
       "transportation": "Bus",
       "accommodation": "City hotels",
       "safety_tips": ["Avoid heat during summer"],
-      "photos": []
+      "photos": [],
+      "genre_vector": [1,0,0,0,0,0,1,0,0,1,0,0,0,1]
     },
-
     {
       "place_name": "Everest Base Camp Trek",
       "location": "Solukhumbu, Nepal",
@@ -203,7 +212,8 @@
       "transportation": "Flight to Lukla, then trekking",
       "accommodation": "Teahouses",
       "safety_tips": "Acclimatize properly, watch for altitude sickness",
-      "photos": []
+      "photos": [],
+      "genre_vector": [1,1,0,0,1,0,1,0,0,1,0,0,0,1]
     },
     {
       "place_name": "Annapurna Base Camp Trek",
@@ -221,7 +231,9 @@
       "transportation": "Drive to Nayapul, then trekking",
       "accommodation": "Teahouses",
       "safety_tips": "Check weather forecasts regularly",
-      "photos": []
+      "photos": [],
+      "genre_vector": [1,1,0,0,1,0,1,0,1,0,0,0,0,1]
+
     },
     {
       "place_name": "Langtang Valley Trek",
@@ -241,7 +253,9 @@
       "transportation": "Road/Flight + trekking",
       "accommodation": "Teahouses/Camping",
       "safety_tips": "Hire a guide, prepare for altitude",
-      "photos": []
+      "photos": [],
+      "genre_vector": [1,1,0,0,0,0,1,1,0,0,0,0,0,1]
+
     },
     {
       "place_name": "Manaslu Circuit Trek",
@@ -261,7 +275,9 @@
       "transportation": "Road/Flight + trekking",
       "accommodation": "Teahouses/Camping",
       "safety_tips": "Hire a guide, prepare for altitude",
-      "photos": []
+      "photos": [],
+      "genre_vector": [1,1,1,0,0,0,1,1,0,1,0,0,0,1]
+
     },
     {
       "place_name": "Upper Mustang Trek",
@@ -281,7 +297,9 @@
       "transportation": "Road/Flight + trekking",
       "accommodation": "Teahouses/Camping",
       "safety_tips": "Hire a guide, prepare for altitude",
-      "photos": []
+      "photos": [],
+      "genre_vector": [1,1,1,0,0,0,1,0,0,1,0,0,0,1]
+
     },
     {
       "place_name": "Gokyo Lakes Trek",
@@ -301,7 +319,9 @@
       "transportation": "Road/Flight + trekking",
       "accommodation": "Teahouses/Camping",
       "safety_tips": "Hire a guide, prepare for altitude",
-      "photos": []
+      "photos": [],
+      "genre_vector": [1,1,0,0,0,0,1,1,0,0,0,0,0,1]
+
     },
     {
       "place_name": "Mardi Himal Trek",
@@ -321,7 +341,9 @@
       "transportation": "Road/Flight + trekking",
       "accommodation": "Teahouses/Camping",
       "safety_tips": "Hire a guide, prepare for altitude",
-      "photos": []
+      "photos": [],
+      "genre_vector": [1,1,0,0,1,0,1,0,0,0,0,0,0,1]
+
     },
     {
       "place_name": "Kanchenjunga Base Camp Trek",
@@ -341,7 +363,9 @@
       "transportation": "Road/Flight + trekking",
       "accommodation": "Teahouses/Camping",
       "safety_tips": "Hire a guide, prepare for altitude",
-      "photos": []
+      "photos": [],
+      "genre_vector": [1,1,1,0,0,1,1,0,0,0,1,0,0,1]
+
     },
     {
       "place_name": "Makalu Base Camp Trek",
@@ -361,7 +385,9 @@
       "transportation": "Road/Flight + trekking",
       "accommodation": "Teahouses/Camping",
       "safety_tips": "Hire a guide, prepare for altitude",
-      "photos": []
+      "photos": [],
+      "genre_vector": [1,1,1,0,0,1,1,0,0,0,1,0,0,1]
+
     },
     {
       "place_name": "Dolpo Trek",
@@ -381,7 +407,9 @@
       "transportation": "Road/Flight + trekking",
       "accommodation": "Teahouses/Camping",
       "safety_tips": "Hire a guide, prepare for altitude",
-      "photos": []
+      "photos": [],
+      "genre_vector": [1,1,1,0,0,0,1,1,0,1,1,0,0,1]
+
     },
     {
       "place_name": "Poon Hill Trek",
@@ -401,7 +429,9 @@
       "transportation": "Road/Flight + trekking",
       "accommodation": "Teahouses/Camping",
       "safety_tips": "Hire a guide, prepare for altitude",
-      "photos": []
+      "photos": [],
+      "genre_vector": [1,1,0,1,1,0,1,0,0,0,0,0,0,1]
+
     },
     {
       "place_name": "Tamang Heritage Trail",
@@ -421,7 +451,9 @@
       "transportation": "Road/Flight + trekking",
       "accommodation": "Teahouses/Camping",
       "safety_tips": "Hire a guide, prepare for altitude",
-      "photos": []
+      "photos": [],
+      "genre_vector": [1,1,0,0,0,0,1,0,0,1,0,0,0,1]
+
     },
     {
       "place_name": "Helambu Trek",
@@ -441,7 +473,9 @@
       "transportation": "Road/Flight + trekking",
       "accommodation": "Teahouses/Camping",
       "safety_tips": "Hire a guide, prepare for altitude",
-      "photos": []
+      "photos": [],
+      "genre_vector": [1,1,0,0,0,0,1,0,1,0,0,0,0,1]
+
     },
     {
       "place_name": "Rara Lake Trek",
@@ -461,7 +495,9 @@
       "transportation": "Road/Flight + trekking",
       "accommodation": "Teahouses/Camping",
       "safety_tips": "Hire a guide, prepare for altitude",
-      "photos": []
+      "photos": [],
+      "genre_vector": [1,1,0,0,0,1,1,1,0,0,1,0,0,1]
+
     },
     {
       "place_name": "Khaptad National Park Trek",
@@ -481,7 +517,9 @@
       "transportation": "Road/Flight + trekking",
       "accommodation": "Teahouses/Camping",
       "safety_tips": "Hire a guide, prepare for altitude",
-      "photos": []
+      "photos": [],
+      "genre_vector": [1,1,1,0,0,1,0,1,0,1,1,0,0,1]
+
     },
     {
       "place_name": "Dhaulagiri Circuit Trek",
@@ -501,7 +539,9 @@
       "transportation": "Road/Flight + trekking",
       "accommodation": "Teahouses/Camping",
       "safety_tips": "Hire a guide, prepare for altitude",
-      "photos": []
+      "photos": [],
+      "genre_vector": [1,1,1,0,0,0,1,0,0,0,0,0,0,1]
+
     },
     {
       "place_name": "Api Base Camp Trek",
@@ -521,7 +561,9 @@
       "transportation": "Road/Flight + trekking",
       "accommodation": "Teahouses/Camping",
       "safety_tips": "Hire a guide, prepare for altitude",
-      "photos": []
+      "photos": [],
+      "genre_vector": [1,1,1,0,0,1,1,0,0,0,1,0,0,1]
+
     },
     {
       "place_name": "Saipal Base Camp Trek",
@@ -541,7 +583,9 @@
       "transportation": "Road/Flight + trekking",
       "accommodation": "Teahouses/Camping",
       "safety_tips": "Hire a guide, prepare for altitude",
-      "photos": []
+      "photos": [],
+      "genre_vector": [1,1,1,0,0,1,1,0,0,0,1,0,0,1]
+
     },
     {
       "place_name": "Tilicho Lake Trek",
@@ -561,7 +605,9 @@
       "transportation": "Road/Flight + trekking",
       "accommodation": "Teahouses/Camping",
       "safety_tips": "Hire a guide, prepare for altitude",
-      "photos": []
+      "photos": [],
+      "genre_vector": [1,1,0,0,0,0,1,1,0,0,0,0,0,1]
+
     },
     {
       "place_name": "Nar Phu Valley Trek",
@@ -601,7 +647,9 @@
       "transportation": "Road/Flight + trekking",
       "accommodation": "Teahouses/Camping",
       "safety_tips": "Hire a guide, prepare for altitude",
-      "photos": []
+      "photos": [],
+      "genre_vector": [1,1,1,0,0,0,1,0,0,1,0,0,0,1]
+
     },
     {
       "place_name": "Panch Pokhari Trek",
@@ -621,7 +669,9 @@
       "transportation": "Road/Flight + trekking",
       "accommodation": "Teahouses/Camping",
       "safety_tips": "Hire a guide, prepare for altitude",
-      "photos": []
+      "photos": [],
+      "genre_vector": [1,1,0,0,0,0,1,0,0,0,0,0,0,1]
+
     },
     {
       "place_name": "Milke Danda Trek",
@@ -641,7 +691,9 @@
       "transportation": "Road/Flight + trekking",
       "accommodation": "Teahouses/Camping",
       "safety_tips": "Hire a guide, prepare for altitude",
-      "photos": []
+      "photos": [],
+      "genre_vector": [1,1,0,0,1,0,1,0,0,0,0,0,0,1]
+
     },
     {
       "place_name": "Kapuche Lake Trek",
@@ -661,7 +713,9 @@
       "transportation": "Road/Flight + trekking",
       "accommodation": "Teahouses/Camping",
       "safety_tips": "Hire a guide, prepare for altitude",
-      "photos": []
+      "photos": [],
+      "genre_vector": [1,1,0,0,0,0,1,1,0,0,0,0,0,1]
+
     },
     {
       "place_name": "Lower Mustang Trek",
@@ -681,7 +735,9 @@
       "transportation": "Road/Flight + trekking",
       "accommodation": "Teahouses/Camping",
       "safety_tips": "Hire a guide, prepare for altitude",
-      "photos": []
+      "photos": [],
+      "genre_vector": [1,1,0,0,0,0,1,0,0,1,0,0,0,1]
+
     },
     {
       "place_name": "Mohare Danda Trek",
@@ -701,7 +757,9 @@
       "transportation": "Road/Flight + trekking",
       "accommodation": "Teahouses/Camping",
       "safety_tips": "Hire a guide, prepare for altitude",
-      "photos": []
+      "photos": [],
+      "genre_vector": [1,1,0,1,1,0,1,0,0,0,0,0,0,1]
+
     },
     {
       "place_name": "Kori Village Trek",
@@ -721,7 +779,9 @@
       "transportation": "Road/Flight + trekking",
       "accommodation": "Teahouses/Camping",
       "safety_tips": "Hire a guide, prepare for altitude",
-      "photos": []
+      "photos": [],
+      "genre_vector": [1,1,0,0,0,0,1,0,0,0,0,0,0,1]
+
     },
     {
       "place_name": "Badimalika Trek",
@@ -741,7 +801,9 @@
       "transportation": "Road/Flight + trekking",
       "accommodation": "Teahouses/Camping",
       "safety_tips": "Hire a guide, prepare for altitude",
-      "photos": []
+      "photos": [],
+      "genre_vector": [1,1,1,0,0,0,1,0,0,1,0,0,0,1]
+
     },
     {
       "place_name": "Shey Phoksundo Trek",
@@ -761,7 +823,9 @@
       "transportation": "Road/Flight + trekking",
       "accommodation": "Teahouses/Camping",
       "safety_tips": "Hire a guide, prepare for altitude",
-      "photos": []
+      "photos": [],
+      "genre_vector": [1,1,1,0,0,0,1,1,0,1,1,0,0,1]
+
     },
     {
       "place_name": "Upper Dolpo Trek",
@@ -781,7 +845,9 @@
       "transportation": "Road/Flight + trekking",
       "accommodation": "Teahouses/Camping",
       "safety_tips": "Hire a guide, prepare for altitude",
-      "photos": []
+      "photos": [],
+      "genre_vector": [1,1,1,0,0,0,1,1,0,1,1,0,0,1]
+
     },
     {
       "place_name": "Limi Valley Trek",
@@ -801,7 +867,9 @@
       "transportation": "Road/Flight + trekking",
       "accommodation": "Teahouses/Camping",
       "safety_tips": "Hire a guide, prepare for altitude",
-      "photos": []
+      "photos": [],
+      "genre_vector": [1,1,1,0,0,0,1,0,0,1,0,0,0,1]
+
     },
     {
       "place_name": "Tsho Rolpa Trek",
@@ -821,7 +889,9 @@
       "transportation": "Road/Flight + trekking",
       "accommodation": "Teahouses/Camping",
       "safety_tips": "Hire a guide, prepare for altitude",
-      "photos": []
+      "photos": [],
+      "genre_vector": [1,1,0,0,0,0,1,1,0,0,0,0,0,1]
+
     }
 
   

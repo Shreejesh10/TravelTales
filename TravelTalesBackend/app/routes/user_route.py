@@ -1,13 +1,10 @@
 from fastapi import APIRouter, Depends, HTTPException, status
-from datetime import datetime, timezone
 from app.utils.db_utils import get_db
 from app.model import *
 from sqlalchemy.orm import Session
-from app.schemas.schemas import UserCreate, UserLogin, UserResponse
+from app.schemas.schemas import LoginResponse, UserCreate, UserLogin, UserResponse
 from app.services.services import create_user, authenticate_user
 from app.utils.jwt_util import create_access_token, create_refresh_token
-from app.auth.auth import get_current_user, refresh_token
-from jose import JWTError, jwt
 
 
 _SHOW_NAME = "users"
@@ -26,7 +23,7 @@ def signup(user:UserCreate, db: Session = Depends(get_db)):
             status_code=status.HTTP_400_BAD_REQUEST,
             detail=str(e)
         )
-@router.post("/login")
+@router.post("/login", response_model= LoginResponse)
 def login(user: UserLogin, db: Session = Depends(get_db)):
     authenticated_user = authenticate_user(db, user.email, user.password)
 
@@ -36,26 +33,25 @@ def login(user: UserLogin, db: Session = Depends(get_db)):
             detail="Invalid email or password"
         )
     access_token = create_access_token(
-        data={"sub": authenticated_user.email}
+        data= {
+            "sub": str(authenticated_user.id),
+            "email": authenticated_user.email  
+        }
     )
     refresh_token = create_refresh_token(
-        data={"sub": authenticated_user.email}
+        data= {
+            "sub": str(authenticated_user.id),
+            "email": authenticated_user.email  
+        }
     )
 
-    return {
-        "user_id": authenticated_user.id,
-        "access_token": access_token,
-        "message": "Login successful",
-        "refresh_token": refresh_token
-    }
-
-@router.get("/me", response_model=UserResponse)
-def get_me(current_user = Depends(get_current_user)):
-    return current_user
-
-@router.post("/refresh")
-def refresh(token: str):
-    return refresh_token(token)
+    return LoginResponse(
+        user_id=authenticated_user.id,
+        access_token=access_token,
+        refresh_token=refresh_token,
+        message="Login successful",
+        roles=  authenticated_user.roles
+    )
 
 
 

@@ -1,5 +1,5 @@
 from fastapi import FastAPI
-from app.routes import destination_route, user_route
+from app.routes import  destination_route, user_route, genre_route
 from fastapi.middleware.cors import CORSMiddleware
 
 
@@ -20,6 +20,7 @@ app.add_middleware(
 
 app.include_router(user_route.router)
 app.include_router(destination_route.router)
+app.include_router(genre_route.router)
 
 
 @app.get("/")
