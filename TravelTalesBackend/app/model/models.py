@@ -64,3 +64,4 @@ class UserGenre(Base):
     
     # user = relationship("User", back_populates="user_genres")
     # genre = relationship("Genre", back_populates="user_genres")
+

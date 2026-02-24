@@ -4,7 +4,7 @@ from sqlalchemy.orm import Session
 import os
 
 from app.utils.db_utils import get_db
-from app.model.models import User
+from app.model.models import User, UserStatus
 from app.utils.oauth2 import security
 from fastapi.security import HTTPAuthorizationCredentials
 from app.utils.jwt_util import create_access_token
@@ -55,3 +55,16 @@ def refresh_token(token: str):
 
     except JWTError:
         raise HTTPException(status_code=401, detail="Invalid or expired refresh token")
+
+def get_approved_company(current_user :User = Depends(get_current_user)):
+    if current_user.status == UserStatus.PENDING:
+        raise HTTPException(
+            status_code= status.HTTP_403_FORBIDDEN,
+            detail= "Account should be approved from admin"
+        )
+    elif current_user.status == UserStatus.REJECTED:
+        raise HTTPException(
+            status_code= status.HTTP_403_FORBIDDEN,
+            detail= "Your account is rejected by admin"
+        )
+    return current_user

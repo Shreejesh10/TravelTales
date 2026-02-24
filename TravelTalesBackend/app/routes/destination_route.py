@@ -10,7 +10,8 @@ from app.services.destination_service import (
     get_destination_by_id, 
     get_all_destinations, 
     delete_destination,
-    update_destination_service)
+    update_destination_service,)
+from app.services.recommendation_service import recommend_destinations
 
 
 from app.schemas.schemas import(
@@ -123,7 +124,7 @@ def delete_destination_route(
             detail="An unexpected error occurred"
         ) 
 
-@router.patch("/}", response_model = DestinationResponse)
+@router.patch("/{destination_id}", response_model = DestinationResponse)
 def update_destination(
     destination_update: DestinationUpdate,
     destination_id : int,
@@ -144,3 +145,14 @@ def update_destination(
             detail= f"Destination with id {destination_id} not found"
         )
     return update_destination
+
+
+
+
+@router.get("/recommend/me", response_model=List[DestinationResponse])
+def get_recommendations(
+    current_user: User = Depends(get_current_user),
+    db: Session = Depends(get_db)
+):
+    return recommend_destinations(db, current_user.id)
+
