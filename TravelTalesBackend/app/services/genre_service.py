@@ -1,6 +1,9 @@
 from sqlalchemy.orm import Session
 from app.model.models import UserGenre, Genre
 from typing import List, Tuple
+def get_all_genres(db:Session):
+    return db.query(Genre).order_by(Genre.genre_id).all()
+
 
 def get_genre_vector(db: Session, genre_ids: List[int]) -> List[int]:
     all_genres = db.query(Genre).order_by(Genre.genre_id).all() #gets all genre available

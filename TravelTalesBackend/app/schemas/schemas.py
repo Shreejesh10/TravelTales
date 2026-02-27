@@ -20,6 +20,7 @@ class LoginResponse(BaseModel):
     refresh_token: str
     message: str
     roles: str
+    has_completed_preference: bool
 
 class UserResponse(BaseModel):
     id: int
@@ -28,6 +29,7 @@ class UserResponse(BaseModel):
     created_at: datetime
     roles: str
     status: UserStatus
+    profile_photo_url: Optional[str] = None
     class Config:
         
         from_attributes = True  
@@ -113,6 +115,13 @@ class DestinationResponse(BaseModel):
         from_attributes = True
 
 #for genre
+class GenreResponse(BaseModel):
+    genre_id: int
+    name: str
+    
+    class Config:
+        from_attributes = True
+
 class Genre(BaseModel):
     genre_id: int
     name: str

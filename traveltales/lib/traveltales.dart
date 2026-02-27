@@ -91,6 +91,18 @@ class TravelTales extends StatelessWidget {
                 fontWeight: FontWeight.w400,
               ),
             ),
+            snackBarTheme: SnackBarThemeData(
+              backgroundColor: Color(0xFFE9FCFF),
+              contentTextStyle: TextStyle(
+                color: Color(0xFF0A2A4A),
+                fontSize: 14.sp),
+              behavior: SnackBarBehavior.floating,
+
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(12),
+              ),
+              elevation: 4,
+            )
           ),
           darkTheme: ThemeData(
             fontFamily: 'Poppins',

@@ -1,7 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:traveltales/core/ui/components/viewAllRow.dart';
+import 'package:traveltales/core/ui/localization/sharedRes.dart';
 import 'package:traveltales/core/ui/resources/theme/appColors.dart';
 import 'package:traveltales/core/ui/resources/theme/dimens.dart';
+import 'dart:io';
+import 'package:image_picker/image_picker.dart';
+
 
 class ProfileScreen extends StatefulWidget {
   const ProfileScreen({super.key});
@@ -11,8 +16,35 @@ class ProfileScreen extends StatefulWidget {
 }
 
 class _ProfileScreenState extends State<ProfileScreen> {
+  final ImagePicker picker = ImagePicker();
+  File? profileImageFile;
+
+
+  Future<void> _changeProfilePicture() async {
+    try {
+      final XFile? picked = await picker.pickImage(
+        source: ImageSource.gallery, // change to ImageSource.camera if you want
+        imageQuality: 80,
+      );
+
+      if (picked == null) return;
+
+      setState(() {
+        profileImageFile = File(picked.path);
+      });
+    } catch (e) {
+      if (!mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text("Could not pick image: $e")),
+      );
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
+    final cs = Theme.of(context).colorScheme;
+
+
     return Scaffold(
       appBar: AppBar(
         automaticallyImplyLeading: false,
@@ -30,7 +62,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
         actions: [
           IconButton(
             onPressed: () {},
-            icon: Icon(Icons.settings, size: compactDimens.medium1),
+            icon: Icon(Icons.edit, size: compactDimens.medium1),
           ),
         ],
       ),
@@ -44,70 +76,238 @@ class _ProfileScreenState extends State<ProfileScreen> {
           ),
           SizedBox(height: 16.h),
           Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              _profileCard(
-                title: 'Friends',
-                value: '15',
+              Expanded(
+                  child: _statCard(
+                    iconColor: cs.primary,
+                    icon: Icons.person_outline,
+                    value: "15",
+                    label: "Total\nFriends",
+                    onTap: () {},
+                  )
               ),
-              _profileCard(
-                title: 'Events Booked',
-                value: '10',
+              SizedBox(width: 10.w),
+              Expanded(
+                  child: _statCard(
+                    iconColor: Colors.green,
+                    icon: Icons.event_available_outlined,
+                    value: "234",
+                    label: "Events\nBooked",
+                    onTap: () {},)
               ),
-              _profileCard(
-                title: 'Pending',
-                value: '10',
-              ),
+              SizedBox(width: 10.w),
+              Expanded(
+                  child: _statCard(
+                    iconColor: Colors.red,
+                    icon: Icons.pending_outlined,
+                    value: "5",
+                    label: "Request Pending",
+                    onTap: () {},)
+              )
 
             ],
           ),
           SizedBox(height: 16.h),
-          Container(
-            height: 200,
-            padding: EdgeInsets.all( 8.w),
-            alignment: Alignment.topLeft,
-            decoration: BoxDecoration(
-              color: Theme.of(context).brightness == Brightness.light
-                  ? AppColors.containerBoxColor
-                  : AppColors.darkContainerBoxColor,
-              borderRadius: BorderRadius.circular(12.r),
-            ),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text("Booked Events"),
-                SizedBox(height: 8.h),
-                bookedEvent()
-              ],
-            )
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              ViewAllRow(
+                  firstText: SharedRes.strings(context).recentBookedEvents,
+                  onPressed:(){}
+              ),
+              SizedBox(height: 8.h),
+              _bookedEventCard(
+                context,
+                  imageAsset: "assets/images/Bouddha.png",
+                  title: "Everest Base Camp",
+                  statusText: "Completed Oct 15, 2025",
+                  organizerText: "Kalpa Tours and Travels",
+                  difficultyText: "Hard",
+                  onTap: (){}
+              ),
+              SizedBox(height: 8.h),
+              _bookedEventCard(
+                  context,
+                  imageAsset: "assets/images/Bouddha.png",
+                  title: "Everest Base Camp",
+                  statusText: "Completed Oct 15, 2025",
+                  organizerText: "Kalpa Tours and Travels",
+                  difficultyText: "Hard",
+                  onTap: (){}
+              ),
+              SizedBox(height: 8.h),
+              _bookedEventCard(
+                  context,
+                  imageAsset: "assets/images/Bouddha.png",
+                  title: "Everest Base Camp",
+                  statusText: "Completed Oct 15, 2025",
+                  organizerText: "Kalpa Tours and Travels",
+                  difficultyText: "Hard",
+                  onTap: (){}
+              )
+            ],
           ),
-
-
-
+          SizedBox(height: 16.h),
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              ViewAllRow(
+                  firstText: SharedRes.strings(context).settings,
+                  onPressed:(){},
+                isViewAll: false,
+              ),
+              SizedBox(height: 8.h),
+              _settingsTile(
+                icon: Icons.person_outline,
+                title: SharedRes.strings(context).accountSetting,
+                onTap: (){},
+              ),
+              SizedBox(height: 8.h),
+              _settingsTile(
+                icon: Icons.do_not_disturb_on_total_silence_rounded,
+                title: SharedRes.strings(context).language,
+                onTap: (){},
+              ),
+              SizedBox(height: 8.h),
+              _settingsTile(
+                icon: Icons.password,
+                title: SharedRes.strings(context).changePassword,
+                onTap: (){},
+              ),
+              SizedBox(height: 8.h),
+              _settingsTile(
+                icon: Icons.light_mode_outlined,
+                title: SharedRes.strings(context).theme,
+                onTap: (){},
+              ),
+              SizedBox(height: 8.h),
+              _settingsTile(
+                icon: Icons.logout,
+                title: SharedRes.strings(context).logout,
+                onTap: (){},
+                textColor: Colors.red,
+                iconColor: Colors.red,
+              ),
+            ]
+          )
         ],
       ),
 
     );
   }
+  Widget _settingsTile({
+    required IconData icon,
+    required String title,
+    required VoidCallback onTap,
+    Color? textColor,
+    Color? iconColor,
+  }) {
+    return InkWell(
+      onTap: onTap,
+      borderRadius: BorderRadius.circular(14.r),
+      child: Container(
+        padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 14.h),
+        decoration: BoxDecoration(
+          color: Theme.of(context).brightness == Brightness.light
+              ? AppColors.containerBoxColor
+              : AppColors.darkContainerBoxColor,
+          borderRadius: BorderRadius.circular(14.r),
+        ),
+        child: Row(
+          children: [
+            Icon(
+              icon,
+              size: 20.sp,
+              color: iconColor,
+            ),
+            SizedBox(width: 16.w),
+            Expanded(
+              child: Text(
+                title,
+                style: TextStyle(
+                  fontSize: 14.sp,
+                  fontWeight: FontWeight.w500,
+                  color: textColor,
+                ),
+              ),
+            ),
+            Icon(
+              Icons.arrow_forward,
+              size: 14.sp,
+              color: Colors.grey,
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+  Widget _profile({
+    required String imagePath,
+    required String userName,
+    required String email,
+  }) {
+    final cs = Theme.of(context).colorScheme;
 
-  Widget _profile({required String imagePath, required String userName, required String email}){
+    ImageProvider avatarProvider;
+    if (profileImageFile != null) {
+      avatarProvider = FileImage(profileImageFile!);
+    } else {
+      avatarProvider = AssetImage(imagePath);
+    }
+
     return Align(
       child: Column(
         children: [
           SizedBox(height: 16.h),
-          Container(
-            width: 80.w,
-            height: 80.h,
-            decoration: BoxDecoration(
-              shape: BoxShape.circle,
-              image: DecorationImage(
-                image: AssetImage(imagePath),
-                fit: BoxFit.cover,
+
+          Stack(
+            clipBehavior: Clip.none,
+            children: [
+              Container(
+                width: 84.w,
+                height: 84.w,
+                decoration: BoxDecoration(
+                  shape: BoxShape.circle,
+                  border: Border.all(color: Colors.white, width: 2),
+                  image: DecorationImage(
+                    image: avatarProvider,
+                    fit: BoxFit.cover,
+                  ),
+                ),
               ),
-            ),
+
+              Positioned(
+                right: -2,
+                bottom: -2,
+                child: InkWell(
+                  onTap: _changeProfilePicture,
+                  borderRadius: BorderRadius.circular(99.r),
+                  child: Container(
+                    width: 30.w,
+                    height: 30.w,
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      shape: BoxShape.circle,
+                      boxShadow: [
+                        BoxShadow(
+                          blurRadius: 12,
+                          offset: const Offset(0, 4),
+                          color: Colors.black.withOpacity(0.15),
+                        ),
+                      ],
+                    ),
+                    child: Icon(
+                      Icons.camera_alt_outlined,
+                      size: 16.sp,
+                      color: cs.primary,
+                    ),
+                  ),
+                ),
+              ),
+            ],
           ),
 
-          SizedBox(height: 8.h),
+          SizedBox(height: 10.h),
           Text(
             userName,
             style: TextStyle(
@@ -125,97 +325,153 @@ class _ProfileScreenState extends State<ProfileScreen> {
           ),
         ],
       ),
-
     );
   }
 
-  Widget _profileCard({ required String title, required String value}){
-    return InkWell(
-      onTap: (){} ,
-      child: Container(
+  Widget _statCard({
+        required IconData icon,
+        required String value,
+        required String label,
+        required VoidCallback onTap,
+        required iconColor
+      }) {
+    final cs = Theme.of(context).colorScheme;
 
-        padding: EdgeInsets.all(16.w),
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(12.r),
-          color:Theme.of(context).brightness == Brightness.light
-              ?  AppColors.containerBoxColor
-              :  AppColors.darkContainerBoxColor,
-        ),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              Text(title, style: TextStyle(fontWeight: FontWeight.w500),),
-              Text(value, style: TextStyle(color: Colors.grey, fontSize: 20.sp,overflow: TextOverflow.ellipsis),)
-            ]
-      ),
-      ),
-    );
-  }
-  Widget bookedEvent(){
     return InkWell(
-      onTap: (){},
+      onTap: onTap,
+      borderRadius: BorderRadius.circular(14.r),
       child: Container(
-        padding: EdgeInsets.all(4.sp),
+        padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 12.h),
         decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(12.r),
+          color: Theme.of(context).brightness == Brightness.light
+              ? AppColors.containerBoxColor
+              : AppColors.darkContainerBoxColor,
+          borderRadius: BorderRadius.circular(14.r),
+
         ),
-        child:Row(
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
           children: [
-            ClipRect(
+            Icon(icon, size: 20.sp, color: iconColor),
+            SizedBox(height: 8.h),
+            Text(
+              value,
+              style: TextStyle(
+                fontSize: 20.sp,
+                fontWeight: FontWeight.w800,
+              ),
+            ),
+            SizedBox(height: 2.h),
+            Text(
+              label,
+              textAlign: TextAlign.center,
+              style: TextStyle(
+                fontSize: 10.sp,
+                color: Colors.grey,
+                fontWeight: FontWeight.w600,
+                letterSpacing: 0.4,
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+  Widget _bookedEventCard(
+      BuildContext context, {
+        required String imageAsset,
+        required String title,
+        required String statusText,
+        required String organizerText,
+        required String difficultyText,
+        required VoidCallback onTap,
+      }) {
+    final cs = Theme.of(context).colorScheme;
+
+    return InkWell(
+      onTap: onTap,
+      borderRadius: BorderRadius.circular(14.r),
+      child: Container(
+        padding: EdgeInsets.all(12.w),
+        decoration: BoxDecoration(
+            color: Theme.of(context).brightness == Brightness.light
+                ? AppColors.containerBoxColor
+                : AppColors.darkContainerBoxColor,
+          borderRadius: BorderRadius.circular(14.r),
+        ),
+        child: Row(
+          children: [
+            // Image Section
+            ClipRRect(
+              borderRadius: BorderRadius.circular(12.r),
               child: Image.asset(
-                'assets/images/Bouddha.png',
-                height: 50.h,
-                width: 50.w,
+                imageAsset,
+                height: 54.w,
+                width: 54.w,
                 fit: BoxFit.cover,
               ),
-            )
-          ]
-        )
-      )
+            ),
+            SizedBox(width: 12.w),
+
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    title,
+                    style: TextStyle(fontSize: 14.sp, fontWeight: FontWeight.w700),
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                  SizedBox(height: 4.h),
+                  _infoRow(Icons.check_circle_outline, statusText, Colors.green),
+                  SizedBox(height: 4.h),
+                  _infoRow(Icons.verified_outlined, organizerText, Colors.green),
+                ],
+              ),
+            ),
+            SizedBox(width: 10.w),
+
+            // Difficulty Badge
+            Container(
+              padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 6.h),
+              decoration: BoxDecoration(
+                color: Colors.red.withOpacity(0.12),
+                borderRadius: BorderRadius.circular(99.r),
+              ),
+              child: Text(
+                difficultyText,
+                style: TextStyle(
+                  fontSize: 11.sp,
+                  fontWeight: FontWeight.w700,
+                  color: Colors.red,
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
     );
   }
-  // Widget settingItemRow(BuildContext context) {
-  //   return Container(
-  //     padding: EdgeInsets.all(4.sp),
-  //     decoration: BoxDecoration(
-  //       borderRadius: BorderRadius.circular(12.r),
-  //     ),
-  //     child: InkWell(
-  //       borderRadius: BorderRadius.circular(12.r),
-  //       onTap: () {},
-  //       child: Padding(
-  //         padding: EdgeInsets.symmetric(
-  //           horizontal: compactDimens.medium1,
-  //           vertical: compactDimens.small2,
-  //         ),
-  //         child: Column(
-  //           children: [
-  //             Row(
-  //               children: [
-  //                 Expanded(
-  //                   child: Text(
-  //                     "Setting",
-  //                     style: TextStyle(
-  //                       fontSize: 14.sp,
-  //                       fontWeight: FontWeight.w500,
-  //                     ),
-  //                   ),
-  //                 ),
-  //                 Icon(
-  //                   Icons.chevron_right,
-  //                   size: 20.sp,
-  //                   color: Colors.grey,
-  //                 ),
-  //               ],
-  //             ),
-  //             Divider()
-  //           ],
-  //         ),
-  //
-  //       ),
-  //     ),
-  //   );
-  // }
+
+  Widget _infoRow(IconData icon, String text, Color iconColor) {
+    return Row(
+      children: [
+        Icon(icon, size: 14.sp, color: iconColor),
+        SizedBox(width: 6.w),
+        Expanded(
+          child: Text(
+            text,
+            style: TextStyle(fontSize: 11.sp, color: Colors.grey),
+            maxLines: 1,
+            overflow: TextOverflow.ellipsis,
+          ),
+        ),
+      ],
+    );
+  }
+
+
 }
 
 

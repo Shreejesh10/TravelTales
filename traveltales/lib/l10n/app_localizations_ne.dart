@@ -78,6 +78,9 @@ class AppLocalizationsNe extends AppLocalizations {
   String get explore => 'एक्सप्लोर!';
 
   @override
+  String get selectTheCategories => 'तपाईंले अन्वेषण गर्न चाहनुभएको\nवर्गहरू चयन गर्नुहोस्';
+
+  @override
   String get noAccount => 'खाता छैन?';
 
   @override
@@ -88,4 +91,34 @@ class AppLocalizationsNe extends AppLocalizations {
 
   @override
   String get login => 'लग इन गर्नुहोस्';
+
+  @override
+  String get settings => 'सेटिङहरू';
+
+  @override
+  String get recentBookedEvents => 'हालै बुक गरिएका कार्यक्रमहरू';
+
+  @override
+  String get accountSetting => 'खाता सेटिङ';
+
+  @override
+  String get language => 'भाषा';
+
+  @override
+  String get changePassword => 'पासवर्ड परिवर्तन गर्नुहोस्';
+
+  @override
+  String get theme => 'थिम';
+
+  @override
+  String get logout => 'लगआउट';
+
+  @override
+  String get totalFriends => 'कुल साथीहरू';
+
+  @override
+  String get eventsBooked => 'घटनाहरू बुक';
+
+  @override
+  String get requestPending => 'अनुरोध पेन्डिङ';
 }

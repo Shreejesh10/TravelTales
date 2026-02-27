@@ -27,9 +27,21 @@
   "bestPlaceToVisit": "अहिले घुम्नका लागि उत्तम ठाउँहरू",
   "adventureAwaitsLetsGo": "एडभेन्चर अवेट्स, लेट्स गो ",
   "explore": "एक्सप्लोर!",
+  "selectTheCategories": "तपाईंले अन्वेषण गर्न चाहनुभएको\nवर्गहरू चयन गर्नुहोस्",
 
   "noAccount": "खाता छैन?",
   "alreadyGotAnAccount": "पहिले नै खाता छ?",
   "signup": "साइन अप",
-  "login": "लग इन गर्नुहोस्"
+  "login": "लग इन गर्नुहोस्",
+
+  "settings": "सेटिङहरू",
+  "recentBookedEvents": "हालै बुक गरिएका कार्यक्रमहरू",
+  "accountSetting": "खाता सेटिङ",
+  "language": "भाषा",
+  "changePassword": "पासवर्ड परिवर्तन गर्नुहोस्",
+  "theme": "थिम",
+  "logout": "लगआउट",
+  "totalFriends": "कुल साथीहरू",
+  "eventsBooked": "घटनाहरू बुक",
+  "requestPending": "अनुरोध पेन्डिङ"
 }

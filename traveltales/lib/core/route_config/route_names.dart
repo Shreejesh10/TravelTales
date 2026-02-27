@@ -10,6 +10,9 @@ class RouteName{
   static const String dashBoardScreen = '/dashboard-screen';
   static const String homeScreen = '/home-screen';
   static const String viewAllScreen = '/view-all-screen';
+  static const String preferenceScreen = '/preference-screen';
+
+
 
 
 

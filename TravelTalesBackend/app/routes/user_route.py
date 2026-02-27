@@ -1,4 +1,8 @@
-from fastapi import APIRouter, Depends, HTTPException, status
+from app.auth.auth import get_current_user
+from app.model.models import User
+from fastapi import APIRouter, Depends, HTTPException, status, UploadFile, File
+import os
+import uuid
 from app.utils.db_utils import get_db
 from app.model import *
 from sqlalchemy.orm import Session
@@ -50,9 +54,44 @@ def login(user: UserLogin, db: Session = Depends(get_db)):
         access_token=access_token,
         refresh_token=refresh_token,
         message="Login successful",
-        roles=  authenticated_user.roles
+        roles=  authenticated_user.roles,
+        has_completed_preference= authenticated_user.has_completed_preference
     )
+@router.post("/me/profile_photo")
+def upload_profile_photo(
+    photo: UploadFile = File(...),
+    db: Session = Depends(get_db),
+    current_user: User = Depends(get_current_user),
+):
+    allowed = {"image/jpeg", "image/png", "image/webp", "image/jpg"}
+    if photo.content_type not in allowed:
+        raise HTTPException(status_code=400, detail="Only jpg/png/webp images allowed")
 
+    contents = photo.file.read()
+    if len(contents) > 5 * 1024 * 1024:
+        raise HTTPException(status_code=400, detail="Max file size is 5MB")
 
+    ext = ".jpg"
+    if photo.content_type == "image/png":
+        ext = ".png"
+    elif photo.content_type == "image/webp":
+        ext = ".webp"
+
+    os.makedirs("media/profile_photos", exist_ok=True)
+    filename = f"user_{current_user.id}_{uuid.uuid4().hex}{ext}"
+    filepath = os.path.join("media/profile_photos", filename)
+
+    with open(filepath, "wb") as f:
+        f.write(contents)
+
+    public_url = f"/media/profile_photos/{filename}"
+
+    current_user.profile_picture_url = public_url
+
+    db.add(current_user)
+    db.commit()
+    db.refresh(current_user)
+
+    return {"profile_picture_url": public_url}
 
 

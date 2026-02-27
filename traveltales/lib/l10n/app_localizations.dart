@@ -233,6 +233,12 @@ abstract class AppLocalizations {
   /// **'Explore!'**
   String get explore;
 
+  /// No description provided for @selectTheCategories.
+  ///
+  /// In en, this message translates to:
+  /// **'Select the categories you\nwant to explore'**
+  String get selectTheCategories;
+
   /// No description provided for @noAccount.
   ///
   /// In en, this message translates to:
@@ -256,6 +262,66 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Log in'**
   String get login;
+
+  /// No description provided for @settings.
+  ///
+  /// In en, this message translates to:
+  /// **'Settings'**
+  String get settings;
+
+  /// No description provided for @recentBookedEvents.
+  ///
+  /// In en, this message translates to:
+  /// **'Recent Booked Events'**
+  String get recentBookedEvents;
+
+  /// No description provided for @accountSetting.
+  ///
+  /// In en, this message translates to:
+  /// **'Account Setting'**
+  String get accountSetting;
+
+  /// No description provided for @language.
+  ///
+  /// In en, this message translates to:
+  /// **'Language'**
+  String get language;
+
+  /// No description provided for @changePassword.
+  ///
+  /// In en, this message translates to:
+  /// **'Change Password'**
+  String get changePassword;
+
+  /// No description provided for @theme.
+  ///
+  /// In en, this message translates to:
+  /// **'Theme'**
+  String get theme;
+
+  /// No description provided for @logout.
+  ///
+  /// In en, this message translates to:
+  /// **'Logout'**
+  String get logout;
+
+  /// No description provided for @totalFriends.
+  ///
+  /// In en, this message translates to:
+  /// **'Total\nFriends'**
+  String get totalFriends;
+
+  /// No description provided for @eventsBooked.
+  ///
+  /// In en, this message translates to:
+  /// **'Events\nBooked'**
+  String get eventsBooked;
+
+  /// No description provided for @requestPending.
+  ///
+  /// In en, this message translates to:
+  /// **'Request Pending'**
+  String get requestPending;
 }
 
 class _AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {

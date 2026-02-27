@@ -78,6 +78,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get explore => 'Explore!';
 
   @override
+  String get selectTheCategories => 'Select the categories you\nwant to explore';
+
+  @override
   String get noAccount => 'Don\'t have an Account?';
 
   @override
@@ -88,4 +91,34 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get login => 'Log in';
+
+  @override
+  String get settings => 'Settings';
+
+  @override
+  String get recentBookedEvents => 'Recent Booked Events';
+
+  @override
+  String get accountSetting => 'Account Setting';
+
+  @override
+  String get language => 'Language';
+
+  @override
+  String get changePassword => 'Change Password';
+
+  @override
+  String get theme => 'Theme';
+
+  @override
+  String get logout => 'Logout';
+
+  @override
+  String get totalFriends => 'Total\nFriends';
+
+  @override
+  String get eventsBooked => 'Events\nBooked';
+
+  @override
+  String get requestPending => 'Request Pending';
 }

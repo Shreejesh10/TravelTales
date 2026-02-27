@@ -6,12 +6,11 @@ import 'dart:io';
 
 final storage = FlutterSecureStorage();
 // const String API_URL = 'http://10.0.2.2:8000';
+final String API_URL = 'http://192.168.1.67:8000';
 
-
-
-final String API_URL = Platform.isAndroid
-    ? 'http://10.0.2.2:8000' // Android emulator → maps to PC localhost
-    : 'http://192.168.1.80:8000'; // physical device on same LAN
+// final String API_URL = Platform.isAndroid
+//     ? 'http://10.0.2.2:8000' // Android emulator → maps to PC localhost
+//     : 'http://192.168.1.80:8000'; // physical device on same LAN
 
 
 Future<Map<String, String>> getHeaders() async {
@@ -37,7 +36,7 @@ Future<String?> getUserId() async {
 
   final payload = utf8.decode(base64Url.decode(base64Url.normalize(parts[1])));
   final payloadMap = jsonDecode(payload);
-  return payloadMap['sub'];
+  return payloadMap['sub']?.toString();
 }
 
 
@@ -100,7 +99,7 @@ Future<void> refreshAccessToken() async {
   }
 }
 
-Future<void> login(String email, String password) async {
+Future<bool> login(String email, String password) async {
   final url = Uri.parse('$API_URL/users/login');
   final body = jsonEncode({
     "email": email,
@@ -121,7 +120,13 @@ Future<void> login(String email, String password) async {
       await storage.write(key: 'access_token', value: data['access_token']);
       await storage.write(key: 'refresh_token', value: data['refresh_token']);
 
-      log(" Login successful!");
+      final bool hasCompleted = data['has_completed_preference'] ==true;
+
+      await storage.write(key: 'has_completed_preference', value: hasCompleted.toString(),
+  );
+
+      log(" Login successful. has_completed_preference: $hasCompleted");
+      return hasCompleted;
     } else {
       log(" Login failed: ${response.statusCode} ${response.body}");
       throw Exception("Login failed: ${response.body}");
@@ -182,5 +187,97 @@ Future<Map<String, dynamic>?> getDestination(int destinationId) async{
     log("Error during fetching destination: $e");
     return null;
   }
+}
+
+Future<List<Map<String, dynamic>>> getRecommendedDestinations() async {
+  final url = Uri.parse('$API_URL/destinations/recommended');
+  final headers = await getHeaders();
+
+  final response = await http.get(url, headers: headers);
+
+  if (response.statusCode == 200) {
+    final data = jsonDecode(response.body);
+    return List<Map<String, dynamic>>.from(data);
+  }
+
+  throw Exception(
+    "Recommended fetch failed: ${response.statusCode} ${response.body}",
+  );
+}
+
+Future<List<Map<String, dynamic>>> getBestDestinations() async {
+  final url = Uri.parse('$API_URL/destinations/best');
+  final headers = await getHeaders();
+
+  final response = await http.get(url, headers: headers);
+
+  if (response.statusCode == 200) {
+    final data = jsonDecode(response.body);
+    return List<Map<String, dynamic>>.from(data);
+  }
+
+  throw Exception("Best fetch failed: ${response.statusCode} ${response.body}");
+
+}
+
+
+Future<List<Map<String, dynamic>>> fetchAllGenres() async {
+  final url = Uri.parse('$API_URL/users/genres');
+
+  final headers = await getHeaders();
+
+  final res = await http.get(url, headers: headers);
+
+  if (res.statusCode == 200) {
+    final data = jsonDecode(res.body);
+
+    final list = List<Map<String, dynamic>>.from(data);
+
+    return list.map((g) {
+      final rawId = g["id"] ?? g["genre_id"] ?? g["genreId"];
+      return {
+        "id": (rawId as num).toInt(),
+        "name": (g["name"] ?? "").toString(),
+      };
+    }).toList();
+  }
+
+  throw Exception("GET /users/genres failed: ${res.statusCode} ${res.body}");
+}
+
+Future<List<int>> fetchUserPreferenceIds() async {
+  final url = Uri.parse('$API_URL/users/get_preferences/me');
+  final headers = await getHeaders();
+
+  final res = await http.get(url, headers: headers);
+
+  if (res.statusCode == 200) {
+    final data = jsonDecode(res.body) as Map<String, dynamic>;
+    final prefs = List<Map<String, dynamic>>.from(data["preferences"] ?? []);
+    return prefs.map((p) => (p["id"] as num).toInt()).toList();
+  }
+
+  throw Exception(
+    "GET /users/get_preferences/me failed: ${res.statusCode} ${res.body}",
+  );
+}
+
+Future<void> saveUserPreferencesByIds(List<int> genreIds) async {
+  final url = Uri.parse('$API_URL/users/update_preferences/me');
+  final headers = await getHeaders();
+
+  final body = jsonEncode({
+    "preferences": {
+      "genre_ids": genreIds,
+    }
+  });
+
+  final res = await http.post(url, headers: headers, body: body);
+
+  if (res.statusCode == 200 || res.statusCode == 201) return;
+
+  throw Exception(
+    "POST /users/update_preferences/me failed: ${res.statusCode} ${res.body}",
+  );
 }
 

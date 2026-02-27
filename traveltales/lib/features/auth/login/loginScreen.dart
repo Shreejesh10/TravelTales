@@ -36,14 +36,15 @@ class LoginScreenState extends State<LoginScreen> {
     final password = _passwordController.text;
 
     try {
-      await login(email, password);
+      final bool hasCompletedPreference = await login(email, password);
 
       if (!mounted) return;
 
-      Navigator.pushReplacementNamed(
-        context,
-        RouteName.dashBoardScreen,
-      );
+      if(hasCompletedPreference){
+        Navigator.pushReplacementNamed( context, RouteName.dashBoardScreen);
+      } else{
+        Navigator.pushReplacementNamed( context, RouteName.preferenceScreen);
+      }
     } catch (e) {
       if (!mounted) return;
 
@@ -77,7 +78,7 @@ class LoginScreenState extends State<LoginScreen> {
                     child:
                     Image.asset(
                       'assets/images/TravelTalesFull.png',
-                      width: compactDimens.loginImageSize,
+                      width: 200.w,
                     ),
 
                   ),

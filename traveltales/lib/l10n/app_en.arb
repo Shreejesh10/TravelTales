@@ -26,10 +26,22 @@
   "bestPlaceToVisit": "Best Places to Visit Now",
   "adventureAwaitsLetsGo": "Adventure Awaits Let's Go",
   "explore": "Explore!",
+  "selectTheCategories": "Select the categories you\nwant to explore",
 
   "noAccount": "Don't have an Account?",
   "alreadyGotAnAccount": "Already got an account?",
   "signup": "Sign Up",
-  "login": "Log in"
+  "login": "Log in",
+
+  "settings": "Settings",
+  "recentBookedEvents": "Recent Booked Events",
+  "accountSetting": "Account Setting",
+  "language": "Language",
+  "changePassword": "Change Password",
+  "theme": "Theme",
+  "logout": "Logout",
+  "totalFriends": "Total\nFriends",
+  "eventsBooked": "Events\nBooked",
+  "requestPending": "Request Pending"
 
 }

@@ -3,6 +3,7 @@ import 'package:traveltales/core/route_config/route_names.dart';
 import 'package:traveltales/features/dashboard/dashboardScreen.dart';
 import 'package:traveltales/features/homeScreen/homeScreen.dart';
 import 'package:traveltales/features/auth/login/loginScreen.dart';
+import 'package:traveltales/features/onboardingScreen/onboardingScreen.dart';
 import 'package:traveltales/features/viewAllScreen/viewAllScreen.dart';
 
 import '../../features/auth/signup/signupScreen.dart';
@@ -27,7 +28,8 @@ class RouteConfig {
         return MaterialPageRoute(builder: (_) => const DashboardScreen());
       case RouteName.viewAllScreen:
         return MaterialPageRoute(builder: (_) => ViewAllScreen(title: args as String,));
-
+      case RouteName.preferenceScreen:
+        return MaterialPageRoute(builder: (_) => PreferenceScreen());
 
       default:
         return _errorRoute();

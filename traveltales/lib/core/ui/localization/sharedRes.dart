@@ -45,5 +45,17 @@ class Strings {
   String get bestPlaceToVisit => _l10n.bestPlaceToVisit;
   String get adventureAwaitsLetsGo => _l10n.adventureAwaitsLetsGo;
   String get explore => _l10n.explore;
+  String get selectTheCategories => _l10n.selectTheCategories;
+  String get logout => _l10n.logout;
+  String get settings => _l10n.settings;
+  String get recentBookedEvents => _l10n.recentBookedEvents;
+  String get accountSetting => _l10n.accountSetting;
+  String get language => _l10n.language;
+  String get changePassword => _l10n.changePassword;
+  String get theme => _l10n.theme;
+  String get totalFriends => _l10n.totalFriends;
+  String get eventsBooked => _l10n.eventsBooked;
+  String get requestPending => _l10n.requestPending;
+
 
 }
