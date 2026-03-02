@@ -28,6 +28,8 @@ def create_user(db: Session, data: UserCreate):
 # def get_users(db: Session):
 #     return db.query(User).all()
 
+def fetch_user_information(db: Session, user_id: int):
+    return db.query(User).filter(User.id == user_id).first()
 
 def get_user_by_email(db: Session, email: str):
     return db.query(User).filter(User.email == email).first()

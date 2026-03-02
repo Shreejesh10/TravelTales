@@ -42,6 +42,16 @@
   "logout": "Logout",
   "totalFriends": "Total\nFriends",
   "eventsBooked": "Events\nBooked",
-  "requestPending": "Request Pending"
+  "requestPending": "Request Pending",
+
+  "save": "Save",
+  "cancel": "Cancel",
+  "ok": "OK",
+  "selectLanguage": "Select Language",
+  "selectTheme": "Select Theme",
+  "logoutMessage": "Are you sure you want to logout?",
+  "changePasswordMessage": "Are you sure you want to change your password?"
+
+
 
 }

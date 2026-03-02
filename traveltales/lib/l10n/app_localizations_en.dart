@@ -121,4 +121,25 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get requestPending => 'Request Pending';
+
+  @override
+  String get save => 'Save';
+
+  @override
+  String get cancel => 'Cancel';
+
+  @override
+  String get ok => 'OK';
+
+  @override
+  String get selectLanguage => 'Select Language';
+
+  @override
+  String get selectTheme => 'Select Theme';
+
+  @override
+  String get logoutMessage => 'Are you sure you want to logout?';
+
+  @override
+  String get changePasswordMessage => 'Are you sure you want to change your password?';
 }

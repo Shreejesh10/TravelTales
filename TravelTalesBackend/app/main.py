@@ -1,7 +1,9 @@
 from fastapi import FastAPI
 from app.routes import  destination_route, user_route, genre_route
 from fastapi.middleware.cors import CORSMiddleware
-
+from fastapi.staticfiles import StaticFiles
+import os
+from pathlib import Path
 
 app = FastAPI()
 
@@ -17,6 +19,16 @@ app.add_middleware(
     allow_headers=["*"]
     
 )
+
+
+
+BASE_DIR = Path(__file__).resolve().parent   # TravelTalesBackend/app
+MEDIA_DIR = BASE_DIR.parent / "media"        # TravelTalesBackend/media
+
+(MEDIA_DIR / "profile_photos").mkdir(parents=True, exist_ok=True)
+app.mount("/media", StaticFiles(directory=str(MEDIA_DIR)), name="media")
+
+print("Serving MEDIA from:", MEDIA_DIR)
 
 app.include_router(user_route.router)
 app.include_router(destination_route.router)

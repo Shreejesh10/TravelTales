@@ -7,8 +7,9 @@ from app.utils.db_utils import get_db
 from app.model import *
 from sqlalchemy.orm import Session
 from app.schemas.schemas import LoginResponse, UserCreate, UserLogin, UserResponse
-from app.services.services import create_user, authenticate_user
+from app.services.services import create_user, authenticate_user, fetch_user_information
 from app.utils.jwt_util import create_access_token, create_refresh_token
+from pathlib import Path
 
 
 _SHOW_NAME = "users"
@@ -57,15 +58,31 @@ def login(user: UserLogin, db: Session = Depends(get_db)):
         roles=  authenticated_user.roles,
         has_completed_preference= authenticated_user.has_completed_preference
     )
+
+
+@router.get("/me/user_information", response_model=UserResponse)
+def get_user_information_route(
+    current_user: User = Depends(get_current_user),
+    db: Session = Depends(get_db),
+):
+    user = fetch_user_information(db, current_user.id)
+
+    if not user:
+        raise HTTPException(status_code=404, detail="User not found")
+
+    return user
+    
 @router.post("/me/profile_photo")
 def upload_profile_photo(
     photo: UploadFile = File(...),
     db: Session = Depends(get_db),
     current_user: User = Depends(get_current_user),
 ):
-    allowed = {"image/jpeg", "image/png", "image/webp", "image/jpg"}
+    allowed = {"image/jpeg", "image/png", "image/webp", "image/jpg", "image/heic", "image/heif"}
+    print("CONTENT TYPE:", photo.content_type)
+    print("FILENAME:", photo.filename)
     if photo.content_type not in allowed:
-        raise HTTPException(status_code=400, detail="Only jpg/png/webp images allowed")
+        raise HTTPException(status_code=400, detail="Only jpg/png/webp/heif images allowed")
 
     contents = photo.file.read()
     if len(contents) > 5 * 1024 * 1024:
@@ -76,6 +93,11 @@ def upload_profile_photo(
         ext = ".png"
     elif photo.content_type == "image/webp":
         ext = ".webp"
+    elif photo.content_type in {"image/heic", "image/heif"}:
+        ext = ".heic"
+    from pathlib import Path
+    print("CWD:", os.getcwd())
+    print("BASE DIR:", Path(__file__).resolve().parent)
 
     os.makedirs("media/profile_photos", exist_ok=True)
     filename = f"user_{current_user.id}_{uuid.uuid4().hex}{ext}"

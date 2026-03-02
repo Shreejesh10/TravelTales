@@ -121,4 +121,25 @@ class AppLocalizationsNe extends AppLocalizations {
 
   @override
   String get requestPending => 'अनुरोध पेन्डिङ';
+
+  @override
+  String get save => 'बचत गर्नुहोस्';
+
+  @override
+  String get cancel => 'रद्द गर्नुहोस्';
+
+  @override
+  String get ok => 'ठीक छ';
+
+  @override
+  String get selectLanguage => 'भाषा चयन गर्नुहोस्';
+
+  @override
+  String get selectTheme => 'विषयवस्तु चयन गर्नुहोस्';
+
+  @override
+  String get logoutMessage => 'के तपाईं लगआउट गर्न निश्चित हुनुहुन्छ?';
+
+  @override
+  String get changePasswordMessage => 'के तपाईं आफ्नो पासवर्ड परिवर्तन गर्न निश्चित हुनुहुन्छ?';
 }

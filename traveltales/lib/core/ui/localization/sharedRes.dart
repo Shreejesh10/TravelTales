@@ -56,6 +56,14 @@ class Strings {
   String get totalFriends => _l10n.totalFriends;
   String get eventsBooked => _l10n.eventsBooked;
   String get requestPending => _l10n.requestPending;
+  String get save => _l10n.save;
+  String get cancel => _l10n.cancel;
+  String get ok => _l10n.ok;
+  String get selectLanguage => _l10n.selectLanguage;
+  String get selectTheme => _l10n.selectTheme;
+  String get logoutMessage => _l10n.logoutMessage;
+  String get changePasswordMessage => _l10n.changePasswordMessage;
+
 
 
 }

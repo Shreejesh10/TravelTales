@@ -3,6 +3,9 @@ import 'dart:developer';
 import 'package:http/http.dart' as http;
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'dart:io';
+import 'package:http_parser/http_parser.dart';
+import 'package:path/path.dart' as p;
+import 'package:traveltales/core/model/user_info.dart';
 
 final storage = FlutterSecureStorage();
 // const String API_URL = 'http://10.0.2.2:8000';
@@ -241,9 +244,36 @@ Future<List<Map<String, dynamic>>> fetchAllGenres() async {
       };
     }).toList();
   }
-
   throw Exception("GET /users/genres failed: ${res.statusCode} ${res.body}");
 }
+
+Future<UserInfo> fetchMeUserInfo() async {
+  final url = Uri.parse('$API_URL/users/me/user_information');
+  final headers = await getHeaders(); // uses access_token
+
+  final response = await http.get(url, headers: headers);
+
+  if (response.statusCode == 200) {
+    final data = jsonDecode(response.body);
+
+    if (data is Map<String, dynamic> && data.containsKey('id')) {
+      return UserInfo.fromJson(data);
+    }
+
+    if (data is Map<String, dynamic> && data.containsKey('User Information')) {
+      final inner = data['User Information'];
+      if (inner is Map<String, dynamic>) {
+        return UserInfo.fromJson(inner);
+      }
+    }
+
+    throw Exception("Unexpected user info format: ${response.body}");
+  }
+
+  throw Exception("GET /users/me/user_information failed: "
+      "${response.statusCode} ${response.body}");
+}
+
 
 Future<List<int>> fetchUserPreferenceIds() async {
   final url = Uri.parse('$API_URL/users/get_preferences/me');
@@ -281,3 +311,41 @@ Future<void> saveUserPreferencesByIds(List<int> genreIds) async {
   );
 }
 
+Future<String> uploadProfilePicture(File imageFile) async {
+  final url = Uri.parse('$API_URL/users/me/profile_photo');
+  final accessToken = await storage.read(key: 'access_token');
+  if (accessToken == null) throw Exception("Access token error.");
+
+  final request = http.MultipartRequest('POST', url);
+  request.headers['Authorization'] = 'Bearer $accessToken';
+
+  final ext = p.extension(imageFile.path).toLowerCase();
+  MediaType mediaType = MediaType('image', 'jpeg');
+  if (ext == '.png') mediaType = MediaType('image', 'png');
+  if (ext == '.webp') mediaType = MediaType('image', 'webp');
+
+  request.files.add(
+    await http.MultipartFile.fromPath(
+      'photo',
+      imageFile.path,
+      contentType: mediaType,
+    ),
+  );
+
+  final streamedResponse = await request.send();
+  final responseBody = await streamedResponse.stream.bytesToString();
+
+  if (streamedResponse.statusCode == 200) {
+    final data = jsonDecode(responseBody);
+    final String relativeUrl = data['profile_picture_url']?.toString() ?? "";
+
+    if (relativeUrl.isEmpty) {
+      throw Exception("Upload succeeded but no profile_picture_url returned.");
+    }
+
+    await storage.write(key: 'profile_picture_url', value: relativeUrl);
+    return relativeUrl;
+  }
+
+  throw Exception("Upload failed: ${streamedResponse.statusCode} $responseBody");
+}

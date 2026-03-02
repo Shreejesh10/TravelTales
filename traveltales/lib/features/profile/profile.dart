@@ -1,11 +1,20 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:traveltales/api/api.dart';
+import 'package:traveltales/core/model/user_info.dart';
+import 'package:traveltales/core/ui/components/actionDialogBox.dart';
+import 'package:traveltales/core/ui/components/languageDialog.dart';
 import 'package:traveltales/core/ui/components/viewAllRow.dart';
 import 'package:traveltales/core/ui/localization/sharedRes.dart';
 import 'package:traveltales/core/ui/resources/theme/appColors.dart';
 import 'package:traveltales/core/ui/resources/theme/dimens.dart';
 import 'dart:io';
 import 'package:image_picker/image_picker.dart';
+import 'package:flutter_image_compress/flutter_image_compress.dart';
+import 'package:path_provider/path_provider.dart';
+import 'package:path/path.dart' as p;
 
 
 class ProfileScreen extends StatefulWidget {
@@ -18,26 +27,103 @@ class ProfileScreen extends StatefulWidget {
 class _ProfileScreenState extends State<ProfileScreen> {
   final ImagePicker picker = ImagePicker();
   File? profileImageFile;
+  String? profilePhotoUrl;
+  bool isLoading = false;
+  UserInfo? me;
+  String? userError;
 
+  @override
+  void initState() {
+    super.initState();
+    loadProfilePhoto();
+    _loadUser();
+  }
+
+  Future<void> _loadUser()async{
+    setState(() {
+      userError = null;
+      isLoading = true;
+    });
+    try{
+      final user = await fetchMeUserInfo();
+      setState(() {
+        me = user;
+        isLoading = false;
+      });
+    }catch(e){
+      setState(() {
+        userError = e.toString();
+        isLoading = false;
+      });
+
+    }
+  }
+  Future<void> loadProfilePhoto() async {
+    final url = await storage.read(key: 'profile_picture_url');
+    if (url != null) {
+      setState(() {
+        profilePhotoUrl = url;
+      });
+    }
+  }
 
   Future<void> _changeProfilePicture() async {
+
     try {
       final XFile? picked = await picker.pickImage(
-        source: ImageSource.gallery, // change to ImageSource.camera if you want
+        source: ImageSource.gallery,
         imageQuality: 80,
       );
 
       if (picked == null) return;
 
+      final file = File(picked.path);
+      final converted = await convertToJpg(file);
+
+
       setState(() {
-        profileImageFile = File(picked.path);
+        profileImageFile = converted;
+        isLoading = true;
       });
+
+      final uploadedUrl = await uploadProfilePicture(converted);
+
+      if (!mounted) return;
+      setState(() {
+        profilePhotoUrl = uploadedUrl;
+      });
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text("Profile picture updated!")),
+
+      );
     } catch (e) {
       if (!mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text("Could not pick image: $e")),
+        SnackBar(content: Text("Could not update photo: $e")),
       );
+      log("Could not update photo: $e");
+    } finally {
+      if (mounted) setState(() => isLoading = false);
     }
+  }
+
+  Future<File> convertToJpg(File input) async {
+    final dir = await getTemporaryDirectory();
+    final outPath = p.join(
+      dir.path,
+      "profile_${DateTime.now().millisecondsSinceEpoch}.jpg",
+    );
+
+    final result = await FlutterImageCompress.compressAndGetFile(
+      input.absolute.path,
+      outPath,
+      quality: 85,
+      format: CompressFormat.jpeg,
+    );
+
+    if (result == null) throw Exception("Image conversion failed");
+
+    return File(result.path);
   }
 
   @override
@@ -71,8 +157,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
         children: [
           _profile(
             imagePath: 'assets/images/HomePageImage.png',
-            userName:'Test User',
-            email: 'test123@gmail.com'
+            userName:me?.userName ?? "",
+            email: me?.email ?? "",
           ),
           SizedBox(height: 16.h),
           Row(
@@ -166,7 +252,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
               _settingsTile(
                 icon: Icons.do_not_disturb_on_total_silence_rounded,
                 title: SharedRes.strings(context).language,
-                onTap: (){},
+                onTap: (){
+                  AppLanguageDialog.show(context);
+                },
               ),
               SizedBox(height: 8.h),
               _settingsTile(
@@ -178,13 +266,25 @@ class _ProfileScreenState extends State<ProfileScreen> {
               _settingsTile(
                 icon: Icons.light_mode_outlined,
                 title: SharedRes.strings(context).theme,
-                onTap: (){},
+                onTap: (){
+
+                },
               ),
               SizedBox(height: 8.h),
               _settingsTile(
                 icon: Icons.logout,
                 title: SharedRes.strings(context).logout,
-                onTap: (){},
+                onTap: (){
+                  showAppActionDialog(
+                    context: context,
+                    title: SharedRes.strings(context).logout,
+                    message: SharedRes.strings(context).logoutMessage,
+                    confirmText: SharedRes.strings(context).ok,
+                    isDestructive: true,
+                    onConfirm: () async {
+                    },
+                  );
+                },
                 textColor: Colors.red,
                 iconColor: Colors.red,
               ),
@@ -208,9 +308,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
       child: Container(
         padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 14.h),
         decoration: BoxDecoration(
-          color: Theme.of(context).brightness == Brightness.light
-              ? AppColors.containerBoxColor
-              : AppColors.darkContainerBoxColor,
+          color: AppColors.getContainerBoxColor(context),
           borderRadius: BorderRadius.circular(14.r),
         ),
         child: Row(
@@ -249,11 +347,15 @@ class _ProfileScreenState extends State<ProfileScreen> {
     final cs = Theme.of(context).colorScheme;
 
     ImageProvider avatarProvider;
-    if (profileImageFile != null) {
+    if (profileImageFile != null && isLoading) {
       avatarProvider = FileImage(profileImageFile!);
-    } else {
-      avatarProvider = AssetImage(imagePath);
+    } else if (profilePhotoUrl != null && profilePhotoUrl!.isNotEmpty) {
+      avatarProvider = NetworkImage("$API_URL$profilePhotoUrl");
     }
+    else
+      {
+        avatarProvider = AssetImage(imagePath);
+      }
 
     return Align(
       child: Column(

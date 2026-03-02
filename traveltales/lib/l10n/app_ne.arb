@@ -43,5 +43,13 @@
   "logout": "लगआउट",
   "totalFriends": "कुल साथीहरू",
   "eventsBooked": "घटनाहरू बुक",
-  "requestPending": "अनुरोध पेन्डिङ"
+  "requestPending": "अनुरोध पेन्डिङ",
+
+  "save": "बचत गर्नुहोस्",
+  "cancel": "रद्द गर्नुहोस्",
+  "ok": "ठीक छ",
+  "selectLanguage": "भाषा चयन गर्नुहोस्",
+  "selectTheme": "विषयवस्तु चयन गर्नुहोस्",
+  "logoutMessage": "के तपाईं लगआउट गर्न निश्चित हुनुहुन्छ?",
+  "changePasswordMessage": "के तपाईं आफ्नो पासवर्ड परिवर्तन गर्न निश्चित हुनुहुन्छ?"
 }
