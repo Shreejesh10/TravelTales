@@ -14,6 +14,10 @@ class TravelTales extends StatefulWidget {
     final state = context.findAncestorStateOfType<_TravelTalesState>();
     state?._setLocale(locale);
   }
+  static void setThemeMode(BuildContext context, ThemeMode mode) {
+    final state = context.findAncestorStateOfType<_TravelTalesState>();
+    state?._setThemeMode(mode);
+  }
   @override
   State<TravelTales> createState() => _TravelTalesState();
 }
@@ -21,13 +25,31 @@ class TravelTales extends StatefulWidget {
 class _TravelTalesState extends State<TravelTales> {
   final _storage = const FlutterSecureStorage();
   Locale _locale = const Locale('en');
+  ThemeMode _themeMode = ThemeMode.system;
 
   @override
   void initState() {
     super.initState();
     _loadSavedLocale();
+    _loadThemeMode();
   }
+  Future<void> _loadThemeMode() async {
+    final saved = await _storage.read(key: "app_theme_mode");
+    if (saved == "light") setState(() => _themeMode = ThemeMode.light);
+    if (saved == "dark") setState(() => _themeMode = ThemeMode.dark);
+    if (saved == "system" || saved == null) setState(() => _themeMode = ThemeMode.system);
+  }
+  Future<void> _setThemeMode(ThemeMode mode) async {
+    setState(() => _themeMode = mode);
 
+    final value = switch (mode){
+      ThemeMode.light => "light",
+      ThemeMode.dark => "dark",
+      ThemeMode.system => "system",
+    };
+    await _storage.write(key: "app_theme_mode", value: value);
+
+    }
   Future<void> _loadSavedLocale() async {
     final code = await _storage.read(key: "app_language");
     if (code != null && (code == "en" || code == "ne")) {
@@ -52,6 +74,7 @@ class _TravelTalesState extends State<TravelTales> {
 
           locale: _locale,
 
+          themeMode: _themeMode,
           // themeMode: ,
           theme: ThemeData(
               fontFamily: 'Poppins',

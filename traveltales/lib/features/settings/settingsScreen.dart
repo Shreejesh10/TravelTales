@@ -12,14 +12,12 @@ class _SettingsScreenState extends State<SettingsScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        automaticallyImplyLeading: false,
+        title: Text('Account Setting'),
 
       ),
-      body: SingleChildScrollView(
-        child: ListView(
+      body: Scaffold(
 
-        )
-      ),
+      )
     );
   }
 }

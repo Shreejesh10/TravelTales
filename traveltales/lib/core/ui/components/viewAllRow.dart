@@ -27,7 +27,7 @@ class ViewAllRow extends StatelessWidget {
           firstText,
           style: TextStyle(
             fontSize: 16.sp,
-            fontWeight: FontWeight.w500,
+            fontWeight: FontWeight.w600,
           ),
         ),
         if(isViewAll)
@@ -38,6 +38,7 @@ class ViewAllRow extends StatelessWidget {
                   style: TextStyle(
                     color: Theme.of(context).colorScheme.primary,
                     fontSize: 13.sp,
+
                   )
               )
           ),

@@ -9,7 +9,6 @@ import 'package:traveltales/core/ui/components/viewAllRow.dart';
 import 'package:traveltales/core/ui/localization/sharedRes.dart';
 import 'package:traveltales/core/ui/resources/theme/dimens.dart';
 
-import '../../api/api.dart';
 
 class HomeScreen extends StatefulWidget {
 

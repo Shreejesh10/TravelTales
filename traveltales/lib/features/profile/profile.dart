@@ -4,8 +4,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:traveltales/api/api.dart';
 import 'package:traveltales/core/model/user_info.dart';
+import 'package:traveltales/core/route_config/route_names.dart';
 import 'package:traveltales/core/ui/components/actionDialogBox.dart';
 import 'package:traveltales/core/ui/components/languageDialog.dart';
+import 'package:traveltales/core/ui/components/themeDialog.dart';
 import 'package:traveltales/core/ui/components/viewAllRow.dart';
 import 'package:traveltales/core/ui/localization/sharedRes.dart';
 import 'package:traveltales/core/ui/resources/theme/appColors.dart';
@@ -26,6 +28,9 @@ class ProfileScreen extends StatefulWidget {
 
 class _ProfileScreenState extends State<ProfileScreen> {
   final ImagePicker picker = ImagePicker();
+  TextEditingController passwordController = TextEditingController();
+  TextEditingController confirmPasswordController = TextEditingController();
+
   File? profileImageFile;
   String? profilePhotoUrl;
   bool isLoading = false;
@@ -147,7 +152,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
         ),
         actions: [
           IconButton(
-            onPressed: () {},
+            onPressed: () {
+              Navigator.pushNamed(context, RouteName.settingScreen);
+            },
             icon: Icon(Icons.edit, size: compactDimens.medium1),
           ),
         ],
@@ -168,7 +175,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     iconColor: cs.primary,
                     icon: Icons.person_outline,
                     value: "15",
-                    label: "Total\nFriends",
+                    label: SharedRes.strings(context).totalFriends,
                     onTap: () {},
                   )
               ),
@@ -178,7 +185,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     iconColor: Colors.green,
                     icon: Icons.event_available_outlined,
                     value: "234",
-                    label: "Events\nBooked",
+                    label: SharedRes.strings(context).eventsBooked,
                     onTap: () {},)
               ),
               SizedBox(width: 10.w),
@@ -187,7 +194,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     iconColor: Colors.red,
                     icon: Icons.pending_outlined,
                     value: "5",
-                    label: "Request Pending",
+                    label: SharedRes.strings(context).requestPending,
                     onTap: () {},)
               )
 
@@ -246,7 +253,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
               _settingsTile(
                 icon: Icons.person_outline,
                 title: SharedRes.strings(context).accountSetting,
-                onTap: (){},
+                onTap: (){
+                  Navigator.pushNamed(context, RouteName.settingScreen);
+                },
               ),
               SizedBox(height: 8.h),
               _settingsTile(
@@ -260,14 +269,47 @@ class _ProfileScreenState extends State<ProfileScreen> {
               _settingsTile(
                 icon: Icons.password,
                 title: SharedRes.strings(context).changePassword,
-                onTap: (){},
+                onTap: (){
+                  showAppActionDialog(
+                      context: context,
+                      title: SharedRes.strings(context).changePassword,
+                      contentWidget: [
+                        TextField(
+                          controller: passwordController,
+                          obscureText: true,
+                          decoration: InputDecoration(
+                            labelText: SharedRes.strings(context).password,
+                            border: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(12.r),
+                              ),
+
+
+                          ),
+                        ),
+                        SizedBox(height: 8.h,),
+                        TextField(
+                          controller: confirmPasswordController,
+                          obscureText: true,
+                          decoration: InputDecoration(
+                            labelText: SharedRes.strings(context).password,
+                            border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(12.r),
+                            ),
+
+
+                          ),
+                        )
+                      ],
+                      onConfirm: () {}
+                  );
+                },
               ),
               SizedBox(height: 8.h),
               _settingsTile(
                 icon: Icons.light_mode_outlined,
                 title: SharedRes.strings(context).theme,
                 onTap: (){
-
+                  AppThemeDialog.show(context);
                 },
               ),
               SizedBox(height: 8.h),
@@ -278,7 +320,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   showAppActionDialog(
                     context: context,
                     title: SharedRes.strings(context).logout,
-                    message: SharedRes.strings(context).logoutMessage,
+                    contentWidget: [
+                      Text(
+                          SharedRes.strings(context).logoutMessage),
+                    ],
                     confirmText: SharedRes.strings(context).ok,
                     isDestructive: true,
                     onConfirm: () async {
@@ -445,9 +490,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
       child: Container(
         padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 12.h),
         decoration: BoxDecoration(
-          color: Theme.of(context).brightness == Brightness.light
-              ? AppColors.containerBoxColor
-              : AppColors.darkContainerBoxColor,
+          color: AppColors.getContainerBoxColor(context),
           borderRadius: BorderRadius.circular(14.r),
 
         ),

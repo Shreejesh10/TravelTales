@@ -3,7 +3,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class AppActionDialog extends StatelessWidget {
   final String title;
-  final String message;
+  final List<Widget> contentWidget;
   final String confirmText;
   final String cancelText;
   final VoidCallback onConfirm;
@@ -12,7 +12,7 @@ class AppActionDialog extends StatelessWidget {
   const AppActionDialog({
     super.key,
     required this.title,
-    required this.message,
+    required this.contentWidget,
     required this.onConfirm,
     this.confirmText = "Confirm",
     this.cancelText = "Cancel",
@@ -34,11 +34,9 @@ class AppActionDialog extends StatelessWidget {
           fontWeight: FontWeight.w600,
         ),
       ),
-      content: Text(
-        message,
-        style: TextStyle(
-          fontSize: 14.sp,
-        ),
+      content: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: contentWidget,
       ),
       actions: [
         TextButton(
@@ -72,8 +70,8 @@ class AppActionDialog extends StatelessWidget {
 Future<void> showAppActionDialog({
   required BuildContext context,
   required String title,
-  required String message,
   required VoidCallback onConfirm,
+  required List<Widget> contentWidget,
   String confirmText = "Confirm",
   String cancelText = "Cancel",
   bool isDestructive = false,
@@ -83,7 +81,7 @@ Future<void> showAppActionDialog({
     barrierDismissible: true,
     builder: (_) => AppActionDialog(
       title: title,
-      message: message,
+      contentWidget: contentWidget,
       onConfirm: onConfirm,
       confirmText: confirmText,
       cancelText: cancelText,

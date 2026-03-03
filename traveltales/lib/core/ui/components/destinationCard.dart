@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:traveltales/core/route_config/route_names.dart';
 import 'package:traveltales/core/ui/resources/theme/appColors.dart';
 import 'package:traveltales/core/ui/resources/theme/dimens.dart';
 
@@ -22,14 +23,14 @@ class DestinationCard extends StatelessWidget {
       height: 220.h,
       width: 145.w,
       decoration: BoxDecoration(
-        color:Theme.of(context).brightness == Brightness.light
-          ?  AppColors.containerBoxColor
-          :  AppColors.darkContainerBoxColor,
+        color:AppColors.getContainerBoxColor(context),
         borderRadius: BorderRadius.circular(12.r),
       ),
       child: InkWell(
         borderRadius: BorderRadius.circular(12.r),
-        onTap: (){},
+        onTap: (){
+          Navigator.pushNamed(context, RouteName.destinationDetailScreen);
+        },
         child: Column(
           mainAxisSize: MainAxisSize.min,
           mainAxisAlignment: MainAxisAlignment.start,

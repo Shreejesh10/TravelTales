@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:traveltales/core/route_config/route_names.dart';
 import 'package:traveltales/features/dashboard/dashboardScreen.dart';
+import 'package:traveltales/features/destinationDetailScreen/destinationDetailScreen.dart';
 import 'package:traveltales/features/homeScreen/homeScreen.dart';
 import 'package:traveltales/features/auth/login/loginScreen.dart';
 import 'package:traveltales/features/onboardingScreen/onboardingScreen.dart';
+import 'package:traveltales/features/settings/settingsScreen.dart';
 import 'package:traveltales/features/viewAllScreen/viewAllScreen.dart';
 
 import '../../features/auth/signup/signupScreen.dart';
@@ -30,6 +32,11 @@ class RouteConfig {
         return MaterialPageRoute(builder: (_) => ViewAllScreen(title: args as String,));
       case RouteName.preferenceScreen:
         return MaterialPageRoute(builder: (_) => PreferenceScreen());
+      case RouteName.settingScreen:
+        return MaterialPageRoute(builder: (_) => SettingsScreen());
+      case RouteName.destinationDetailScreen:
+        return MaterialPageRoute(builder: (_) => DestinationDetailScreen());
+
 
       default:
         return _errorRoute();

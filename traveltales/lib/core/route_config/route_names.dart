@@ -11,7 +11,8 @@ class RouteName{
   static const String homeScreen = '/home-screen';
   static const String viewAllScreen = '/view-all-screen';
   static const String preferenceScreen = '/preference-screen';
-
+  static const String settingScreen = '/setting-screen';
+  static const String destinationDetailScreen = '/destination-detail-screen';
 
 
 

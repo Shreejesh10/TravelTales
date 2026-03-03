@@ -18,7 +18,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
   final List<Widget> _pages = const [
     HomeScreen(),
     EventsScreen(),
-    SettingsScreen(),
+    EventsScreen(),
     ProfileScreen(),
   ];
 
