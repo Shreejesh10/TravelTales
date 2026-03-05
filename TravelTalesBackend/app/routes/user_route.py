@@ -37,6 +37,18 @@ def login(user: UserLogin, db: Session = Depends(get_db)):
             status_code=status.HTTP_401_UNAUTHORIZED,
             detail="Invalid email or password"
         )
+    
+    if authenticated_user.roles == "company" and authenticated_user.status != "approved":
+        if authenticated_user.status == "pending":
+            reason = "Your registration request is still pending. Please wait while we review your request."
+        else:
+            reject_reason = authenticated_user.reject_reason or "Please contact us for further details."
+            reason = f"Your registration request has been rejected. {reject_reason}"
+        raise HTTPException(
+            status_code=status.HTTP_403_FORBIDDEN,
+            detail=reason
+        )
+
     access_token = create_access_token(
         data= {
             "sub": str(authenticated_user.id),

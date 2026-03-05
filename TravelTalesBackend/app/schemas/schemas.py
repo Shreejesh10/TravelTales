@@ -53,18 +53,20 @@ class CompanyResponse(BaseModel):
     class Config:
         from_attributes = True
 
-# # Admin approval schema
-# class CompanyApprovalRequest(BaseModel):
-#     approve: bool 
-    
-#     rejection_reason: Optional[str] = None
+class PendingCompanyResponse(BaseModel):
+    user_id: int
+    email: str
+    user_name: Optional[str] = None
+    registered_at: datetime
 
-# # Response after admin approval
-# class CompanyApprovalResponse(BaseModel):
-#     user_id: int
-#     company_id: Optional[int] = None
-#     status: UserStatus
-#     message: str 
+class RejectRequest(BaseModel):
+    reason: Optional[str] = None
+
+class CompanyApprovalResponse(BaseModel):
+    user_id: int
+    company_id: Optional[int] = None
+    status: UserStatus
+    message: str
 
 #Destination
 class DestinationExtraInfo(BaseModel):

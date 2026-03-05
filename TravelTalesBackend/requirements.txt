@@ -7,3 +7,7 @@ SQLAlchemy
 psycopg2-binary
 pydantic
 python-multipart
+python-jose
+pydantic[email]
+passlib
+bcrypt==4.0.1

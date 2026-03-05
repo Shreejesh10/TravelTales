@@ -89,32 +89,51 @@ def get_company_by_id(db: Session, company_id: int):
     return db.query(Company).filter(Company.company_id == company_id).first()
 
 def list_pending_companies(db: Session):
-    """Return all companies whose users are pending approval"""
-    return db.query(Company).join(User).filter(User.roles == "company", User.status == UserStatus.PENDING).all()
+    """Return all company users pending approval (no Company row exists yet)"""
+    users = db.query(User).filter(User.roles == "company", User.status == UserStatus.PENDING).all()
+    return [
+        {
+            "user_id": u.id,
+            "email": u.email,
+            "user_name": u.user_name,
+            "registered_at": u.created_at,
+        }
+        for u in users
+    ]
 
-def approve_or_reject_company(db: Session, user_id: int, approve: bool):
-    """Admin approves or rejects a company"""
+def approve_company(db: Session, user_id: int):
+    """Admin approves a company — creates the Company row at this point"""
     user = db.query(User).filter(User.id == user_id, User.roles == "company").first()
     if not user:
         raise ValueError("Company user not found")
+    if user.status != UserStatus.PENDING:
+        raise ValueError("Company is not in pending state")
 
-    company = db.query(Company).filter(Company.user_id == user_id).first()
-    if not company:
-        # Create company row if it doesn't exist yet
-        company_data = CompanyCreate(user_id=user.id, company_name="Unknown")  # or pass name separately
+    company = Company(
+        user_id=user.id,
+        company_name=user.user_name,
+        verified_at=datetime.utcnow(),
+    )
+    user.status = UserStatus.APPROVED
+    user.reject_reason = None
 
-        company = create_company(db, company_data)
-
-    if approve:
-        user.status = UserStatus.APPROVED
-        company.verified_at = datetime.utcnow()
-        message = "Company approved"
-    else:
-        user.status = UserStatus.REJECTED
-        company.verified_at = None
-        message = "Company rejected"
-
+    db.add(company)
     db.commit()
     db.refresh(user)
     db.refresh(company)
-    return {"user_id": user.id, "company_id": company.company_id, "status": user.status, "message": message}
+    return {"user_id": user.id, "company_id": company.company_id, "status": user.status, "message": "Company approved"}
+
+def reject_company(db: Session, user_id: int, reason: str = None):
+    """Admin rejects a company — only updates the User row"""
+    user = db.query(User).filter(User.id == user_id, User.roles == "company").first()
+    if not user:
+        raise ValueError("Company user not found")
+    if user.status != UserStatus.PENDING:
+        raise ValueError("Company is not in pending state")
+
+    user.status = UserStatus.REJECTED
+    user.reject_reason = reason
+
+    db.commit()
+    db.refresh(user)
+    return {"user_id": user.id, "company_id": None, "status": user.status, "message": "Company rejected"}

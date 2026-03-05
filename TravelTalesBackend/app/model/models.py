@@ -28,6 +28,7 @@ class User(Base):
     status = Column( pgEnum(UserStatus,name="user_status",create_type=False, values_callable=lambda enum: [e.value for e in enum]), nullable=False, default=UserStatus.PENDING)
     # status = Column( pgEnum(UserStatus,name="user_status",create_type=False, native_enum = True), nullable=False, default=UserStatus.PENDING)
     profile_picture_url = Column(String, nullable=True, default="/media/default/default_pp.png")
+    reject_reason = Column(Text, nullable=True)
 
     
 class Company(Base):

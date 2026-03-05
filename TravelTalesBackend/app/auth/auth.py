@@ -56,6 +56,14 @@ def refresh_token(token: str):
     except JWTError:
         raise HTTPException(status_code=401, detail="Invalid or expired refresh token")
 
+def get_admin_user(current_user: User = Depends(get_current_user)):
+    if current_user.roles != "admin":
+        raise HTTPException(
+            status_code=status.HTTP_403_FORBIDDEN,
+            detail="Admin access required"
+        )
+    return current_user
+
 def get_approved_company(current_user :User = Depends(get_current_user)):
     if current_user.status == UserStatus.PENDING:
         raise HTTPException(
