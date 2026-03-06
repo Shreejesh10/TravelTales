@@ -142,4 +142,64 @@ class AppLocalizationsNe extends AppLocalizations {
 
   @override
   String get changePasswordMessage => 'के तपाईं आफ्नो पासवर्ड परिवर्तन गर्न निश्चित हुनुहुन्छ?';
+
+  @override
+  String get aboutThePlace => 'यस ठाउँको बारेमा';
+
+  @override
+  String get bestSeason => 'सर्वोत्तम मौसम';
+
+  @override
+  String get attraction => 'आकर्षण: ';
+
+  @override
+  String get transportation => 'यातायात: ';
+
+  @override
+  String get accommodation => 'आवास: ';
+
+  @override
+  String get highlights => 'हाइलाइटहरू: ';
+
+  @override
+  String get elevation => 'उचाइ';
+
+  @override
+  String get duration => 'अवधि';
+
+  @override
+  String get safetyTips => 'सुरक्षा सुझावहरू: ';
+
+  @override
+  String get all => 'सबै';
+
+  @override
+  String get sunset => 'सूर्यास्त';
+
+  @override
+  String get sunrise => 'सूर्योदय';
+
+  @override
+  String get jungle => 'जंगल';
+
+  @override
+  String get lakeside => 'तालको किनार';
+
+  @override
+  String get waterfall => 'झरना';
+
+  @override
+  String get religious => 'धार्मिक';
+
+  @override
+  String get wildlife => 'वन्यजन्तु';
+
+  @override
+  String get rafting => 'र्‍याफ्टिङ';
+
+  @override
+  String get paragliding => 'प्याराग्लाइडिङ';
+
+  @override
+  String get photographySpot => 'फोटोग्राफी स्पट';
 }

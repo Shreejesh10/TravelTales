@@ -13,6 +13,8 @@ class RouteName{
   static const String preferenceScreen = '/preference-screen';
   static const String settingScreen = '/setting-screen';
   static const String destinationDetailScreen = '/destination-detail-screen';
+  static const String searchScreen = '/search-screen';
+  static const String bookedEventScreen = "/booked_detail_screen";
 
 
 

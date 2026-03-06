@@ -139,11 +139,12 @@ Future<bool> login(String email, String password) async {
     rethrow;
   }
 }
-Future<void> signup(String email, String password) async {
+Future<void> signup(String email, String password, String userName) async {
   final url = Uri.parse('$API_URL/users/signup');
   final body = jsonEncode({
     "email": email,
     "password": password,
+    "user_name": userName
   });
 
   try{
@@ -348,4 +349,11 @@ Future<String> uploadProfilePicture(File imageFile) async {
   }
 
   throw Exception("Upload failed: ${streamedResponse.statusCode} $responseBody");
+}
+
+Future<void> logoutAndClearAuth() async {
+  await storage.delete(key: 'access_token');
+  await storage.delete(key: 'refresh_token');
+
+  await storage.delete(key: 'profile_picture_url');
 }

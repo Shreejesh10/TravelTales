@@ -40,7 +40,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
   @override
   void initState() {
     super.initState();
-    loadProfilePhoto();
     _loadUser();
   }
 
@@ -63,13 +62,11 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
     }
   }
-  Future<void> loadProfilePhoto() async {
-    final url = await storage.read(key: 'profile_picture_url');
-    if (url != null) {
-      setState(() {
-        profilePhotoUrl = url;
-      });
-    }
+
+  Future<void> logout() async{
+    await logoutAndClearAuth();
+    if (!mounted) return;
+    Navigator.pushNamedAndRemoveUntil(context, AuthRouteName.loginScreen, (route) => false);
   }
 
   Future<void> _changeProfilePicture() async {
@@ -163,7 +160,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
         padding: EdgeInsets.symmetric(horizontal: compactDimens.small3),
         children: [
           _profile(
-            imagePath: 'assets/images/HomePageImage.png',
+            imagePath: me?.profilePictureUrl ?? "",
             userName:me?.userName ?? "",
             email: me?.email ?? "",
           ),
@@ -216,7 +213,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   statusText: "Completed Oct 15, 2025",
                   organizerText: "Kalpa Tours and Travels",
                   difficultyText: "Hard",
-                  onTap: (){}
+                  onTap: (){
+                  Navigator.pushNamed(context, RouteName.bookedEventScreen);
+                  }
               ),
               SizedBox(height: 8.h),
               _bookedEventCard(
@@ -327,6 +326,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     confirmText: SharedRes.strings(context).ok,
                     isDestructive: true,
                     onConfirm: () async {
+                      await logout();
                     },
                   );
                 },
@@ -392,15 +392,24 @@ class _ProfileScreenState extends State<ProfileScreen> {
     final cs = Theme.of(context).colorScheme;
 
     ImageProvider avatarProvider;
+
     if (profileImageFile != null && isLoading) {
       avatarProvider = FileImage(profileImageFile!);
-    } else if (profilePhotoUrl != null && profilePhotoUrl!.isNotEmpty) {
-      avatarProvider = NetworkImage("$API_URL$profilePhotoUrl");
-    }
-    else
-      {
-        avatarProvider = AssetImage(imagePath);
+    } else {
+      // pick which path to use
+      final String? pathToUse =
+      (profilePhotoUrl != null && profilePhotoUrl!.isNotEmpty)
+          ? profilePhotoUrl
+          : (imagePath.isNotEmpty ? imagePath : null);
+
+      if (pathToUse != null && pathToUse.startsWith("/")) {
+        final fullUrl = "$API_URL$pathToUse";
+        log("PROFILE IMAGE URL => $fullUrl");
+        avatarProvider = NetworkImage(fullUrl);
+      } else {
+        avatarProvider = const AssetImage("assets/images/Annapurna.png");
       }
+    }
 
     return Align(
       child: Column(

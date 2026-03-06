@@ -74,7 +74,9 @@ class _HomeScreenState extends State<HomeScreen> {
             ),
             const SizedBox(height: 12),
             SearchFilterBar(
+              onTap: () => Navigator.pushNamed(context, RouteName.searchScreen),
               hintText: SharedRes.strings(context).searchDestination,
+              isFilter: false,
             ),
 
             const SizedBox(height: 12),

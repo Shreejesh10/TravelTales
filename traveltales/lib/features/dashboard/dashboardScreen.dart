@@ -5,6 +5,8 @@ import 'package:traveltales/features/homeScreen/homeScreen.dart';
 import 'package:traveltales/features/profile/profile.dart';
 import 'package:traveltales/features/settings/settingsScreen.dart';
 
+import '../searchScreen/searchScreen.dart';
+
 class DashboardScreen extends StatefulWidget {
   const DashboardScreen({super.key});
 

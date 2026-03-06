@@ -364,6 +364,126 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Are you sure you want to change your password?'**
   String get changePasswordMessage;
+
+  /// No description provided for @aboutThePlace.
+  ///
+  /// In en, this message translates to:
+  /// **'About This Place'**
+  String get aboutThePlace;
+
+  /// No description provided for @bestSeason.
+  ///
+  /// In en, this message translates to:
+  /// **'Best Season'**
+  String get bestSeason;
+
+  /// No description provided for @attraction.
+  ///
+  /// In en, this message translates to:
+  /// **'Attraction: '**
+  String get attraction;
+
+  /// No description provided for @transportation.
+  ///
+  /// In en, this message translates to:
+  /// **'Transportation: '**
+  String get transportation;
+
+  /// No description provided for @accommodation.
+  ///
+  /// In en, this message translates to:
+  /// **'Accommodation: '**
+  String get accommodation;
+
+  /// No description provided for @highlights.
+  ///
+  /// In en, this message translates to:
+  /// **'highlights: '**
+  String get highlights;
+
+  /// No description provided for @elevation.
+  ///
+  /// In en, this message translates to:
+  /// **'Elevation'**
+  String get elevation;
+
+  /// No description provided for @duration.
+  ///
+  /// In en, this message translates to:
+  /// **'Duration'**
+  String get duration;
+
+  /// No description provided for @safetyTips.
+  ///
+  /// In en, this message translates to:
+  /// **'Safety Tips: '**
+  String get safetyTips;
+
+  /// No description provided for @all.
+  ///
+  /// In en, this message translates to:
+  /// **'All'**
+  String get all;
+
+  /// No description provided for @sunset.
+  ///
+  /// In en, this message translates to:
+  /// **'Sunset'**
+  String get sunset;
+
+  /// No description provided for @sunrise.
+  ///
+  /// In en, this message translates to:
+  /// **'Sunrise'**
+  String get sunrise;
+
+  /// No description provided for @jungle.
+  ///
+  /// In en, this message translates to:
+  /// **'Jungle'**
+  String get jungle;
+
+  /// No description provided for @lakeside.
+  ///
+  /// In en, this message translates to:
+  /// **'Lakeside'**
+  String get lakeside;
+
+  /// No description provided for @waterfall.
+  ///
+  /// In en, this message translates to:
+  /// **'Waterfall'**
+  String get waterfall;
+
+  /// No description provided for @religious.
+  ///
+  /// In en, this message translates to:
+  /// **'Religious'**
+  String get religious;
+
+  /// No description provided for @wildlife.
+  ///
+  /// In en, this message translates to:
+  /// **'Wildlife'**
+  String get wildlife;
+
+  /// No description provided for @rafting.
+  ///
+  /// In en, this message translates to:
+  /// **'Rafting'**
+  String get rafting;
+
+  /// No description provided for @paragliding.
+  ///
+  /// In en, this message translates to:
+  /// **'Paragliding'**
+  String get paragliding;
+
+  /// No description provided for @photographySpot.
+  ///
+  /// In en, this message translates to:
+  /// **'Photography Spot'**
+  String get photographySpot;
 }
 
 class _AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {

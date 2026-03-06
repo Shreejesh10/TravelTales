@@ -63,6 +63,27 @@ class Strings {
   String get selectTheme => _l10n.selectTheme;
   String get logoutMessage => _l10n.logoutMessage;
   String get changePasswordMessage => _l10n.changePasswordMessage;
+  String get aboutThePlace => _l10n.aboutThePlace;
+  String get bestSeason => _l10n.bestSeason;
+  String get attraction => _l10n.attraction;
+  String get transportation => _l10n.transportation;
+  String get accommodation => _l10n.accommodation;
+  String get highlights => _l10n.highlights;
+  String get elevation => _l10n.elevation;
+  String get duration => _l10n.duration;
+  String get safetyTips => _l10n.safetyTips;
+  String get all => _l10n.all;
+  String get sunset => _l10n.sunset;
+  String get sunrise => _l10n.sunrise;
+  String get jungle => _l10n.jungle;
+  String get lakeside => _l10n.lakeside;
+  String get waterfall => _l10n.waterfall;
+  String get religious => _l10n.religious;
+  String get wildlife => _l10n.wildlife;
+  String get rafting => _l10n.rafting;
+  String get paragliding => _l10n.paragliding;
+  String get photographySpot => _l10n.photographySpot;
+
 
 
 

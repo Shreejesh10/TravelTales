@@ -19,6 +19,7 @@ class SignUpScreen extends StatefulWidget {
 class _SignUpScreenState extends State<SignUpScreen> {
   final _formKey = GlobalKey<FormState>();
   final _emailController = TextEditingController();
+  final _userNameController = TextEditingController();
   final _passwordController = TextEditingController();
   final _confirmPasswordController = TextEditingController();
 
@@ -26,16 +27,19 @@ class _SignUpScreenState extends State<SignUpScreen> {
   void dispose() {
     _emailController.dispose();
     _passwordController.dispose();
+    _confirmPasswordController.dispose();
+    _userNameController.dispose();
     super.dispose();
   }
   void _submit() async {
     if (!_formKey.currentState!.validate()) return;
 
+    final userName = _userNameController.text.trim();
     final email = _emailController.text.trim();
     final password = _passwordController.text;
 
     try {
-      await signup(email, password);
+      await signup(email, password, userName);
 
       if (!mounted) return;
 
@@ -84,6 +88,25 @@ class _SignUpScreenState extends State<SignUpScreen> {
                   controller: _emailController,
                   labelText: SharedRes.strings(context).email,
                   hintText: SharedRes.strings(context).enterEmail,
+                ),
+                const SizedBox(height: 16),
+                Text("Username", style: TextStyle(
+                  fontSize: 14,
+                  fontWeight: FontWeight.w500
+                ),),
+                const SizedBox(height: 6),
+                TextFormField(
+                  controller: _userNameController,
+                  decoration: InputDecoration(
+                    hintText: "Enter username",
+                    border: OutlineInputBorder()
+                  ),
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return "Username is required";
+                    }
+                    return null;
+                  },
                 ),
                 const SizedBox(height: 16),
                 PasswordTextField(

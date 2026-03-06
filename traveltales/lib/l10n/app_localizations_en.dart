@@ -142,4 +142,64 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get changePasswordMessage => 'Are you sure you want to change your password?';
+
+  @override
+  String get aboutThePlace => 'About This Place';
+
+  @override
+  String get bestSeason => 'Best Season';
+
+  @override
+  String get attraction => 'Attraction: ';
+
+  @override
+  String get transportation => 'Transportation: ';
+
+  @override
+  String get accommodation => 'Accommodation: ';
+
+  @override
+  String get highlights => 'highlights: ';
+
+  @override
+  String get elevation => 'Elevation';
+
+  @override
+  String get duration => 'Duration';
+
+  @override
+  String get safetyTips => 'Safety Tips: ';
+
+  @override
+  String get all => 'All';
+
+  @override
+  String get sunset => 'Sunset';
+
+  @override
+  String get sunrise => 'Sunrise';
+
+  @override
+  String get jungle => 'Jungle';
+
+  @override
+  String get lakeside => 'Lakeside';
+
+  @override
+  String get waterfall => 'Waterfall';
+
+  @override
+  String get religious => 'Religious';
+
+  @override
+  String get wildlife => 'Wildlife';
+
+  @override
+  String get rafting => 'Rafting';
+
+  @override
+  String get paragliding => 'Paragliding';
+
+  @override
+  String get photographySpot => 'Photography Spot';
 }

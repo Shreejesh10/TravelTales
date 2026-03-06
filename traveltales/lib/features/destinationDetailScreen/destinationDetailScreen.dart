@@ -126,7 +126,7 @@ class _DestinationDetailScreenState extends State<DestinationDetailScreen> {
                                         child: _statCard(
                                           icon: Icons.schedule,
                                           value: '6 Hours',
-                                          label: 'Duration',
+                                          label: SharedRes.strings(context).duration,
                                           onTap: () {},
                                           iconColor: const Color(0xFF2ECC71),
                                         ),
@@ -136,7 +136,7 @@ class _DestinationDetailScreenState extends State<DestinationDetailScreen> {
                                         child: _statCard(
                                           icon: Icons.height,
                                           value: '3400m',
-                                          label: 'Elevation',
+                                          label: SharedRes.strings(context).elevation,
                                           onTap: () {},
                                           iconColor: const Color(0xFF2ECC71),
                                         ),
@@ -150,7 +150,7 @@ class _DestinationDetailScreenState extends State<DestinationDetailScreen> {
                         ),
                         SizedBox(height: 12.h),
                         ViewAllRow(
-                          firstText: "About This Place",
+                          firstText: SharedRes.strings(context).aboutThePlace,
                           onPressed: () {},
                           isViewAll: false,
                         ),
@@ -166,23 +166,23 @@ class _DestinationDetailScreenState extends State<DestinationDetailScreen> {
                     
                         SizedBox(height: 10.h),
                         _infoRow(
-                          mainText: "Attraction: ",
+                          mainText: SharedRes.strings(context).attraction,
                           contentText: 'Aryaghat, Tengboche Monastery',
                         ),
                         _infoRow(
-                          mainText: "Transportation: ",
+                          mainText: SharedRes.strings(context).transportation,
                           contentText: 'Taxi or bus',
                         ),
                         _infoRow(
-                          mainText: "Accomodation: ",
+                          mainText: SharedRes.strings(context).accommodation,
                           contentText: 'Hotels in Kathmandu',
                         ),
                         _infoRow(
-                          mainText: "Safety Tips: ",
+                          mainText: SharedRes.strings(context).safetyTips,
                           contentText: 'Dress modestly, Non-Hindus restricted',
                         ),
                         _infoRow(
-                          mainText: "Highlights: ",
+                          mainText: SharedRes.strings(context).highlights,
                           contentText:
                               'Religious significance, Bagmati River cremations',
                         ),
@@ -288,7 +288,7 @@ class _DestinationDetailScreenState extends State<DestinationDetailScreen> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
-                "Best Season",
+                SharedRes.strings(context).bestSeason,
                 style: TextStyle(fontSize: 16.sp, fontWeight: FontWeight.w600),
               ),
               Text(

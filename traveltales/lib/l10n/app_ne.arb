@@ -51,5 +51,28 @@
   "selectLanguage": "भाषा चयन गर्नुहोस्",
   "selectTheme": "विषयवस्तु चयन गर्नुहोस्",
   "logoutMessage": "के तपाईं लगआउट गर्न निश्चित हुनुहुन्छ?",
-  "changePasswordMessage": "के तपाईं आफ्नो पासवर्ड परिवर्तन गर्न निश्चित हुनुहुन्छ?"
+  "changePasswordMessage": "के तपाईं आफ्नो पासवर्ड परिवर्तन गर्न निश्चित हुनुहुन्छ?",
+
+  "aboutThePlace": "यस ठाउँको बारेमा",
+  "bestSeason": "सर्वोत्तम मौसम",
+  "attraction": "आकर्षण: ",
+  "transportation": "यातायात: ",
+  "accommodation": "आवास: ",
+  "highlights": "हाइलाइटहरू: ",
+  "elevation": "उचाइ",
+  "duration": "अवधि",
+  "safetyTips": "सुरक्षा सुझावहरू: ",
+
+  "all": "सबै",
+  "sunset": "सूर्यास्त",
+  "sunrise": "सूर्योदय",
+  "jungle": "जंगल",
+  "lakeside": "तालको किनार",
+  "waterfall": "झरना",
+  "religious": "धार्मिक",
+  "wildlife": "वन्यजन्तु",
+  "rafting": "र्‍याफ्टिङ",
+  "paragliding": "प्याराग्लाइडिङ",
+  "photographySpot": "फोटोग्राफी स्पट"
+
 }

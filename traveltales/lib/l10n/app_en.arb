@@ -50,7 +50,29 @@
   "selectLanguage": "Select Language",
   "selectTheme": "Select Theme",
   "logoutMessage": "Are you sure you want to logout?",
-  "changePasswordMessage": "Are you sure you want to change your password?"
+  "changePasswordMessage": "Are you sure you want to change your password?",
+
+  "aboutThePlace": "About This Place",
+  "bestSeason": "Best Season",
+  "attraction": "Attraction: ",
+  "transportation": "Transportation: ",
+  "accommodation": "Accommodation: ",
+  "highlights": "Highlights: ",
+  "elevation": "Elevation",
+  "duration": "Duration",
+  "safetyTips": "Safety Tips: ",
+
+  "all": "All",
+  "sunset": "Sunset",
+  "sunrise": "Sunrise",
+  "jungle": "Jungle",
+  "lakeside": "Lakeside",
+  "waterfall": "Waterfall",
+  "religious": "Religious",
+  "wildlife": "Wildlife",
+  "rafting": "Rafting",
+  "paragliding": "Paragliding",
+  "photographySpot": "Photography Spot"
 
 
 
