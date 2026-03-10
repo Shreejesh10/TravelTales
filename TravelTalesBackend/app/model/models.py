@@ -1,6 +1,6 @@
 import enum
 from app.utils.db_utils import Base
-from sqlalchemy import Column, ForeignKey, Integer,Text,String, Enum ,DateTime, func, Boolean
+from sqlalchemy import Column, ForeignKey, Integer,Text,String, Enum ,DateTime, func, Boolean, ARRAY
 from sqlalchemy.dialects.postgresql import JSONB, ENUM as pgEnum
 from sqlalchemy.orm import relationship
 
@@ -65,6 +65,24 @@ class UserGenre(Base):
     genre_id = Column(Integer,ForeignKey('genre.genre_id', ondelete="CASCADE"),primary_key=True)
     value = Column(Integer, nullable = False, default= 0)
     
-    # user = relationship("User", back_populates="user_genres")
-    # genre = relationship("Genre", back_populates="user_genres")
+class TravelEvent(Base):
+    __tablename__ = "events"
 
+    event_id = Column(Integer, primary_key=True, index= True)
+    company_user_id = Column(Integer, ForeignKey("users.id"), nullable=False)
+    destination_id = Column(Integer, ForeignKey("destination.destination_id"), nullable=False)
+
+    title = Column(String(255), nullable=False)
+    event_description = Column(Text, nullable=True)
+
+    event_date = Column(DateTime, nullable=False)
+    meeting_point = Column(String(255), nullable=True)
+    what_to_bring = Column(ARRAY(String), nullable=True)
+
+    max_people = Column(Integer, nullable=False)
+    price = Column(Integer, nullable=True)
+
+    created_at = Column(DateTime(timezone=True), server_default=func.now(), nullable= False)
+
+    company = relationship("User")
+    destination = relationship("Destination")

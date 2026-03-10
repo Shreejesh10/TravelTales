@@ -1,5 +1,5 @@
 from fastapi import FastAPI
-from app.routes import  destination_route, user_route, genre_route, admin_route
+from app.routes import  destination_route, user_route, genre_route, admin_route, event_route
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
 import os
@@ -31,6 +31,7 @@ app.include_router(user_route.router)
 app.include_router(destination_route.router)
 app.include_router(genre_route.router)
 app.include_router(admin_route.router)
+app.include_router(event_route.router)
 
 
 @app.get("/")

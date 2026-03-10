@@ -1,5 +1,5 @@
 venv/
 .vscode/
 .env
-.media/
+.media
 **/__pycache__/

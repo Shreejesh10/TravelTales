@@ -55,10 +55,11 @@ def create_destination(
 
 @router.get("/", response_model=List[DestinationResponse])
 def get_all_destination_route(
+    limit: int = Query(10, ge=1),
     db: Session = Depends(get_db)
 ):
     try:
-        destinations = get_all_destinations(db)
+        destinations = get_all_destinations(db, limit)
         if destinations is None:
             return []
         return destinations 

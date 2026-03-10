@@ -5,6 +5,7 @@ import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'dart:io';
 import 'package:http_parser/http_parser.dart';
 import 'package:path/path.dart' as p;
+import 'package:traveltales/core/model/destination_model.dart';
 import 'package:traveltales/core/model/user_info.dart';
 
 final storage = FlutterSecureStorage();
@@ -192,21 +193,22 @@ Future<Map<String, dynamic>?> getDestination(int destinationId) async{
     return null;
   }
 }
-
-Future<List<Map<String, dynamic>>> getRecommendedDestinations() async {
-  final url = Uri.parse('$API_URL/destinations/recommended');
+Future<List<Destination>> getRecommendedDestinations() async {
+  final url = Uri.parse('$API_URL/destinations/recommend/me');
   final headers = await getHeaders();
 
   final response = await http.get(url, headers: headers);
 
   if (response.statusCode == 200) {
     final data = jsonDecode(response.body);
-    return List<Map<String, dynamic>>.from(data);
+
+    return List<Map<String, dynamic>>.from(data)
+        .map((e) => Destination.fromJson(e))
+        .toList();
   }
 
   throw Exception(
-    "Recommended fetch failed: ${response.statusCode} ${response.body}",
-  );
+      "Recommended fetch failed: ${response.statusCode} ${response.body}");
 }
 
 Future<List<Map<String, dynamic>>> getBestDestinations() async {
@@ -356,4 +358,22 @@ Future<void> logoutAndClearAuth() async {
   await storage.delete(key: 'refresh_token');
 
   await storage.delete(key: 'profile_picture_url');
+}
+
+Future<List<Destination>> getAllDestinations() async {
+  final url = Uri.parse('$API_URL/destinations/');
+  final headers = await getHeaders();
+
+  final response = await http.get(url, headers: headers);
+
+  if (response.statusCode == 200) {
+    final data = jsonDecode(response.body);
+
+    return List<Map<String, dynamic>>.from(data)
+        .map((e) => Destination.fromJson(e))
+        .toList();
+  }
+
+  throw Exception(
+      "All destinations fetch failed: ${response.statusCode} ${response.body}");
 }

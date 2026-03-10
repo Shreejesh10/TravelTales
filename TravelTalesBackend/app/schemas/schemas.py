@@ -68,7 +68,6 @@ class CompanyApprovalResponse(BaseModel):
     status: UserStatus
     message: str
 
-#Destination
 class DestinationExtraInfo(BaseModel):
     highlights: Optional[List[str]] = []
     attractions: Optional[List[str]] = []
@@ -79,10 +78,15 @@ class DestinationExtraInfo(BaseModel):
     photos: Optional[List[str]] = []
     genre_vector: Optional[List[int]] = []
 
+    difficulty_level: Optional[str] = None
+    duration: Optional[str] = None
+    elevation: Optional[List[int]] = []
+    backdrop_path: Optional[List[str]] = []
+    front_image_path: Optional[List[str]] = []
+
     @field_validator('safety_tips', mode='before')
     @classmethod
     def convert_safety_tips_to_list(cls, v):
-        """Convert string safety_tips to list if needed"""
         if v is None:
             return []
         if isinstance(v, str):
@@ -144,3 +148,43 @@ class PreferenceResponse(BaseModel):
 
 class UserPreferencesResponse(BaseModel):
     preferences: List[PreferenceResponse]
+
+
+#for event
+class TravelEventBase(BaseModel):
+    destination_id: int
+    title: str = Field(..., min_length=1, max_length=255)
+    event_description: Optional[str] = None
+    event_date: datetime
+    meeting_point: Optional[str] = None
+    what_to_bring: Optional[List[str]] = None
+    max_people: int = Field(..., gt=0)
+    price: Optional[int] = Field(None, ge=0)
+
+class TravelEventCreate(TravelEventBase):
+    pass
+
+class TravelEventUpdate(BaseModel):
+    title: Optional[str] = Field(None, min_length=1, max_length=255)
+    event_description: Optional[str] = None
+    event_date: Optional[datetime] = None
+    meeting_point: Optional[str] = None
+    what_to_bring: Optional[List[str]] = None
+    max_people: Optional[int] = Field(None, gt=0)
+    price: Optional[int] = Field(None, ge=0)
+
+class TravelEventResponse(BaseModel):
+    event_id: int
+    company_user_id: int
+    title: str
+    event_description: Optional[str] = None
+    event_date: datetime
+    meeting_point: Optional[str] = None
+    what_to_bring: Optional[List[str]] = None
+    max_people: int
+    price: Optional[int] = None
+    created_at: datetime
+    destination: DestinationResponse
+
+    class Config:
+        from_attributes = True

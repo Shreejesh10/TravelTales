@@ -25,8 +25,8 @@ def get_destination_by_id(db: Session, destination_id: int) -> Optional[Destinat
         """Get a destination by ID"""
         return db.query(Destination).filter(Destination.destination_id == destination_id).first()
 
-def get_all_destinations(db: Session):
-       return db.query(Destination).all()
+def get_all_destinations(db: Session, limit: int = 10):
+       return db.query(Destination).limit(limit).all()
 
 
 def delete_destination(db: Session, destination_id: int) -> bool:

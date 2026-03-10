@@ -3,202 +3,715 @@
     {
       "place_name": "Boudhanath Stupa",
       "location": "Kathmandu, Nepal",
-      "description": "One of the largest Buddhist stupas in the world and a UNESCO World Heritage Site.",
-      "highlights": ["UNESCO World Heritage Site", "Buddhist culture", "Spiritual atmosphere"],
-      "attractions": ["Main Stupa", "Monasteries", "Local cafes"],
+      "description": "One of the largest Buddhist stupas in the world and a UNESCO World Heritage Site. To make the most of Boudhanath Stupa, set aside about 2–3 hours and arrive when the light is soft—morning for calm, late afternoon for atmosphere and photos. Beyond the headline sights, slow down and notice the details: local craft shops, small courtyards, and everyday rituals that shape Kathmandu. If you’re visiting during October to April, crowds are usually manageable and the weather is comfortable. Getting there is straightforward via taxi or local bus from kathmandu, and you’ll find hotels and guesthouses nearby options nearby for any budget. Keep small cash for entry fees or snacks, dress respectfully at religious sites, and take time to try local foods and tea. A short guided walk can add context—history, symbolism, and etiquette—without turning the visit into something rushed.",
+      "highlights": [
+        "UNESCO World Heritage Site",
+        "Buddhist culture",
+        "Spiritual atmosphere"
+      ],
+      "attractions": [
+        "Main Stupa",
+        "Monasteries",
+        "Local cafes"
+      ],
       "best_time_to_visit": "October to April",
       "transportation": "Taxi or local bus from Kathmandu",
       "accommodation": "Hotels and guesthouses nearby",
-      "safety_tips": ["Respect religious customs", "Watch belongings"],
-      "photos": [],
-      "genre_vector": [0,0,0,0,0,0,0,0,0,1,0,0,0,1]
+      "safety_tips": [
+        "Respect religious customs",
+        "Watch belongings"
+      ],
+      "photos": [
+        "/media/destinations/bouddhanath-3.jpg",
+        "/media/destinations/bouddhanath-4.jpg",
+        "/media/destinations/bouddhanath-5.jpg"
+      ],
+      "genre_vector": [
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        0,
+        0,
+        1
+      ],
+      "difficulty_level": "Easy",
+      "duration": "2–3 hours",
+      "elevation": [],
+      "backdrop_path": [
+        "/media/destinations/bouddhanath-1.jpg"
+      ],
+      "front_image_path": [
+        "/media/destinations/bouddhanath-2.jpg"
+      ]
     },
     {
       "place_name": "Pashupatinath Temple",
       "location": "Kathmandu, Nepal",
-      "description": "A sacred Hindu temple complex dedicated to Lord Shiva.",
-      "highlights": ["Religious significance", "Bagmati River cremations"],
-      "attractions": ["Main Temple", "Aryaghat", "Sadhus"],
+      "description": "A sacred Hindu temple complex dedicated to Lord Shiva. To make the most of Pashupatinath Temple, set aside about 2–3 hours and arrive when the light is soft—morning for calm, late afternoon for atmosphere and photos. Beyond the headline sights, slow down and notice the details: local craft shops, small courtyards, and everyday rituals that shape Kathmandu. If you’re visiting during February to May, crowds are usually manageable and the weather is comfortable. Getting there is straightforward via taxi or bus, and you’ll find hotels in kathmandu options nearby for any budget. Keep small cash for entry fees or snacks, dress respectfully at religious sites, and take time to try local foods and tea. A short guided walk can add context—history, symbolism, and etiquette—without turning the visit into something rushed.",
+      "highlights": [
+        "Religious significance",
+        "Bagmati River cremations"
+      ],
+      "attractions": [
+        "Main Temple",
+        "Aryaghat",
+        "Sadhus"
+      ],
       "best_time_to_visit": "February to May",
       "transportation": "Taxi or bus",
       "accommodation": "Hotels in Kathmandu",
-      "safety_tips": ["Dress modestly", "Non-Hindus restricted"],
-      "photos": [],
-      "genre_vector": [0,0,0,0,0,0,0,0,0,1,0,0,0,1]
+      "safety_tips": [
+        "Dress modestly",
+        "Non-Hindus restricted"
+      ],
+      "photos": [
+        "/media/destinations/pashupati1.jpg",
+        "/media/destinations/pashupati3.jpg",
+        "/media/destinations/pashupati5.jpg"
+      ],
+      "genre_vector": [
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        0,
+        0,
+        1
+      ],
+      "difficulty_level": "Easy",
+      "duration": "2–3 hours",
+      "elevation": [],
+      "backdrop_path": [
+        "/media/destinations/pashupati2.jpg"
+      ],
+      "front_image_path": [
+        "/media/destinations/pashupati4.jpg"
+      ]
     },
     {
       "place_name": "Pokhara",
       "location": "Kaski, Nepal",
-      "description": "A scenic city famous for lakes, adventure sports, and Himalayan views.",
-      "highlights": ["Phewa Lake", "Annapurna range"],
-      "attractions": ["Phewa Lake", "Davis Falls", "World Peace Pagoda"],
+      "description": "A scenic city famous for lakes, adventure sports, and Himalayan views. To make the most of Pokhara, set aside about 2–4 days and arrive when the light is soft—morning for calm, late afternoon for atmosphere and photos. Beyond the headline sights, slow down and notice the details: local craft shops, small courtyards, and everyday rituals that shape Kaski. If you’re visiting during September to November, crowds are usually manageable and the weather is comfortable. Getting there is straightforward via flight or tourist bus, and you’ll find lakeside hotels options nearby for any budget. Keep small cash for entry fees or snacks, dress respectfully at religious sites, and take time to try local foods and tea. A short guided walk can add context—history, symbolism, and etiquette—without turning the visit into something rushed.",
+      "highlights": [
+        "Phewa Lake",
+        "Annapurna range"
+      ],
+      "attractions": [
+        "Phewa Lake",
+        "Davis Falls",
+        "World Peace Pagoda"
+      ],
       "best_time_to_visit": "September to November",
       "transportation": "Flight or tourist bus",
       "accommodation": "Lakeside hotels",
-      "safety_tips": ["Use life jackets while boating"],
-      "photos": [],
-      "genre_vector": [1,1,0,1,1,0,1,1,1,0,0,1,1,1]
+      "safety_tips": [
+        "Use life jackets while boating",
+        "Carry basic first-aid supplies"
+      ],
+      "photos": [
+        "/media/destinations/pokhara (1).jpg",
+        "/media/destinations/pokhara (2).jpg",
+        "/media/destinations/pokhara (3).jpg"
+      ],
+      "genre_vector": [
+        1,
+        1,
+        0,
+        1,
+        1,
+        0,
+        1,
+        1,
+        1,
+        0,
+        0,
+        1,
+        1,
+        1
+      ],
+      "difficulty_level": "Easy",
+      "duration": "2–4 days",
+      "elevation": [],
+      "backdrop_path": [
+        "/media/destinations/pokhara (4).jpg"
+      ],
+      "front_image_path": [
+        "/media/destinations/pokhara (5).jpg"
+      ]
     },
     {
       "place_name": "Bhaktapur Durbar Square",
       "location": "Bhaktapur, Nepal",
-      "description": "A historic palace complex showcasing Newari architecture.",
-      "highlights": ["UNESCO site", "Traditional art"],
-      "attractions": ["Nyatapola Temple", "55-Window Palace"],
+      "description": "A historic palace complex showcasing Newari architecture. To make the most of Bhaktapur Durbar Square, set aside about 3–5 hours and arrive when the light is soft—morning for calm, late afternoon for atmosphere and photos. Beyond the headline sights, slow down and notice the details: local craft shops, small courtyards, and everyday rituals that shape Bhaktapur. If you’re visiting during October to March, crowds are usually manageable and the weather is comfortable. Getting there is straightforward via bus or taxi, and you’ll find heritage hotels options nearby for any budget. Keep small cash for entry fees or snacks, dress respectfully at religious sites, and take time to try local foods and tea. A short guided walk can add context—history, symbolism, and etiquette—without turning the visit into something rushed.",
+      "highlights": [
+        "UNESCO site",
+        "Traditional art"
+      ],
+      "attractions": [
+        "Nyatapola Temple",
+        "55-Window Palace"
+      ],
       "best_time_to_visit": "October to March",
       "transportation": "Bus or taxi",
       "accommodation": "Heritage hotels",
-      "safety_tips": ["Walk carefully on brick paths"],
-      "photos": [],
-      "genre_vector": [0,0,0,0,0,0,0,0,0,1,0,0,0,1]
+      "safety_tips": [
+        "Walk carefully on brick paths",
+        "Carry basic first-aid supplies"
+      ],
+      "photos": [
+        "/media/destinations/bhaktapur (1).jpg",
+        "/media/destinations/bhaktapur (2).jpg",
+        "/media/destinations/bhaktapur (3).jpg"
+      ],
+      "genre_vector": [
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        0,
+        0,
+        1
+      ],
+      "difficulty_level": "Easy",
+      "duration": "3–5 hours",
+      "elevation": [],
+      "backdrop_path": [
+        "/media/destinations/bhaktapur (4).jpg"
+      ],
+      "front_image_path": [
+        "/media/destinations/bhaktapur (5).jpg"
+      ]
     },
     {
       "place_name": "Patan Durbar Square",
       "location": "Lalitpur, Nepal",
-      "description": "Ancient royal palace with fine craftsmanship and temples.",
-      "highlights": ["Newari architecture", "Museums"],
-      "attractions": ["Krishna Mandir", "Patan Museum"],
+      "description": "Ancient royal palace with fine craftsmanship and temples. To make the most of Patan Durbar Square, set aside about 2–4 hours and arrive when the light is soft—morning for calm, late afternoon for atmosphere and photos. Beyond the headline sights, slow down and notice the details: local craft shops, small courtyards, and everyday rituals that shape Lalitpur. If you’re visiting during October to March, crowds are usually manageable and the weather is comfortable. Getting there is straightforward via taxi or bus, and you’ll find hotels in lalitpur options nearby for any budget. Keep small cash for entry fees or snacks, dress respectfully at religious sites, and take time to try local foods and tea. A short guided walk can add context—history, symbolism, and etiquette—without turning the visit into something rushed.",
+      "highlights": [
+        "Newari architecture",
+        "Museums"
+      ],
+      "attractions": [
+        "Krishna Mandir",
+        "Patan Museum"
+      ],
       "best_time_to_visit": "October to March",
       "transportation": "Taxi or bus",
       "accommodation": "Hotels in Lalitpur",
-      "safety_tips": ["Avoid crowded areas during festivals"],
-      "photos": [],
-      "genre_vector": [0,0,0,0,0,0,0,0,0,1,0,0,0,1]
+      "safety_tips": [
+        "Avoid crowded areas during festivals",
+        "Carry basic first-aid supplies"
+      ],
+      "photos": [
+        "/media/destinations/patan (1).jpg",
+        "/media/destinations/patan (2).jpg",
+        "/media/destinations/patan (4).jpg"
+      ],
+      "genre_vector": [
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        0,
+        0,
+        1
+      ],
+      "difficulty_level": "Easy",
+      "duration": "2–4 hours",
+      "elevation": [],
+      "backdrop_path": [
+        "/media/destinations/patan (3).jpg"
+      ],
+      "front_image_path": [
+        "/media/destinations/patan (5).jpg"
+      ]
     },
     {
       "place_name": "Lumbini",
       "location": "Rupandehi, Nepal",
-      "description": "Birthplace of Lord Buddha and a major pilgrimage destination.",
-      "highlights": ["Peaceful environment", "Monasteries"],
-      "attractions": ["Maya Devi Temple", "Sacred Garden"],
+      "description": "Birthplace of Lord Buddha and a major pilgrimage destination. To make the most of Lumbini, set aside about 1–2 days and arrive when the light is soft—morning for calm, late afternoon for atmosphere and photos. Beyond the headline sights, slow down and notice the details: local craft shops, small courtyards, and everyday rituals that shape Rupandehi. If you’re visiting during October to March, crowds are usually manageable and the weather is comfortable. Getting there is straightforward via flight or bus, and you’ll find pilgrim lodges options nearby for any budget. Keep small cash for entry fees or snacks, dress respectfully at religious sites, and take time to try local foods and tea. A short guided walk can add context—history, symbolism, and etiquette—without turning the visit into something rushed.",
+      "highlights": [
+        "Peaceful environment",
+        "Monasteries"
+      ],
+      "attractions": [
+        "Maya Devi Temple",
+        "Sacred Garden"
+      ],
       "best_time_to_visit": "October to March",
       "transportation": "Flight or bus",
       "accommodation": "Pilgrim lodges",
-      "safety_tips": ["Stay hydrated", "Respect silence zones"],
-      "photos": [],
-      "genre_vector": [0,0,0,0,1,0,0,0,0,1,0,0,0,1]
+      "safety_tips": [
+        "Stay hydrated",
+        "Respect silence zones"
+      ],
+      "photos": [
+        "/media/destinations/lumbini (1).jpg",
+        "/media/destinations/lumbini (2).jpg",
+        "/media/destinations/lumbini (3).jpg"
+      ],
+      "genre_vector": [
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        0,
+        0,
+        1
+      ],
+      "difficulty_level": "Easy",
+      "duration": "1–2 days",
+      "elevation": [],
+      "backdrop_path": [
+        "/media/destinations/lumbini (4).jpg"
+      ],
+      "front_image_path": [
+        "/media/destinations/lumbini (5).jpg"
+      ]
     },
     {
       "place_name": "Chitwan National Park",
       "location": "Chitwan, Nepal",
-      "description": "A wildlife reserve famous for jungle safaris.",
-      "highlights": ["One-horned rhino", "Bengal tiger"],
-      "attractions": ["Elephant safari", "Canoeing"],
+      "description": "A wildlife reserve famous for jungle safaris. To make the most of Chitwan National Park, set aside about 2–3 days and arrive when the light is soft—morning for calm, late afternoon for atmosphere and photos. Beyond the headline sights, slow down and notice the details: local craft shops, small courtyards, and everyday rituals that shape Chitwan. If you’re visiting during October to March, crowds are usually manageable and the weather is comfortable. Getting there is straightforward via bus or flight, and you’ll find jungle resorts options nearby for any budget. Keep small cash for entry fees or snacks, dress respectfully at religious sites, and take time to try local foods and tea. A short guided walk can add context—history, symbolism, and etiquette—without turning the visit into something rushed.",
+      "highlights": [
+        "One-horned rhino",
+        "Bengal tiger"
+      ],
+      "attractions": [
+        "Elephant safari",
+        "Canoeing"
+      ],
       "best_time_to_visit": "October to March",
       "transportation": "Bus or flight",
       "accommodation": "Jungle resorts",
-      "safety_tips": ["Follow guide instructions"],
-      "photos": [],
-      "genre_vector": [0,0,0,0,0,1,0,0,0,0,1,0,0,1]
+      "safety_tips": [
+        "Follow guide instructions",
+        "Carry basic first-aid supplies"
+      ],
+      "photos": [
+        "/media/destinations/chitwan (1).jpg",
+        "/media/destinations/chitwan (2).jpg",
+        "/media/destinations/chitwan (3).jpg"
+      ],
+      "genre_vector": [
+        0,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        0,
+        1
+      ],
+      "difficulty_level": "Easy",
+      "duration": "2–3 days",
+      "elevation": [],
+      "backdrop_path": [
+        "/media/destinations/chitwan (4).jpg"
+      ],
+      "front_image_path": [
+        "/media/destinations/chitwan (5).jpg"
+      ]
     },
     {
       "place_name": "Nagarkot",
       "location": "Bhaktapur, Nepal",
-      "description": "Hill station known for sunrise and Himalayan views.",
-      "highlights": ["Mountain views", "Sunrise"],
-      "attractions": ["View tower", "Nature walks"],
+      "description": "Hill station known for sunrise and Himalayan views. To make the most of Nagarkot, set aside about Overnight or 1 day and arrive when the light is soft—morning for calm, late afternoon for atmosphere and photos. Beyond the headline sights, slow down and notice the details: local craft shops, small courtyards, and everyday rituals that shape Bhaktapur. If you’re visiting during October to April, crowds are usually manageable and the weather is comfortable. Getting there is straightforward via taxi, and you’ll find resorts and hotels options nearby for any budget. Keep small cash for entry fees or snacks, dress respectfully at religious sites, and take time to try local foods and tea. A short guided walk can add context—history, symbolism, and etiquette—without turning the visit into something rushed.",
+      "highlights": [
+        "Mountain views",
+        "Sunrise"
+      ],
+      "attractions": [
+        "View tower",
+        "Nature walks"
+      ],
       "best_time_to_visit": "October to April",
       "transportation": "Taxi",
       "accommodation": "Resorts and hotels",
-      "safety_tips": ["Carry warm clothing"],
-      "photos": [],
-      "genre_vector": [1,0,0,0,1,0,1,0,0,0,0,0,0,1]
+      "safety_tips": [
+        "Carry warm clothing",
+        "Carry basic first-aid supplies"
+      ],
+      "photos": [
+        "/media/destinations/nagarkot (1).jpg",
+        "/media/destinations/nagarkot (2).jpg",
+        "/media/destinations/nagarkot (3).jpg"
+      ],
+      "genre_vector": [
+        1,
+        0,
+        0,
+        0,
+        1,
+        0,
+        1,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        1
+      ],
+      "difficulty_level": "Easy",
+      "duration": "Overnight or 1 day",
+      "elevation": [],
+      "backdrop_path": [
+        "/media/destinations/nagarkot (4).jpg"
+      ],
+      "front_image_path": [
+        "/media/destinations/nagarkot (5).jpg"
+      ]
     },
     {
       "place_name": "Bandipur",
       "location": "Tanahun, Nepal",
-      "description": "A preserved hilltop town with cultural heritage.",
-      "highlights": ["Traditional houses", "Scenic views"],
-      "attractions": ["Bandipur Bazaar", "Siddha Cave"],
+      "description": "A preserved hilltop town with cultural heritage. To make the most of Bandipur, set aside about 1–2 days and arrive when the light is soft—morning for calm, late afternoon for atmosphere and photos. Beyond the headline sights, slow down and notice the details: local craft shops, small courtyards, and everyday rituals that shape Tanahun. If you’re visiting during September to April, crowds are usually manageable and the weather is comfortable. Getting there is straightforward via bus + short hike, and you’ll find boutique hotels options nearby for any budget. Keep small cash for entry fees or snacks, dress respectfully at religious sites, and take time to try local foods and tea. A short guided walk can add context—history, symbolism, and etiquette—without turning the visit into something rushed.",
+      "highlights": [
+        "Traditional houses",
+        "Scenic views"
+      ],
+      "attractions": [
+        "Bandipur Bazaar",
+        "Siddha Cave"
+      ],
       "best_time_to_visit": "September to April",
       "transportation": "Bus + short hike",
       "accommodation": "Boutique hotels",
-      "safety_tips": ["Wear comfortable shoes"],
-      "photos": [],
-      "genre_vector": [1,0,0,1,1,0,1,0,0,0,0,0,0,1]
+      "safety_tips": [
+        "Wear comfortable shoes",
+        "Carry basic first-aid supplies"
+      ],
+      "photos": [
+        "/media/destinations/bandipur (1).jpg",
+        "/media/destinations/nagarkot (2).jpg",
+        "/media/destinations/nagarkot (3).jpg"
+      ],
+      "genre_vector": [
+        1,
+        0,
+        0,
+        1,
+        1,
+        0,
+        1,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        1
+      ],
+      "difficulty_level": "Easy",
+      "duration": "1–2 days",
+      "elevation": [],
+      "backdrop_path": [
+        "/media/destinations/nagarkot (4).jpg"
+      ],
+      "front_image_path": [
+        "/media/destinations/nagarkot (5).jpg"
+      ]
     },
     {
       "place_name": "Janakpur",
       "location": "Dhanusha, Nepal",
-      "description": "Religious city associated with Goddess Sita.",
-      "highlights": ["Hindu pilgrimage", "Cultural festivals"],
-      "attractions": ["Janaki Mandir", "Sacred ponds"],
+      "description": "Religious city associated with Goddess Sita. To make the most of Janakpur, set aside about 1–2 days and arrive when the light is soft—morning for calm, late afternoon for atmosphere and photos. Beyond the headline sights, slow down and notice the details: local craft shops, small courtyards, and everyday rituals that shape Dhanusha. If you’re visiting during October to March, crowds are usually manageable and the weather is comfortable. Getting there is straightforward via flight or bus, and you’ll find hotels in city options nearby for any budget. Keep small cash for entry fees or snacks, dress respectfully at religious sites, and take time to try local foods and tea. A short guided walk can add context—history, symbolism, and etiquette—without turning the visit into something rushed.",
+      "highlights": [
+        "Hindu pilgrimage",
+        "Cultural festivals"
+      ],
+      "attractions": [
+        "Janaki Mandir",
+        "Sacred ponds"
+      ],
       "best_time_to_visit": "October to March",
       "transportation": "Flight or bus",
       "accommodation": "Hotels in city",
-      "safety_tips": ["Dress modestly"],
-      "photos": [],
-      "genre_vector": [0,0,0,0,0,0,0,0,0,1,0,0,0,1]
+      "safety_tips": [
+        "Dress modestly",
+        "Carry basic first-aid supplies"
+      ],
+      "photos": [
+        "/media/destinations/janakpur (1).jpg",
+        "/media/destinations/janakpur (2).jpg",
+        "/media/destinations/janakpur (3).jpg"
+      ],
+      "genre_vector": [
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        0,
+        0,
+        1
+      ],
+      "difficulty_level": "Easy",
+      "duration": "1–2 days",
+      "elevation": [],
+      "backdrop_path": [
+        "/media/destinations/janakpur (3).jpg"
+      ],
+      "front_image_path": [
+        "/media/destinations/janakpur (1).jpg"
+      ]
     },
     {
       "place_name": "Ilam",
       "location": "Ilam, Nepal",
-      "description": "A hill town famous for tea gardens.",
-      "highlights": ["Tea estates", "Cool climate"],
-      "attractions": ["Kanyam Tea Garden"],
+      "description": "A hill town famous for tea gardens. To make the most of Ilam, set aside about 2–3 days and arrive when the light is soft—morning for calm, late afternoon for atmosphere and photos. Beyond the headline sights, slow down and notice the details: local craft shops, small courtyards, and everyday rituals that shape Ilam. If you’re visiting during March to May, crowds are usually manageable and the weather is comfortable. Getting there is straightforward via bus or jeep, and you’ll find local hotels options nearby for any budget. Keep small cash for entry fees or snacks, dress respectfully at religious sites, and take time to try local foods and tea. A short guided walk can add context—history, symbolism, and etiquette—without turning the visit into something rushed.",
+      "highlights": [
+        "Tea estates",
+        "Cool climate"
+      ],
+      "attractions": [
+        "Kanyam Tea Garden"
+      ],
       "best_time_to_visit": "March to May",
       "transportation": "Bus or jeep",
       "accommodation": "Local hotels",
-      "safety_tips": ["Carry rain gear"],
-      "photos": [],
-      "genre_vector": [1,0,0,1,1,0,1,0,0,0,0,0,0,1]
+      "safety_tips": [
+        "Carry rain gear",
+        "Carry basic first-aid supplies"
+      ],
+      "photos": [
+        "/media/destinations/ilam (1).jpg",
+        "/media/destinations/ilam (2).jpg",
+        "/media/destinations/ilam (3).jpg",
+        "/media/destinations/ilam (4).jpg"
+      ],
+      "genre_vector": [
+        1,
+        0,
+        0,
+        1,
+        1,
+        0,
+        1,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        1
+      ],
+      "difficulty_level": "Easy",
+      "duration": "2–3 days",
+      "elevation": [],
+      "backdrop_path": [
+        "/media/destinations/ilam (4).jpg"
+      ],
+      "front_image_path": [
+        "/media/destinations/ilam (4).jpg"
+      ]
     },
     {
       "place_name": "Gosaikunda",
       "location": "Rasuwa, Nepal",
-      "description": "A sacred alpine lake located in Langtang region.",
-      "highlights": ["Holy lake", "Mountain scenery"],
-      "attractions": ["Gosaikunda Lake"],
+      "description": "A sacred alpine lake located in Langtang region. To make the most of Gosaikunda, set aside about 5–7 days and arrive when the light is soft—morning for calm, late afternoon for atmosphere and photos. Beyond the headline sights, slow down and notice the details: local craft shops, small courtyards, and everyday rituals that shape Rasuwa. If you’re visiting during August to October, crowds are usually manageable and the weather is comfortable. Getting there is straightforward via drive + hike, and you’ll find tea houses options nearby for any budget. Keep small cash for entry fees or snacks, dress respectfully at religious sites, and take time to try local foods and tea. A short guided walk can add context—history, symbolism, and etiquette—without turning the visit into something rushed.",
+      "highlights": [
+        "Holy lake",
+        "Mountain scenery"
+      ],
+      "attractions": [
+        "Gosaikunda Lake"
+      ],
       "best_time_to_visit": "August to October",
       "transportation": "Drive + hike",
       "accommodation": "Tea houses",
-      "safety_tips": ["Acclimatize properly"],
-      "photos": [],
-      "genre_vector": [1,1,0,0,0,0,1,1,0,1,0,0,0,1]
+      "safety_tips": [
+        "Acclimatize properly",
+        "Carry basic first-aid supplies"
+      ],
+      "photos": [
+        "/media/destinations/gosaikunda (1).jpg",
+        "/media/destinations/gosaikunda (2).jpg",
+        "/media/destinations/gosaikunda (3).jpg"
+      ],
+      "genre_vector": [
+        1,
+        1,
+        0,
+        0,
+        0,
+        0,
+        1,
+        1,
+        0,
+        1,
+        0,
+        0,
+        0,
+        1
+      ],
+      "difficulty_level": "Easy",
+      "duration": "5–7 days",
+      "elevation": [
+        4380
+      ],
+      "backdrop_path": [
+        "/media/destinations/gosaikunda (4).jpg"
+      ],
+      "front_image_path": [
+        "/media/destinations/gosaikunda (5).jpg"
+      ]
     },
     {
       "place_name": "Rara Lake",
       "location": "Mugu, Nepal",
-      "description": "Largest and deepest lake in Nepal.",
-      "highlights": ["Crystal clear water", "Remote beauty"],
-      "attractions": ["Rara National Park"],
+      "description": "Largest and deepest lake in Nepal. To make the most of Rara Lake, set aside about 4–7 days and arrive when the light is soft—morning for calm, late afternoon for atmosphere and photos. Beyond the headline sights, slow down and notice the details: local craft shops, small courtyards, and everyday rituals that shape Mugu. If you’re visiting during September to October, crowds are usually manageable and the weather is comfortable. Getting there is straightforward via flight + trek, and you’ll find local lodges options nearby for any budget. Keep small cash for entry fees or snacks, dress respectfully at religious sites, and take time to try local foods and tea. A short guided walk can add context—history, symbolism, and etiquette—without turning the visit into something rushed.",
+      "highlights": [
+        "Crystal clear water",
+        "Remote beauty"
+      ],
+      "attractions": [
+        "Rara National Park"
+      ],
       "best_time_to_visit": "September to October",
       "transportation": "Flight + trek",
       "accommodation": "Local lodges",
-      "safety_tips": ["Travel with guide"],
-      "photos": [],
-      "genre_vector": [1,1,0,0,0,1,1,1,0,0,1,0,0,1]
+      "safety_tips": [
+        "Travel with guide",
+        "Carry basic first-aid supplies"
+      ],
+      "photos": [
+        "/media/destinations/rara (1).jpg",
+        "/media/destinations/rara (2).jpg",
+        "/media/destinations/rara (3).jpg"
+      ],
+      "genre_vector": [
+        1,
+        1,
+        0,
+        0,
+        0,
+        1,
+        1,
+        1,
+        0,
+        0,
+        1,
+        0,
+        0,
+        1
+      ],
+      "difficulty_level": "Easy",
+      "duration": "4–7 days",
+      "elevation": [
+        2990
+      ],
+      "backdrop_path": [
+        "/media/destinations/rara (1).jpg"
+      ],
+      "front_image_path": [
+        "/media/destinations/rara (3).jpg"
+      ]
     },
     {
       "place_name": "Mustang",
       "location": "Mustang, Nepal",
-      "description": "Ancient Himalayan kingdom with desert landscapes.",
-      "highlights": ["Tibetan culture", "Caves"],
-      "attractions": ["Lo Manthang"],
+      "description": "Ancient Himalayan kingdom with desert landscapes. To make the most of Mustang, set aside about 5–10 days and arrive when the light is soft—morning for calm, late afternoon for atmosphere and photos. Beyond the headline sights, slow down and notice the details: local craft shops, small courtyards, and everyday rituals that shape Mustang. If you’re visiting during March to October, crowds are usually manageable and the weather is comfortable. Getting there is straightforward via flight or jeep, and you’ll find tea houses options nearby for any budget. Keep small cash for entry fees or snacks, dress respectfully at religious sites, and take time to try local foods and tea. A short guided walk can add context—history, symbolism, and etiquette—without turning the visit into something rushed.",
+      "highlights": [
+        "Tibetan culture",
+        "Caves"
+      ],
+      "attractions": [
+        "Lo Manthang"
+      ],
       "best_time_to_visit": "March to October",
       "transportation": "Flight or jeep",
       "accommodation": "Tea houses",
-      "safety_tips": ["Carry permits"],
-      "photos": [],
-      "genre_vector": [1,1,1,0,0,0,1,0,0,1,0,0,0,1]
-    },
-    {
-      "place_name": "Dharan",
-      "location": "Sunsari, Nepal",
-      "description": "A gateway city to eastern hills.",
-      "highlights": ["Religious sites", "Hill views"],
-      "attractions": ["Budha Subba Temple"],
-      "best_time_to_visit": "October to March",
-      "transportation": "Bus",
-      "accommodation": "City hotels",
-      "safety_tips": ["Avoid heat during summer"],
-      "photos": [],
-      "genre_vector": [1,0,0,0,0,0,1,0,0,1,0,0,0,1]
+      "safety_tips": [
+        "Carry permits",
+        "Carry basic first-aid supplies"
+      ],
+      "photos": [
+        "/media/destinations/mustang (2).jpg",
+        "/media/destinations/mustang (1).jpg",
+        "/media/destinations/mustang (3).jpg",
+        "/media/destinations/mustang (4).jpg"
+      ],
+      "genre_vector": [
+        1,
+        1,
+        1,
+        0,
+        0,
+        0,
+        1,
+        0,
+        0,
+        1,
+        0,
+        0,
+        0,
+        1
+      ],
+      "difficulty_level": "Easy",
+      "duration": "5–10 days",
+      "elevation": [
+        4200
+      ],
+      "backdrop_path": [
+        "/media/destinations/mustang (1).jpg"
+      ],
+      "front_image_path": [
+        "/media/destinations/mustang (4).jpg"
+      ]
     },
     {
       "place_name": "Everest Base Camp Trek",
       "location": "Solukhumbu, Nepal",
-      "description": "World-famous trek leading to the base of Mount Everest.",
+      "description": "World-famous trek leading to the base of Mount Everest. Everest Base Camp Trek is best approached as a journey rather than a checklist. Plan for roughly 12–14 days, including at least one or two buffer days for weather or acclimatization. Along the way you’ll move through small villages and teahouse stops where meals are simple but warming—dal bhat, noodles, soups—and mornings often start early to catch clear mountain views.  The route reaches high points around 5364 m, so pacing and hydration matter. Carry layered clothing for big temperature swings, and keep essentials in a daypack: water purification, snacks, a headlamp, and a basic first-aid kit. Transport typically involves flight to lukla, then trekking, and accommodation is usually teahouses. If you are new to altitude, a guide or trekking partner is a smart choice, and it’s wise to listen to your body more than your schedule.",
       "highlights": [
         "Mount Everest views",
         "Sherpa culture",
@@ -208,17 +721,50 @@
         "Kala Patthar",
         "Tengboche Monastery"
       ],
-      "best_time_to_visit": "March\u2013May, September\u2013November",
+      "best_time_to_visit": "March–May, September–November",
       "transportation": "Flight to Lukla, then trekking",
       "accommodation": "Teahouses",
-      "safety_tips": "Acclimatize properly, watch for altitude sickness",
-      "photos": [],
-      "genre_vector": [1,1,0,0,1,0,1,0,0,1,0,0,0,1]
+      "safety_tips": [
+        "Acclimatize properly, watch for altitude sickness",
+        "Carry basic first-aid supplies"
+      ],
+      "photos": [
+        "/media/destinations/mountEverest (1).jpg",
+        "/media/destinations/mountEverest (2).jpg",
+        "/media/destinations/mountEverest (3).jpg"
+      ],
+      "genre_vector": [
+        1,
+        1,
+        0,
+        0,
+        1,
+        0,
+        1,
+        0,
+        0,
+        1,
+        0,
+        0,
+        0,
+        1
+      ],
+      "difficulty_level": "Hard",
+      "duration": "12–14 days",
+      "elevation": [
+        5364
+      ],
+      "backdrop_path": [
+        "/media/destinations/mountEverest (1).jpg"
+      ],
+      "front_image_path": [
+        "/media/destinations/mountEverest (3).jpg"
+      ]
     },
     {
       "place_name": "Annapurna Base Camp Trek",
       "location": "Kaski, Nepal",
-      "description": "Scenic trek into the Annapurna sanctuary.",
+      "description": "Scenic trek into the Annapurna sanctuary. Annapurna Base Camp Trek is best approached as a journey rather than a checklist. Plan for roughly 7–12 days, including at least one or two buffer days for weather or acclimatization. Along the way you’ll move through small villages and teahouse stops where meals are simple but warming—dal bhat, noodles, soups—and mornings often start early to catch clear mountain views.  The route reaches high points around 4130 m, so pacing and hydration matter. Carry layered clothing for big temperature swings, and keep essentials in a daypack: water purification, snacks, a headlamp, and a basic first-aid kit. Transport typically involves drive to nayapul, then trekking, and accommodation is usually teahouses. If you are new to altitude, a guide or trekking partner is a smart choice, and it’s wise to listen to your body more than your schedule.",
       "highlights": [
         "Annapurna massif",
         "Hot springs",
@@ -227,18 +773,52 @@
       "attractions": [
         "Machapuchare Base Camp"
       ],
-      "best_time_to_visit": "March\u2013May, September\u2013November",
+      "best_time_to_visit": "March–May, September–November",
       "transportation": "Drive to Nayapul, then trekking",
       "accommodation": "Teahouses",
-      "safety_tips": "Check weather forecasts regularly",
-      "photos": [],
-      "genre_vector": [1,1,0,0,1,0,1,0,1,0,0,0,0,1]
-
+      "safety_tips": [
+        "Check weather forecasts regularly",
+        "Carry basic first-aid supplies"
+      ],
+      "photos": [
+        "/media/destinations/annapurna (1).jpg",
+        "/media/destinations/annapurna (2).jpg",
+        "/media/destinations/annapurna (3).jpg",
+        "/media/destinations/annapurna (4).jpg",
+        "/media/destinations/annapurna (5).jpg"
+      ],
+      "genre_vector": [
+        1,
+        1,
+        0,
+        0,
+        1,
+        0,
+        1,
+        0,
+        1,
+        0,
+        0,
+        0,
+        0,
+        1
+      ],
+      "difficulty_level": "Medium",
+      "duration": "7–12 days",
+      "elevation": [
+        4130
+      ],
+      "backdrop_path": [
+        "/media/destinations/annapurna (5).jpg"
+      ],
+      "front_image_path": [
+        "/media/destinations/annapurna (3).jpg"
+      ]
     },
     {
       "place_name": "Langtang Valley Trek",
       "location": "Nepal",
-      "description": "Langtang Valley Trek is a popular trekking destination in Nepal.",
+      "description": "Langtang Valley Trek is a popular trekking destination in Nepal. Langtang Valley Trek is best approached as a journey rather than a checklist. Plan for roughly 7–10 days, including at least one or two buffer days for weather or acclimatization. Along the way you’ll move through small villages and teahouse stops where meals are simple but warming—dal bhat, noodles, soups—and mornings often start early to catch clear mountain views.  The route reaches high points around 4984 m, so pacing and hydration matter. Carry layered clothing for big temperature swings, and keep essentials in a daypack: water purification, snacks, a headlamp, and a basic first-aid kit. Transport typically involves road/flight + trekking, and accommodation is usually teahouses/camping. If you are new to altitude, a guide or trekking partner is a smart choice, and it’s wise to listen to your body more than your schedule.",
       "highlights": [
         "Mountain views",
         "Cultural villages",
@@ -249,18 +829,51 @@
         "Passes",
         "Peaks"
       ],
-      "best_time_to_visit": "March\u2013May, September\u2013November",
+      "best_time_to_visit": "March–May, September–November",
       "transportation": "Road/Flight + trekking",
       "accommodation": "Teahouses/Camping",
-      "safety_tips": "Hire a guide, prepare for altitude",
-      "photos": [],
-      "genre_vector": [1,1,0,0,0,0,1,1,0,0,0,0,0,1]
-
+      "safety_tips": [
+        "Hire a guide, prepare for altitude",
+        "Carry basic first-aid supplies"
+      ],
+      "photos": [
+        "/media/destinations/langtang (1).jpg",
+        "/media/destinations/langtang (2).jpg",
+        "/media/destinations/langtang (3).jpg",
+        "/media/destinations/langtang (4).jpg"
+      ],
+      "genre_vector": [
+        1,
+        1,
+        0,
+        0,
+        0,
+        0,
+        1,
+        1,
+        0,
+        0,
+        0,
+        0,
+        0,
+        1
+      ],
+      "difficulty_level": "Medium",
+      "duration": "7–10 days",
+      "elevation": [
+        4984
+      ],
+      "backdrop_path": [
+        "/media/destinations/langtang (1).jpg"
+      ],
+      "front_image_path": [
+        "/media/destinations/langtang (4).jpg"
+      ]
     },
     {
       "place_name": "Manaslu Circuit Trek",
       "location": "Nepal",
-      "description": "Manaslu Circuit Trek is a popular trekking destination in Nepal.",
+      "description": "Manaslu Circuit Trek is a popular trekking destination in Nepal. Manaslu Circuit Trek is best approached as a journey rather than a checklist. Plan for roughly 14–18 days, including at least one or two buffer days for weather or acclimatization. Along the way you’ll move through small villages and teahouse stops where meals are simple but warming—dal bhat, noodles, soups—and mornings often start early to catch clear mountain views.  The route reaches high points around 5160 m, so pacing and hydration matter. Carry layered clothing for big temperature swings, and keep essentials in a daypack: water purification, snacks, a headlamp, and a basic first-aid kit. Transport typically involves road/flight + trekking, and accommodation is usually teahouses/camping. If you are new to altitude, a guide or trekking partner is a smart choice, and it’s wise to listen to your body more than your schedule.",
       "highlights": [
         "Mountain views",
         "Cultural villages",
@@ -271,18 +884,50 @@
         "Passes",
         "Peaks"
       ],
-      "best_time_to_visit": "March\u2013May, September\u2013November",
+      "best_time_to_visit": "March–May, September–November",
       "transportation": "Road/Flight + trekking",
       "accommodation": "Teahouses/Camping",
-      "safety_tips": "Hire a guide, prepare for altitude",
-      "photos": [],
-      "genre_vector": [1,1,1,0,0,0,1,1,0,1,0,0,0,1]
-
+      "safety_tips": [
+        "Hire a guide, prepare for altitude",
+        "Carry basic first-aid supplies"
+      ],
+      "photos": [
+        "/media/destinations/manasluCircuit (1).jpg",
+        "/media/destinations/manasluCircuit (2).jpg",
+        "/media/destinations/manasluCircuit (3).jpg"
+      ],
+      "genre_vector": [
+        1,
+        1,
+        1,
+        0,
+        0,
+        0,
+        1,
+        1,
+        0,
+        1,
+        0,
+        0,
+        0,
+        1
+      ],
+      "difficulty_level": "Hard",
+      "duration": "14–18 days",
+      "elevation": [
+        5160
+      ],
+      "backdrop_path": [
+        "/media/destinations/manasluCircuit (1).jpg"
+      ],
+      "front_image_path": [
+        "/media/destinations/manasluCircuit (3).jpg"
+      ]
     },
     {
       "place_name": "Upper Mustang Trek",
       "location": "Nepal",
-      "description": "Upper Mustang Trek is a popular trekking destination in Nepal.",
+      "description": "Upper Mustang Trek is a popular trekking destination in Nepal. Upper Mustang Trek is best approached as a journey rather than a checklist. Plan for roughly 10–14 days, including at least one or two buffer days for weather or acclimatization. Along the way you’ll move through small villages and teahouse stops where meals are simple but warming—dal bhat, noodles, soups—and mornings often start early to catch clear mountain views.  The route reaches high points around 4200 m, so pacing and hydration matter. Carry layered clothing for big temperature swings, and keep essentials in a daypack: water purification, snacks, a headlamp, and a basic first-aid kit. Transport typically involves road/flight + trekking, and accommodation is usually teahouses/camping. If you are new to altitude, a guide or trekking partner is a smart choice, and it’s wise to listen to your body more than your schedule.",
       "highlights": [
         "Mountain views",
         "Cultural villages",
@@ -293,18 +938,51 @@
         "Passes",
         "Peaks"
       ],
-      "best_time_to_visit": "March\u2013May, September\u2013November",
+      "best_time_to_visit": "March–May, September–November",
       "transportation": "Road/Flight + trekking",
       "accommodation": "Teahouses/Camping",
-      "safety_tips": "Hire a guide, prepare for altitude",
-      "photos": [],
-      "genre_vector": [1,1,1,0,0,0,1,0,0,1,0,0,0,1]
-
+      "safety_tips": [
+        "Hire a guide, prepare for altitude",
+        "Carry basic first-aid supplies"
+      ],
+      "photos": [
+        "/media/destinations/upperMustang (1).jpg",
+        "/media/destinations/upperMustang (2).jpg",
+        "/media/destinations/upperMustang (3).jpg",
+        "/media/destinations/upperMustang (4).jpg"
+      ],
+      "genre_vector": [
+        1,
+        1,
+        1,
+        0,
+        0,
+        0,
+        1,
+        0,
+        0,
+        1,
+        0,
+        0,
+        0,
+        1
+      ],
+      "difficulty_level": "Medium",
+      "duration": "10–14 days",
+      "elevation": [
+        4200
+      ],
+      "backdrop_path": [
+        "/media/destinations/upperMustang (1).jpg"
+      ],
+      "front_image_path": [
+        "/media/destinations/upperMustang (3).jpg"
+      ]
     },
     {
       "place_name": "Gokyo Lakes Trek",
       "location": "Nepal",
-      "description": "Gokyo Lakes Trek is a popular trekking destination in Nepal.",
+      "description": "Gokyo Lakes Trek is a popular trekking destination in Nepal. Gokyo Lakes Trek is best approached as a journey rather than a checklist. Plan for roughly 12–14 days, including at least one or two buffer days for weather or acclimatization. Along the way you’ll move through small villages and teahouse stops where meals are simple but warming—dal bhat, noodles, soups—and mornings often start early to catch clear mountain views.  The route reaches high points around 5360 m, so pacing and hydration matter. Carry layered clothing for big temperature swings, and keep essentials in a daypack: water purification, snacks, a headlamp, and a basic first-aid kit. Transport typically involves road/flight + trekking, and accommodation is usually teahouses/camping. If you are new to altitude, a guide or trekking partner is a smart choice, and it’s wise to listen to your body more than your schedule.",
       "highlights": [
         "Mountain views",
         "Cultural villages",
@@ -315,18 +993,51 @@
         "Passes",
         "Peaks"
       ],
-      "best_time_to_visit": "March\u2013May, September\u2013November",
+      "best_time_to_visit": "March–May, September–November",
       "transportation": "Road/Flight + trekking",
       "accommodation": "Teahouses/Camping",
-      "safety_tips": "Hire a guide, prepare for altitude",
-      "photos": [],
-      "genre_vector": [1,1,0,0,0,0,1,1,0,0,0,0,0,1]
-
+      "safety_tips": [
+        "Hire a guide, prepare for altitude",
+        "Carry basic first-aid supplies"
+      ],
+      "photos": [
+        "/media/destinations/gokyo (1).jpg",
+        "/media/destinations/gokyo (2).jpg",
+        "/media/destinations/gokyo (3).jpg",
+        "/media/destinations/gokyo (4).jpg"
+      ],
+      "genre_vector": [
+        1,
+        1,
+        0,
+        0,
+        0,
+        0,
+        1,
+        1,
+        0,
+        0,
+        0,
+        0,
+        0,
+        1
+      ],
+      "difficulty_level": "Medium",
+      "duration": "12–14 days",
+      "elevation": [
+        5360
+      ],
+      "backdrop_path": [
+        "/media/destinations/gokyo (3).jpg"
+      ],
+      "front_image_path": [
+        "/media/destinations/gokyo (2).jpg"
+      ]
     },
     {
       "place_name": "Mardi Himal Trek",
       "location": "Nepal",
-      "description": "Mardi Himal Trek is a popular trekking destination in Nepal.",
+      "description": "Mardi Himal Trek is a popular trekking destination in Nepal. Mardi Himal Trek is best approached as a journey rather than a checklist. Plan for roughly 4–7 days, including at least one or two buffer days for weather or acclimatization. Along the way you’ll move through small villages and teahouse stops where meals are simple but warming—dal bhat, noodles, soups—and mornings often start early to catch clear mountain views.  The route reaches high points around 4500 m, so pacing and hydration matter. Carry layered clothing for big temperature swings, and keep essentials in a daypack: water purification, snacks, a headlamp, and a basic first-aid kit. Transport typically involves road/flight + trekking, and accommodation is usually teahouses/camping. If you are new to altitude, a guide or trekking partner is a smart choice, and it’s wise to listen to your body more than your schedule.",
       "highlights": [
         "Mountain views",
         "Cultural villages",
@@ -337,18 +1048,52 @@
         "Passes",
         "Peaks"
       ],
-      "best_time_to_visit": "March\u2013May, September\u2013November",
+      "best_time_to_visit": "March–May, September–November",
       "transportation": "Road/Flight + trekking",
       "accommodation": "Teahouses/Camping",
-      "safety_tips": "Hire a guide, prepare for altitude",
-      "photos": [],
-      "genre_vector": [1,1,0,0,1,0,1,0,0,0,0,0,0,1]
-
+      "safety_tips": [
+        "Hire a guide, prepare for altitude",
+        "Carry basic first-aid supplies"
+      ],
+      "photos": [
+        "/media/destinations/mardi (1).jpg",
+        "/media/destinations/mardi (2).jpg",
+        "/media/destinations/mardi (3).jpg",
+        "/media/destinations/mardi (4).jpg",
+        "/media/destinations/mardi (5).jpg"
+      ],
+      "genre_vector": [
+        1,
+        1,
+        0,
+        0,
+        1,
+        0,
+        1,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        1
+      ],
+      "difficulty_level": "Medium",
+      "duration": "4–7 days",
+      "elevation": [
+        4500
+      ],
+      "backdrop_path": [
+        "/media/destinations/mardi (4).jpg"
+      ],
+      "front_image_path": [
+        "/media/destinations/mardi (2).jpg"
+      ]
     },
     {
       "place_name": "Kanchenjunga Base Camp Trek",
       "location": "Nepal",
-      "description": "Kanchenjunga Base Camp Trek is a popular trekking destination in Nepal.",
+      "description": "Kanchenjunga Base Camp Trek is a popular trekking destination in Nepal. Kanchenjunga Base Camp Trek is best approached as a journey rather than a checklist. Plan for roughly 18–24 days, including at least one or two buffer days for weather or acclimatization. Along the way you’ll move through small villages and teahouse stops where meals are simple but warming—dal bhat, noodles, soups—and mornings often start early to catch clear mountain views.  The route reaches high points around 5143 m, so pacing and hydration matter. Carry layered clothing for big temperature swings, and keep essentials in a daypack: water purification, snacks, a headlamp, and a basic first-aid kit. Transport typically involves road/flight + trekking, and accommodation is usually teahouses/camping. If you are new to altitude, a guide or trekking partner is a smart choice, and it’s wise to listen to your body more than your schedule.",
       "highlights": [
         "Mountain views",
         "Cultural villages",
@@ -359,18 +1104,51 @@
         "Passes",
         "Peaks"
       ],
-      "best_time_to_visit": "March\u2013May, September\u2013November",
+      "best_time_to_visit": "March–May, September–November",
       "transportation": "Road/Flight + trekking",
       "accommodation": "Teahouses/Camping",
-      "safety_tips": "Hire a guide, prepare for altitude",
-      "photos": [],
-      "genre_vector": [1,1,1,0,0,1,1,0,0,0,1,0,0,1]
-
+      "safety_tips": [
+        "Hire a guide, prepare for altitude",
+        "Carry basic first-aid supplies"
+      ],
+      "photos": [
+        "/media/destinations/kanchenjunga (1).jpg",
+        "/media/destinations/kanchenjunga (2).jpg",
+        "/media/destinations/kanchenjunga (3).jpg",
+        "/media/destinations/kanchenjunga (4).jpg"
+      ],
+      "genre_vector": [
+        1,
+        1,
+        1,
+        0,
+        0,
+        1,
+        1,
+        0,
+        0,
+        0,
+        1,
+        0,
+        0,
+        1
+      ],
+      "difficulty_level": "Hard",
+      "duration": "18–24 days",
+      "elevation": [
+        5143
+      ],
+      "backdrop_path": [
+        "/media/destinations/kanchenjunga (3).jpg"
+      ],
+      "front_image_path": [
+        "/media/destinations/kanchenjunga (1).jpg"
+      ]
     },
     {
       "place_name": "Makalu Base Camp Trek",
       "location": "Nepal",
-      "description": "Makalu Base Camp Trek is a popular trekking destination in Nepal.",
+      "description": "Makalu Base Camp Trek is a popular trekking destination in Nepal. Makalu Base Camp Trek is best approached as a journey rather than a checklist. Plan for roughly 18–22 days, including at least one or two buffer days for weather or acclimatization. Along the way you’ll move through small villages and teahouse stops where meals are simple but warming—dal bhat, noodles, soups—and mornings often start early to catch clear mountain views.  The route reaches high points around 4870 m, so pacing and hydration matter. Carry layered clothing for big temperature swings, and keep essentials in a daypack: water purification, snacks, a headlamp, and a basic first-aid kit. Transport typically involves road/flight + trekking, and accommodation is usually teahouses/camping. If you are new to altitude, a guide or trekking partner is a smart choice, and it’s wise to listen to your body more than your schedule.",
       "highlights": [
         "Mountain views",
         "Cultural villages",
@@ -381,84 +1159,51 @@
         "Passes",
         "Peaks"
       ],
-      "best_time_to_visit": "March\u2013May, September\u2013November",
+      "best_time_to_visit": "March–May, September–November",
       "transportation": "Road/Flight + trekking",
       "accommodation": "Teahouses/Camping",
-      "safety_tips": "Hire a guide, prepare for altitude",
-      "photos": [],
-      "genre_vector": [1,1,1,0,0,1,1,0,0,0,1,0,0,1]
-
-    },
-    {
-      "place_name": "Dolpo Trek",
-      "location": "Nepal",
-      "description": "Dolpo Trek is a popular trekking destination in Nepal.",
-      "highlights": [
-        "Mountain views",
-        "Cultural villages",
-        "Nature"
+      "safety_tips": [
+        "Hire a guide, prepare for altitude",
+        "Carry basic first-aid supplies"
       ],
-      "attractions": [
-        "Lakes",
-        "Passes",
-        "Peaks"
+      "photos": [
+        "/media/destinations/makalu (1).jpg",
+        "/media/destinations/makalu (2).jpg",
+        "/media/destinations/makalu (3).jpg",
+        "/media/destinations/makalu (4).jpg"
       ],
-      "best_time_to_visit": "March\u2013May, September\u2013November",
-      "transportation": "Road/Flight + trekking",
-      "accommodation": "Teahouses/Camping",
-      "safety_tips": "Hire a guide, prepare for altitude",
-      "photos": [],
-      "genre_vector": [1,1,1,0,0,0,1,1,0,1,1,0,0,1]
-
-    },
-    {
-      "place_name": "Poon Hill Trek",
-      "location": "Nepal",
-      "description": "Poon Hill Trek is a popular trekking destination in Nepal.",
-      "highlights": [
-        "Mountain views",
-        "Cultural villages",
-        "Nature"
+      "genre_vector": [
+        1,
+        1,
+        1,
+        0,
+        0,
+        1,
+        1,
+        0,
+        0,
+        0,
+        1,
+        0,
+        0,
+        1
       ],
-      "attractions": [
-        "Lakes",
-        "Passes",
-        "Peaks"
+      "difficulty_level": "Hard",
+      "duration": "18–22 days",
+      "elevation": [
+        4870
       ],
-      "best_time_to_visit": "March\u2013May, September\u2013November",
-      "transportation": "Road/Flight + trekking",
-      "accommodation": "Teahouses/Camping",
-      "safety_tips": "Hire a guide, prepare for altitude",
-      "photos": [],
-      "genre_vector": [1,1,0,1,1,0,1,0,0,0,0,0,0,1]
-
-    },
-    {
-      "place_name": "Tamang Heritage Trail",
-      "location": "Nepal",
-      "description": "Tamang Heritage Trail is a popular trekking destination in Nepal.",
-      "highlights": [
-        "Mountain views",
-        "Cultural villages",
-        "Nature"
+      "backdrop_path": [
+        "/media/destinations/makalu (4).jpg"
       ],
-      "attractions": [
-        "Lakes",
-        "Passes",
-        "Peaks"
-      ],
-      "best_time_to_visit": "March\u2013May, September\u2013November",
-      "transportation": "Road/Flight + trekking",
-      "accommodation": "Teahouses/Camping",
-      "safety_tips": "Hire a guide, prepare for altitude",
-      "photos": [],
-      "genre_vector": [1,1,0,0,0,0,1,0,0,1,0,0,0,1]
-
+      "front_image_path": [
+        "/media/destinations/makalu (2).jpg"
+      ]
     },
     {
       "place_name": "Helambu Trek",
       "location": "Nepal",
-      "description": "Helambu Trek is a popular trekking destination in Nepal.",
+      "description": "Helambu Trek is a popular trekking destination in Nepal. Helambu Trek is best approached as a journey rather than a checklist. Plan for roughly 5–8 days, including at least one or two buffer days for weather or acclimatization. Along the way you’ll move through small villages and teahouse stops where meals are simple but warming—dal bhat, noodles, soups—and mornings often start early to catch clear mountain views.  The route reaches high points around 3640 m, so pacing and hydration matter. Carry layered clothing for big temperature swings, and keep essentials in a daypack: water purification, snacks, a headlamp, and a basic first-aid kit. Transport typically involves road/flight + trekking, and accommodation is usually teahouses/camping. If you are new to altitude, a guide or trekking partner is a smart choice, and it’s wise to listen to your body more than your schedule.",
       "highlights": [
         "Mountain views",
         "Cultural villages",
@@ -469,84 +1214,50 @@
         "Passes",
         "Peaks"
       ],
-      "best_time_to_visit": "March\u2013May, September\u2013November",
+      "best_time_to_visit": "March–May, September–November",
       "transportation": "Road/Flight + trekking",
       "accommodation": "Teahouses/Camping",
-      "safety_tips": "Hire a guide, prepare for altitude",
-      "photos": [],
-      "genre_vector": [1,1,0,0,0,0,1,0,1,0,0,0,0,1]
-
-    },
-    {
-      "place_name": "Rara Lake Trek",
-      "location": "Nepal",
-      "description": "Rara Lake Trek is a popular trekking destination in Nepal.",
-      "highlights": [
-        "Mountain views",
-        "Cultural villages",
-        "Nature"
+      "safety_tips": [
+        "Hire a guide, prepare for altitude",
+        "Carry basic first-aid supplies"
       ],
-      "attractions": [
-        "Lakes",
-        "Passes",
-        "Peaks"
+      "photos": [
+        "/media/destinations/helambu (1).jpg",
+        "/media/destinations/helambu (2).jpg",
+        "/media/destinations/helambu (3).jpg"
       ],
-      "best_time_to_visit": "March\u2013May, September\u2013November",
-      "transportation": "Road/Flight + trekking",
-      "accommodation": "Teahouses/Camping",
-      "safety_tips": "Hire a guide, prepare for altitude",
-      "photos": [],
-      "genre_vector": [1,1,0,0,0,1,1,1,0,0,1,0,0,1]
-
-    },
-    {
-      "place_name": "Khaptad National Park Trek",
-      "location": "Nepal",
-      "description": "Khaptad National Park Trek is a popular trekking destination in Nepal.",
-      "highlights": [
-        "Mountain views",
-        "Cultural villages",
-        "Nature"
+      "genre_vector": [
+        1,
+        1,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        1,
+        0,
+        0,
+        0,
+        0,
+        1
       ],
-      "attractions": [
-        "Lakes",
-        "Passes",
-        "Peaks"
+      "difficulty_level": "Medium",
+      "duration": "5–8 days",
+      "elevation": [
+        3640
       ],
-      "best_time_to_visit": "March\u2013May, September\u2013November",
-      "transportation": "Road/Flight + trekking",
-      "accommodation": "Teahouses/Camping",
-      "safety_tips": "Hire a guide, prepare for altitude",
-      "photos": [],
-      "genre_vector": [1,1,1,0,0,1,0,1,0,1,1,0,0,1]
-
-    },
-    {
-      "place_name": "Dhaulagiri Circuit Trek",
-      "location": "Nepal",
-      "description": "Dhaulagiri Circuit Trek is a popular trekking destination in Nepal.",
-      "highlights": [
-        "Mountain views",
-        "Cultural villages",
-        "Nature"
+      "backdrop_path": [
+        "/media/destinations/helambu (2).jpg"
       ],
-      "attractions": [
-        "Lakes",
-        "Passes",
-        "Peaks"
-      ],
-      "best_time_to_visit": "March\u2013May, September\u2013November",
-      "transportation": "Road/Flight + trekking",
-      "accommodation": "Teahouses/Camping",
-      "safety_tips": "Hire a guide, prepare for altitude",
-      "photos": [],
-      "genre_vector": [1,1,1,0,0,0,1,0,0,0,0,0,0,1]
-
+      "front_image_path": [
+        "/media/destinations/helambu (1).jpg"
+      ]
     },
     {
       "place_name": "Api Base Camp Trek",
       "location": "Nepal",
-      "description": "Api Base Camp Trek is a popular trekking destination in Nepal.",
+      "description": "Api Base Camp Trek is a popular trekking destination in Nepal. Api Base Camp Trek is best approached as a journey rather than a checklist. Plan for roughly 12–16 days, including at least one or two buffer days for weather or acclimatization. Along the way you’ll move through small villages and teahouse stops where meals are simple but warming—dal bhat, noodles, soups—and mornings often start early to catch clear mountain views.  The route reaches high points around 4560 m, so pacing and hydration matter. Carry layered clothing for big temperature swings, and keep essentials in a daypack: water purification, snacks, a headlamp, and a basic first-aid kit. Transport typically involves road/flight + trekking, and accommodation is usually teahouses/camping. If you are new to altitude, a guide or trekking partner is a smart choice, and it’s wise to listen to your body more than your schedule.",
       "highlights": [
         "Mountain views",
         "Cultural villages",
@@ -557,40 +1268,51 @@
         "Passes",
         "Peaks"
       ],
-      "best_time_to_visit": "March\u2013May, September\u2013November",
+      "best_time_to_visit": "March–May, September–November",
       "transportation": "Road/Flight + trekking",
       "accommodation": "Teahouses/Camping",
-      "safety_tips": "Hire a guide, prepare for altitude",
-      "photos": [],
-      "genre_vector": [1,1,1,0,0,1,1,0,0,0,1,0,0,1]
-
-    },
-    {
-      "place_name": "Saipal Base Camp Trek",
-      "location": "Nepal",
-      "description": "Saipal Base Camp Trek is a popular trekking destination in Nepal.",
-      "highlights": [
-        "Mountain views",
-        "Cultural villages",
-        "Nature"
+      "safety_tips": [
+        "Hire a guide, prepare for altitude",
+        "Carry basic first-aid supplies"
       ],
-      "attractions": [
-        "Lakes",
-        "Passes",
-        "Peaks"
+      "photos": [
+        "/media/destinations/api (1).jpg",
+        "/media/destinations/api (2).jpg",
+        "/media/destinations/api (3).jpg",
+        "/media/destinations/api (4).jpg"
       ],
-      "best_time_to_visit": "March\u2013May, September\u2013November",
-      "transportation": "Road/Flight + trekking",
-      "accommodation": "Teahouses/Camping",
-      "safety_tips": "Hire a guide, prepare for altitude",
-      "photos": [],
-      "genre_vector": [1,1,1,0,0,1,1,0,0,0,1,0,0,1]
-
+      "genre_vector": [
+        1,
+        1,
+        1,
+        0,
+        0,
+        1,
+        1,
+        0,
+        0,
+        0,
+        1,
+        0,
+        0,
+        1
+      ],
+      "difficulty_level": "Hard",
+      "duration": "12–16 days",
+      "elevation": [
+        4560
+      ],
+      "backdrop_path": [
+        "/media/destinations/api (3).jpg"
+      ],
+      "front_image_path": [
+        "/media/destinations/api (4).jpg"
+      ]
     },
     {
       "place_name": "Tilicho Lake Trek",
       "location": "Nepal",
-      "description": "Tilicho Lake Trek is a popular trekking destination in Nepal.",
+      "description": "Tilicho Lake Trek is a popular trekking destination in Nepal. Tilicho Lake Trek is best approached as a journey rather than a checklist. Plan for roughly 8–12 days, including at least one or two buffer days for weather or acclimatization. Along the way you’ll move through small villages and teahouse stops where meals are simple but warming—dal bhat, noodles, soups—and mornings often start early to catch clear mountain views.  The route reaches high points around 4919 m, so pacing and hydration matter. Carry layered clothing for big temperature swings, and keep essentials in a daypack: water purification, snacks, a headlamp, and a basic first-aid kit. Transport typically involves road/flight + trekking, and accommodation is usually teahouses/camping. If you are new to altitude, a guide or trekking partner is a smart choice, and it’s wise to listen to your body more than your schedule.",
       "highlights": [
         "Mountain views",
         "Cultural villages",
@@ -601,60 +1323,53 @@
         "Passes",
         "Peaks"
       ],
-      "best_time_to_visit": "March\u2013May, September\u2013November",
+      "best_time_to_visit": "March–May, September–November",
       "transportation": "Road/Flight + trekking",
       "accommodation": "Teahouses/Camping",
-      "safety_tips": "Hire a guide, prepare for altitude",
-      "photos": [],
-      "genre_vector": [1,1,0,0,0,0,1,1,0,0,0,0,0,1]
-
-    },
-    {
-      "place_name": "Nar Phu Valley Trek",
-      "location": "Nepal",
-      "description": "Nar Phu Valley Trek is a popular trekking destination in Nepal.",
-      "highlights": [
-        "Mountain views",
-        "Cultural villages",
-        "Nature"
+      "safety_tips": [
+        "Hire a guide, prepare for altitude",
+        "Carry basic first-aid supplies"
       ],
-      "attractions": [
-        "Lakes",
-        "Passes",
-        "Peaks"
+      "photos": [
+        "/media/destinations/tilicho (1).jpg",
+        "/media/destinations/tilicho (2).jpg",
+        "/media/destinations/tilicho (3).jpg",
+        "/media/destinations/tilicho (4).jpg",
+        "/media/destinations/tilicho (5).jpg",
+        "/media/destinations/tilicho (6).jpg"
       ],
-      "best_time_to_visit": "March\u2013May, September\u2013November",
-      "transportation": "Road/Flight + trekking",
-      "accommodation": "Teahouses/Camping",
-      "safety_tips": "Hire a guide, prepare for altitude",
-      "photos": []
-    },
-    {
-      "place_name": "Ruby Valley Trek",
-      "location": "Nepal",
-      "description": "Ruby Valley Trek is a popular trekking destination in Nepal.",
-      "highlights": [
-        "Mountain views",
-        "Cultural villages",
-        "Nature"
+      "genre_vector": [
+        1,
+        1,
+        0,
+        0,
+        0,
+        0,
+        1,
+        1,
+        0,
+        0,
+        0,
+        0,
+        0,
+        1
       ],
-      "attractions": [
-        "Lakes",
-        "Passes",
-        "Peaks"
+      "difficulty_level": "Medium",
+      "duration": "8–12 days",
+      "elevation": [
+        4919
       ],
-      "best_time_to_visit": "March\u2013May, September\u2013November",
-      "transportation": "Road/Flight + trekking",
-      "accommodation": "Teahouses/Camping",
-      "safety_tips": "Hire a guide, prepare for altitude",
-      "photos": [],
-      "genre_vector": [1,1,1,0,0,0,1,0,0,1,0,0,0,1]
-
+      "backdrop_path": [
+        "/media/destinations/tilicho (3).jpg"
+      ],
+      "front_image_path": [
+        "/media/destinations/tilicho (4).jpg"
+      ]
     },
     {
       "place_name": "Panch Pokhari Trek",
       "location": "Nepal",
-      "description": "Panch Pokhari Trek is a popular trekking destination in Nepal.",
+      "description": "Panch Pokhari Trek is a popular trekking destination in Nepal. Panch Pokhari Trek is best approached as a journey rather than a checklist. Plan for roughly 4–6 days, including at least one or two buffer days for weather or acclimatization. Along the way you’ll move through small villages and teahouse stops where meals are simple but warming—dal bhat, noodles, soups—and mornings often start early to catch clear mountain views.  The route reaches high points around 4100 m, so pacing and hydration matter. Carry layered clothing for big temperature swings, and keep essentials in a daypack: water purification, snacks, a headlamp, and a basic first-aid kit. Transport typically involves road/flight + trekking, and accommodation is usually teahouses/camping. If you are new to altitude, a guide or trekking partner is a smart choice, and it’s wise to listen to your body more than your schedule.",
       "highlights": [
         "Mountain views",
         "Cultural villages",
@@ -665,62 +1380,51 @@
         "Passes",
         "Peaks"
       ],
-      "best_time_to_visit": "March\u2013May, September\u2013November",
+      "best_time_to_visit": "March–May, September–November",
       "transportation": "Road/Flight + trekking",
       "accommodation": "Teahouses/Camping",
-      "safety_tips": "Hire a guide, prepare for altitude",
-      "photos": [],
-      "genre_vector": [1,1,0,0,0,0,1,0,0,0,0,0,0,1]
-
-    },
-    {
-      "place_name": "Milke Danda Trek",
-      "location": "Nepal",
-      "description": "Milke Danda Trek is a popular trekking destination in Nepal.",
-      "highlights": [
-        "Mountain views",
-        "Cultural villages",
-        "Nature"
+      "safety_tips": [
+        "Hire a guide, prepare for altitude",
+        "Carry basic first-aid supplies"
       ],
-      "attractions": [
-        "Lakes",
-        "Passes",
-        "Peaks"
+      "photos": [
+        "/media/destinations/pachpokhari (1).jpg",
+        "/media/destinations/pachpokhari (2).jpg",
+        "/media/destinations/pachpokhari (3).jpg",
+        "/media/destinations/pachpokhari (4).jpg"
       ],
-      "best_time_to_visit": "March\u2013May, September\u2013November",
-      "transportation": "Road/Flight + trekking",
-      "accommodation": "Teahouses/Camping",
-      "safety_tips": "Hire a guide, prepare for altitude",
-      "photos": [],
-      "genre_vector": [1,1,0,0,1,0,1,0,0,0,0,0,0,1]
-
-    },
-    {
-      "place_name": "Kapuche Lake Trek",
-      "location": "Nepal",
-      "description": "Kapuche Lake Trek is a popular trekking destination in Nepal.",
-      "highlights": [
-        "Mountain views",
-        "Cultural villages",
-        "Nature"
+      "genre_vector": [
+        1,
+        1,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        1
       ],
-      "attractions": [
-        "Lakes",
-        "Passes",
-        "Peaks"
+      "difficulty_level": "Medium",
+      "duration": "4–6 days",
+      "elevation": [
+        4100
       ],
-      "best_time_to_visit": "March\u2013May, September\u2013November",
-      "transportation": "Road/Flight + trekking",
-      "accommodation": "Teahouses/Camping",
-      "safety_tips": "Hire a guide, prepare for altitude",
-      "photos": [],
-      "genre_vector": [1,1,0,0,0,0,1,1,0,0,0,0,0,1]
-
+      "backdrop_path": [
+        "/media/destinations/pachpokhari (4).jpg"
+      ],
+      "front_image_path": [
+        "/media/destinations/pachpokhari (2).jpg"
+      ]
     },
     {
       "place_name": "Lower Mustang Trek",
       "location": "Nepal",
-      "description": "Lower Mustang Trek is a popular trekking destination in Nepal.",
+      "description": "Lower Mustang Trek is a popular trekking destination in Nepal. Lower Mustang Trek is best approached as a journey rather than a checklist. Plan for roughly 7–10 days, including at least one or two buffer days for weather or acclimatization. Along the way you’ll move through small villages and teahouse stops where meals are simple but warming—dal bhat, noodles, soups—and mornings often start early to catch clear mountain views.  The route reaches high points around 3800 m, so pacing and hydration matter. Carry layered clothing for big temperature swings, and keep essentials in a daypack: water purification, snacks, a headlamp, and a basic first-aid kit. Transport typically involves road/flight + trekking, and accommodation is usually teahouses/camping. If you are new to altitude, a guide or trekking partner is a smart choice, and it’s wise to listen to your body more than your schedule.",
       "highlights": [
         "Mountain views",
         "Cultural villages",
@@ -731,18 +1435,50 @@
         "Passes",
         "Peaks"
       ],
-      "best_time_to_visit": "March\u2013May, September\u2013November",
+      "best_time_to_visit": "March–May, September–November",
       "transportation": "Road/Flight + trekking",
       "accommodation": "Teahouses/Camping",
-      "safety_tips": "Hire a guide, prepare for altitude",
-      "photos": [],
-      "genre_vector": [1,1,0,0,0,0,1,0,0,1,0,0,0,1]
-
+      "safety_tips": [
+        "Hire a guide, prepare for altitude",
+        "Carry basic first-aid supplies"
+      ],
+      "photos": [
+        "/media/destinations/lowerMustang (3).jpg",
+        "/media/destinations/lowerMustang (1).jpg",
+        "/media/destinations/lowerMustang (2).jpg"
+      ],
+      "genre_vector": [
+        1,
+        1,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        0,
+        1,
+        0,
+        0,
+        0,
+        1
+      ],
+      "difficulty_level": "Medium",
+      "duration": "7–10 days",
+      "elevation": [
+        3800
+      ],
+      "backdrop_path": [
+        "/media/destinations/lowerMustang (4).jpg"
+      ],
+      "front_image_path": [
+        "/media/destinations/lowerMustang (2).jpg"
+      ]
     },
     {
       "place_name": "Mohare Danda Trek",
       "location": "Nepal",
-      "description": "Mohare Danda Trek is a popular trekking destination in Nepal.",
+      "description": "Mohare Danda Trek is a popular trekking destination in Nepal. Mohare Danda Trek is best approached as a journey rather than a checklist. Plan for roughly 4–6 days, including at least one or two buffer days for weather or acclimatization. Along the way you’ll move through small villages and teahouse stops where meals are simple but warming—dal bhat, noodles, soups—and mornings often start early to catch clear mountain views.  The route reaches high points around 3300 m, so pacing and hydration matter. Carry layered clothing for big temperature swings, and keep essentials in a daypack: water purification, snacks, a headlamp, and a basic first-aid kit. Transport typically involves road/flight + trekking, and accommodation is usually teahouses/camping. If you are new to altitude, a guide or trekking partner is a smart choice, and it’s wise to listen to your body more than your schedule.",
       "highlights": [
         "Mountain views",
         "Cultural villages",
@@ -753,18 +1489,51 @@
         "Passes",
         "Peaks"
       ],
-      "best_time_to_visit": "March\u2013May, September\u2013November",
+      "best_time_to_visit": "March–May, September–November",
       "transportation": "Road/Flight + trekking",
       "accommodation": "Teahouses/Camping",
-      "safety_tips": "Hire a guide, prepare for altitude",
-      "photos": [],
-      "genre_vector": [1,1,0,1,1,0,1,0,0,0,0,0,0,1]
-
+      "safety_tips": [
+        "Hire a guide, prepare for altitude",
+        "Carry basic first-aid supplies"
+      ],
+      "photos": [
+        "/media/destinations/mohore (3).jpg",
+        "/media/destinations/mohore (1).jpg",
+        "/media/destinations/mohore (2).jpg",
+        "/media/destinations/mohore (4).jpg"
+      ],
+      "genre_vector": [
+        1,
+        1,
+        0,
+        1,
+        1,
+        0,
+        1,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        1
+      ],
+      "difficulty_level": "Easy",
+      "duration": "4–6 days",
+      "elevation": [
+        3300
+      ],
+      "backdrop_path": [
+        "/media/destinations/mohore (4).jpg"
+      ],
+      "front_image_path": [
+        "/media/destinations/mohore (1).jpg"
+      ]
     },
     {
       "place_name": "Kori Village Trek",
       "location": "Nepal",
-      "description": "Kori Village Trek is a popular trekking destination in Nepal.",
+      "description": "Kori Village Trek is a popular trekking destination in Nepal. Kori Village Trek is best approached as a journey rather than a checklist. Plan for roughly 4–7 days, including at least one or two buffer days for weather or acclimatization. Along the way you’ll move through small villages and teahouse stops where meals are simple but warming—dal bhat, noodles, soups—and mornings often start early to catch clear mountain views.  The route reaches high points around 3800 m, so pacing and hydration matter. Carry layered clothing for big temperature swings, and keep essentials in a daypack: water purification, snacks, a headlamp, and a basic first-aid kit. Transport typically involves road/flight + trekking, and accommodation is usually teahouses/camping. If you are new to altitude, a guide or trekking partner is a smart choice, and it’s wise to listen to your body more than your schedule.",
       "highlights": [
         "Mountain views",
         "Cultural villages",
@@ -775,18 +1544,50 @@
         "Passes",
         "Peaks"
       ],
-      "best_time_to_visit": "March\u2013May, September\u2013November",
+      "best_time_to_visit": "March–May, September–November",
       "transportation": "Road/Flight + trekking",
       "accommodation": "Teahouses/Camping",
-      "safety_tips": "Hire a guide, prepare for altitude",
-      "photos": [],
-      "genre_vector": [1,1,0,0,0,0,1,0,0,0,0,0,0,1]
-
+      "safety_tips": [
+        "Hire a guide, prepare for altitude",
+        "Carry basic first-aid supplies"
+      ],
+      "photos": [
+        "/media/destinations/kori (3).jpg",
+        "/media/destinations/kori (1).jpg",
+        "/media/destinations/kori (2).jpg"
+      ],
+      "genre_vector": [
+        1,
+        1,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        1
+      ],
+      "difficulty_level": "Medium",
+      "duration": "4–7 days",
+      "elevation": [
+        3800
+      ],
+      "backdrop_path": [
+        "/media/destinations/kori (3).jpg"
+      ],
+      "front_image_path": [
+        "/media/destinations/kori (1).jpg"
+      ]
     },
     {
       "place_name": "Badimalika Trek",
       "location": "Nepal",
-      "description": "Badimalika Trek is a popular trekking destination in Nepal.",
+      "description": "Badimalika Trek is a popular trekking destination in Nepal. Badimalika Trek is best approached as a journey rather than a checklist. Plan for roughly 7–10 days, including at least one or two buffer days for weather or acclimatization. Along the way you’ll move through small villages and teahouse stops where meals are simple but warming—dal bhat, noodles, soups—and mornings often start early to catch clear mountain views.  The route reaches high points around 4200 m, so pacing and hydration matter. Carry layered clothing for big temperature swings, and keep essentials in a daypack: water purification, snacks, a headlamp, and a basic first-aid kit. Transport typically involves road/flight + trekking, and accommodation is usually teahouses/camping. If you are new to altitude, a guide or trekking partner is a smart choice, and it’s wise to listen to your body more than your schedule.",
       "highlights": [
         "Mountain views",
         "Cultural villages",
@@ -797,18 +1598,49 @@
         "Passes",
         "Peaks"
       ],
-      "best_time_to_visit": "March\u2013May, September\u2013November",
+      "best_time_to_visit": "March–May, September–November",
       "transportation": "Road/Flight + trekking",
       "accommodation": "Teahouses/Camping",
-      "safety_tips": "Hire a guide, prepare for altitude",
-      "photos": [],
-      "genre_vector": [1,1,1,0,0,0,1,0,0,1,0,0,0,1]
-
+      "safety_tips": [
+        "Hire a guide, prepare for altitude",
+        "Carry basic first-aid supplies"
+      ],
+      "photos": [
+        "/media/destinations/badhimalika (4).jpg",
+        "/media/destinations/badhimalika (1).jpg"
+      ],
+      "genre_vector": [
+        1,
+        1,
+        1,
+        0,
+        0,
+        0,
+        1,
+        0,
+        0,
+        1,
+        0,
+        0,
+        0,
+        1
+      ],
+      "difficulty_level": "Medium",
+      "duration": "7–10 days",
+      "elevation": [
+        4200
+      ],
+      "backdrop_path": [
+        "/media/destinations/badhimalika (3).jpg"
+      ],
+      "front_image_path": [
+        "/media/destinations/badhimalika (2).jpg"
+      ]
     },
     {
       "place_name": "Shey Phoksundo Trek",
       "location": "Nepal",
-      "description": "Shey Phoksundo Trek is a popular trekking destination in Nepal.",
+      "description": "Shey Phoksundo Trek is a popular trekking destination in Nepal. Shey Phoksundo Trek is best approached as a journey rather than a checklist. Plan for roughly 8–12 days, including at least one or two buffer days for weather or acclimatization. Along the way you’ll move through small villages and teahouse stops where meals are simple but warming—dal bhat, noodles, soups—and mornings often start early to catch clear mountain views.  The route reaches high points around 3612 m, so pacing and hydration matter. Carry layered clothing for big temperature swings, and keep essentials in a daypack: water purification, snacks, a headlamp, and a basic first-aid kit. Transport typically involves road/flight + trekking, and accommodation is usually teahouses/camping. If you are new to altitude, a guide or trekking partner is a smart choice, and it’s wise to listen to your body more than your schedule.",
       "highlights": [
         "Mountain views",
         "Cultural villages",
@@ -819,18 +1651,50 @@
         "Passes",
         "Peaks"
       ],
-      "best_time_to_visit": "March\u2013May, September\u2013November",
+      "best_time_to_visit": "March–May, September–November",
       "transportation": "Road/Flight + trekking",
       "accommodation": "Teahouses/Camping",
-      "safety_tips": "Hire a guide, prepare for altitude",
-      "photos": [],
-      "genre_vector": [1,1,1,0,0,0,1,1,0,1,1,0,0,1]
-
+      "safety_tips": [
+        "Hire a guide, prepare for altitude",
+        "Carry basic first-aid supplies"
+      ],
+      "photos": [
+        "/media/destinations/sheyp (1).jpg",
+        "/media/destinations/sheyp (2).jpg",
+        "/media/destinations/sheyp (3).jpg"
+      ],
+      "genre_vector": [
+        1,
+        1,
+        1,
+        0,
+        0,
+        0,
+        1,
+        1,
+        0,
+        1,
+        1,
+        0,
+        0,
+        1
+      ],
+      "difficulty_level": "Medium",
+      "duration": "8–12 days",
+      "elevation": [
+        3612
+      ],
+      "backdrop_path": [
+        "/media/destinations/sheyp (4).jpg"
+      ],
+      "front_image_path": [
+        "/media/destinations/sheyp (5).jpg"
+      ]
     },
     {
       "place_name": "Upper Dolpo Trek",
       "location": "Nepal",
-      "description": "Upper Dolpo Trek is a popular trekking destination in Nepal.",
+      "description": "Upper Dolpo Trek is a popular trekking destination in Nepal. Upper Dolpo Trek is best approached as a journey rather than a checklist. Plan for roughly 20–28 days, including at least one or two buffer days for weather or acclimatization. Along the way you’ll move through small villages and teahouse stops where meals are simple but warming—dal bhat, noodles, soups—and mornings often start early to catch clear mountain views.  The route reaches high points around 5350 m, so pacing and hydration matter. Carry layered clothing for big temperature swings, and keep essentials in a daypack: water purification, snacks, a headlamp, and a basic first-aid kit. Transport typically involves road/flight + trekking, and accommodation is usually teahouses/camping. If you are new to altitude, a guide or trekking partner is a smart choice, and it’s wise to listen to your body more than your schedule.",
       "highlights": [
         "Mountain views",
         "Cultural villages",
@@ -841,18 +1705,50 @@
         "Passes",
         "Peaks"
       ],
-      "best_time_to_visit": "March\u2013May, September\u2013November",
+      "best_time_to_visit": "March–May, September–November",
       "transportation": "Road/Flight + trekking",
       "accommodation": "Teahouses/Camping",
-      "safety_tips": "Hire a guide, prepare for altitude",
-      "photos": [],
-      "genre_vector": [1,1,1,0,0,0,1,1,0,1,1,0,0,1]
-
+      "safety_tips": [
+        "Hire a guide, prepare for altitude",
+        "Carry basic first-aid supplies"
+      ],
+      "photos": [
+        "/media/destinations/upperdolpa (1).jpg",
+        "/media/destinations/upperdolpa (2).jpg",
+        "/media/destinations/upperdolpa (3).jpg"
+      ],
+      "genre_vector": [
+        1,
+        1,
+        1,
+        0,
+        0,
+        0,
+        1,
+        1,
+        0,
+        1,
+        1,
+        0,
+        0,
+        1
+      ],
+      "difficulty_level": "Hard",
+      "duration": "20–28 days",
+      "elevation": [
+        5350
+      ],
+      "backdrop_path": [
+        "/media/destinations/upperdolpa (4).jpg"
+      ],
+      "front_image_path": [
+        "/media/destinations/upperdolpa (1).jpg"
+      ]
     },
     {
       "place_name": "Limi Valley Trek",
       "location": "Nepal",
-      "description": "Limi Valley Trek is a popular trekking destination in Nepal.",
+      "description": "Limi Valley Trek is a popular trekking destination in Nepal. Limi Valley Trek is best approached as a journey rather than a checklist. Plan for roughly 16–22 days, including at least one or two buffer days for weather or acclimatization. Along the way you’ll move through small villages and teahouse stops where meals are simple but warming—dal bhat, noodles, soups—and mornings often start early to catch clear mountain views.  The route reaches high points around 5000 m, so pacing and hydration matter. Carry layered clothing for big temperature swings, and keep essentials in a daypack: water purification, snacks, a headlamp, and a basic first-aid kit. Transport typically involves road/flight + trekking, and accommodation is usually teahouses/camping. If you are new to altitude, a guide or trekking partner is a smart choice, and it’s wise to listen to your body more than your schedule.",
       "highlights": [
         "Mountain views",
         "Cultural villages",
@@ -863,18 +1759,49 @@
         "Passes",
         "Peaks"
       ],
-      "best_time_to_visit": "March\u2013May, September\u2013November",
+      "best_time_to_visit": "March–May, September–November",
       "transportation": "Road/Flight + trekking",
       "accommodation": "Teahouses/Camping",
-      "safety_tips": "Hire a guide, prepare for altitude",
-      "photos": [],
-      "genre_vector": [1,1,1,0,0,0,1,0,0,1,0,0,0,1]
-
+      "safety_tips": [
+        "Hire a guide, prepare for altitude",
+        "Carry basic first-aid supplies"
+      ],
+      "photos": [
+        "/media/destinations/limi (1).jpg",
+        "/media/destinations/limi (2).jpg"
+      ],
+      "genre_vector": [
+        1,
+        1,
+        1,
+        0,
+        0,
+        0,
+        1,
+        0,
+        0,
+        1,
+        0,
+        0,
+        0,
+        1
+      ],
+      "difficulty_level": "Hard",
+      "duration": "16–22 days",
+      "elevation": [
+        5000
+      ],
+      "backdrop_path": [
+        "/media/destinations/limi (1).jpg"
+      ],
+      "front_image_path": [
+        "/media/destinations/limi (2).jpg"
+      ]
     },
     {
       "place_name": "Tsho Rolpa Trek",
       "location": "Nepal",
-      "description": "Tsho Rolpa Trek is a popular trekking destination in Nepal.",
+      "description": "Tsho Rolpa Trek is a popular trekking destination in Nepal. Tsho Rolpa Trek is best approached as a journey rather than a checklist. Plan for roughly 7–10 days, including at least one or two buffer days for weather or acclimatization. Along the way you’ll move through small villages and teahouse stops where meals are simple but warming—dal bhat, noodles, soups—and mornings often start early to catch clear mountain views.  The route reaches high points around 4580 m, so pacing and hydration matter. Carry layered clothing for big temperature swings, and keep essentials in a daypack: water purification, snacks, a headlamp, and a basic first-aid kit. Transport typically involves road/flight + trekking, and accommodation is usually teahouses/camping. If you are new to altitude, a guide or trekking partner is a smart choice, and it’s wise to listen to your body more than your schedule.",
       "highlights": [
         "Mountain views",
         "Cultural villages",
@@ -885,15 +1812,45 @@
         "Passes",
         "Peaks"
       ],
-      "best_time_to_visit": "March\u2013May, September\u2013November",
+      "best_time_to_visit": "March–May, September–November",
       "transportation": "Road/Flight + trekking",
       "accommodation": "Teahouses/Camping",
-      "safety_tips": "Hire a guide, prepare for altitude",
-      "photos": [],
-      "genre_vector": [1,1,0,0,0,0,1,1,0,0,0,0,0,1]
-
+      "safety_tips": [
+        "Hire a guide, prepare for altitude",
+        "Carry basic first-aid supplies"
+      ],
+      "photos": [
+        "/media/destinations/tsho (1).jpg",
+        "/media/destinations/tsho (2).jpg",
+        "/media/destinations/tsho (3).jpg"
+      ],
+      "genre_vector": [
+        1,
+        1,
+        0,
+        0,
+        0,
+        0,
+        1,
+        1,
+        0,
+        0,
+        0,
+        0,
+        0,
+        1
+      ],
+      "difficulty_level": "Medium",
+      "duration": "7–10 days",
+      "elevation": [
+        4580
+      ],
+      "backdrop_path": [
+        "/media/destinations/tsho (4).jpg"
+      ],
+      "front_image_path": [
+        "/media/destinations/tsho (5).jpg"
+      ]
     }
-
-  
   ]
 }
