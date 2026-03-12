@@ -5,6 +5,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:traveltales/api/api.dart';
 import 'package:traveltales/core/model/destination_model.dart';
+import 'package:traveltales/core/model/genre_model.dart';
 import 'package:traveltales/core/route_config/route_names.dart';
 import 'package:traveltales/core/ui/components/destinationCard.dart';
 import 'package:traveltales/core/ui/components/preference.dart';
@@ -23,46 +24,76 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> {
   late Future<List<Destination>> recommendedFuture;
   late Future<List<Destination>> allDestinationsFuture;
+  late Future<List<Genre>> allGenresFuture;
 
-  Destination? destination;
+  String selectedGenre = "All";
+  Map<String, int> genreIndexMap = {};
 
   @override
   void initState() {
     super.initState();
     recommendedFuture = getRecommendedDestinations();
     allDestinationsFuture = getAllDestinations();
+    allGenresFuture = fetchAllGenres();
   }
 
-  String getDestinationImage(Map<String, dynamic> destination) {
-    final extraInfo = destination['extra_info'] as Map<String, dynamic>?;
+  bool matchesGenre(Destination destination, String selectedGenre) {
+    if (selectedGenre == "All") return true;
 
-    if (extraInfo != null) {
-      final frontImages = extraInfo['front_image_path'];
-      if (frontImages is List && frontImages.isNotEmpty) {
-        final firstImage = frontImages.first?.toString() ?? '';
-        if (firstImage.isNotEmpty) {
-          return '$API_URL$firstImage';
+    final genreKey = selectedGenre.trim().toLowerCase();
+    final genreIndex = genreIndexMap[genreKey];
+
+    if (genreIndex == null) return false;
+
+    final vector = destination.extraInfo?.genreVector ?? [];
+
+    if (genreIndex >= vector.length) return false;
+
+    final score = (vector[genreIndex] as num).toDouble();
+
+    return score > 0.5;
+  }
+
+  Widget buildGenreFilter() {
+    return FutureBuilder<List<Genre>>(
+      future: allGenresFuture,
+      builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return SizedBox(
+            height: 36.h,
+            child: const Center(child: CircularProgressIndicator()),
+          );
         }
-      }
 
-      final photos = extraInfo['photos'];
-      if (photos is List && photos.isNotEmpty) {
-        final firstPhoto = photos.first?.toString() ?? '';
-        if (firstPhoto.isNotEmpty) {
-          return '$API_URL$firstPhoto';
+        if (snapshot.hasError) {
+          return SizedBox(
+            height: 36.h,
+            child: const Center(child: Text("Failed to load genres")),
+          );
         }
-      }
-    }
 
-    return '';
-  }
+        final genres = snapshot.data ?? [];
 
-  String getDestinationTitle(Map<String, dynamic> destination) {
-    return destination['place_name']?.toString() ?? 'Unknown Destination';
-  }
+        genreIndexMap = {
+          for (int i = 0; i < genres.length; i++) genres[i].name.trim().toLowerCase(): i,
+        };
 
-  String getDestinationLocation(Map<String, dynamic> destination) {
-    return destination['location']?.toString() ?? 'Unknown Location';
+        final genreNames = [
+          "All",
+          ...genres.map((g) => g.name).where((name) => name.trim().isNotEmpty),
+        ];
+
+        return DestinationPreference(
+          genres: genreNames,
+          selectedGenre: selectedGenre,
+          onGenreSelected: (genre) {
+            setState(() {
+              selectedGenre = genre;
+            });
+          },
+        );
+      },
+    );
   }
 
   Widget buildDestinationList(Future<List<Destination>> futureList) {
@@ -82,17 +113,22 @@ class _HomeScreenState extends State<HomeScreen> {
 
         final destinations = snapshot.data ?? [];
 
-        if (destinations.isEmpty) {
-          return const Center(
-            child: Text("No destinations found"),
+        final filteredDestinations = destinations
+            .where((destination) => matchesGenre(destination, selectedGenre))
+            .toList();
+
+        if (filteredDestinations.isEmpty) {
+          return Center(
+            child: Text("No $selectedGenre destinations found"),
           );
         }
 
         return ListView.builder(
           scrollDirection: Axis.horizontal,
-          itemCount: destinations.length,
+          itemCount: filteredDestinations.length,
           itemBuilder: (context, index) {
-            final destination = destinations[index];
+            final destination = filteredDestinations[index];
+
             final image =
             destination.extraInfo?.frontImagePath.isNotEmpty == true
                 ? destination.extraInfo!.frontImagePath.first
@@ -107,7 +143,7 @@ class _HomeScreenState extends State<HomeScreen> {
               title: destination.placeName,
               location: destination.location,
               isNetworkImage: image.isNotEmpty,
-              destinationId: destination.id,
+              destinationId: destination.destinationId,
             );
           },
         );
@@ -140,7 +176,10 @@ class _HomeScreenState extends State<HomeScreen> {
           actions: [
             IconButton(
               onPressed: () {},
-              icon: Icon(Icons.notifications_none, size: compactDimens.medium1),
+              icon: Icon(
+                Icons.notifications_none,
+                size: compactDimens.medium1,
+              ),
             ),
           ],
         ),
@@ -176,9 +215,8 @@ class _HomeScreenState extends State<HomeScreen> {
               isFilter: false,
             ),
             const SizedBox(height: 12),
-            DestinationPreference(),
+            buildGenreFilter(),
             const Divider(thickness: 1.5),
-
             ViewAllRow(
               firstText: SharedRes.strings(context).recommendedForYou,
               onPressed: () {
@@ -193,7 +231,6 @@ class _HomeScreenState extends State<HomeScreen> {
               height: 220.h,
               child: buildDestinationList(recommendedFuture),
             ),
-
             ViewAllRow(
               firstText: SharedRes.strings(context).bestPlaceToVisit,
               onPressed: () {
@@ -215,6 +252,9 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   TextStyle headingStyle() {
-    return TextStyle(fontSize: 42.sp, height: 1.2);
+    return TextStyle(
+      fontSize: 42.sp,
+      height: 1.2,
+    );
   }
 }

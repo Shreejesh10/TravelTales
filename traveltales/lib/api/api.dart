@@ -6,11 +6,13 @@ import 'dart:io';
 import 'package:http_parser/http_parser.dart';
 import 'package:path/path.dart' as p;
 import 'package:traveltales/core/model/destination_model.dart';
+import 'package:traveltales/core/model/genre_model.dart';
 import 'package:traveltales/core/model/user_info.dart';
 
 final storage = FlutterSecureStorage();
 // const String API_URL = 'http://10.0.2.2:8000';
 final String API_URL = 'http://192.168.1.67:8000';
+// final String API_URL = 'http://100.64.238.232:8000';
 
 // final String API_URL = Platform.isAndroid
 //     ? 'http://10.0.2.2:8000' // Android emulator → maps to PC localhost
@@ -170,25 +172,21 @@ Future<void> signup(String email, String password, String userName) async {
     rethrow;
   }
 }
-Future<Map<String, dynamic>?> getDestination(int destinationId) async{
+Future<Destination?> getDestinationByID(int destinationId) async {
   final url = Uri.parse('$API_URL/destinations/$destinationId');
   final headers = await getHeaders();
 
-  try{
-    final response = await http.get(url, headers: headers,);
+  try {
+    final response = await http.get(url, headers: headers);
 
-    if (response.statusCode == 200){
+    if (response.statusCode == 200) {
       final data = jsonDecode(response.body);
-      log("Destination fetched: ${data['place_name']}");
-
-      return data;
-      // return List<Map<String, dynamic>>.from(data);
-      // log("Destination fetched successfully $data");
-    } else{
+      return Destination.fromJson(data);
+    } else {
       log("Destination fetch failed: ${response.statusCode} ${response.body}");
       return null;
     }
-  }catch(e){
+  } catch (e) {
     log("Error during fetching destination: $e");
     return null;
   }
@@ -227,7 +225,7 @@ Future<List<Map<String, dynamic>>> getBestDestinations() async {
 }
 
 
-Future<List<Map<String, dynamic>>> fetchAllGenres() async {
+Future<List<Genre>> fetchAllGenres() async {
   final url = Uri.parse('$API_URL/users/genres');
 
   final headers = await getHeaders();
@@ -235,18 +233,11 @@ Future<List<Map<String, dynamic>>> fetchAllGenres() async {
   final res = await http.get(url, headers: headers);
 
   if (res.statusCode == 200) {
-    final data = jsonDecode(res.body);
+    final List data = jsonDecode(res.body);
 
-    final list = List<Map<String, dynamic>>.from(data);
-
-    return list.map((g) {
-      final rawId = g["id"] ?? g["genre_id"] ?? g["genreId"];
-      return {
-        "id": (rawId as num).toInt(),
-        "name": (g["name"] ?? "").toString(),
-      };
-    }).toList();
+    return data.map((g) => Genre.fromJson(g)).toList();
   }
+
   throw Exception("GET /users/genres failed: ${res.statusCode} ${res.body}");
 }
 

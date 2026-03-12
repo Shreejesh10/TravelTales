@@ -202,4 +202,7 @@ class AppLocalizationsNe extends AppLocalizations {
 
   @override
   String get photographySpot => 'फोटोग्राफी स्पट';
+
+  @override
+  String get changePreference => 'प्राथमिकता परिवर्तन';
 }

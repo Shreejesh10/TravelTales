@@ -398,7 +398,7 @@ abstract class AppLocalizations {
   /// No description provided for @highlights.
   ///
   /// In en, this message translates to:
-  /// **'highlights: '**
+  /// **'Highlights: '**
   String get highlights;
 
   /// No description provided for @elevation.
@@ -484,6 +484,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Photography Spot'**
   String get photographySpot;
+
+  /// No description provided for @changePreference.
+  ///
+  /// In en, this message translates to:
+  /// **'Change Preference'**
+  String get changePreference;
 }
 
 class _AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {

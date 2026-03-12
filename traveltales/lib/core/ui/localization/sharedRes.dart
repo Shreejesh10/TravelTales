@@ -83,7 +83,7 @@ class Strings {
   String get rafting => _l10n.rafting;
   String get paragliding => _l10n.paragliding;
   String get photographySpot => _l10n.photographySpot;
-
+  String get changePreference => _l10n.changePreference;
 
 
 

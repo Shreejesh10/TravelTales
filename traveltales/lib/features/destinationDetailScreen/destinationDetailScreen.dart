@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:traveltales/api/api.dart';
+import 'package:traveltales/core/model/destination_model.dart';
 import 'package:traveltales/core/route_config/route_names.dart';
 import 'package:traveltales/core/ui/components/destinationCard.dart';
 import 'package:traveltales/core/ui/components/viewAllRow.dart';
@@ -15,9 +17,31 @@ class DestinationDetailScreen extends StatefulWidget {
 }
 
 class _DestinationDetailScreenState extends State<DestinationDetailScreen> {
+  Future<Destination?>? destinationFuture;
+  late Future<List<Destination>> recommendedFuture;
+  bool _isLoaded = false;
+  bool isDescriptionExpanded = false;
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+
+    if (_isLoaded) return;
+    _isLoaded = true;
+
+    recommendedFuture = getRecommendedDestinations();
+
+    final args = ModalRoute.of(context)?.settings.arguments;
+
+    if (args is int) {
+      destinationFuture = getDestinationByID(args);
+    } else {
+      destinationFuture = Future.value(null);
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
-    double screenHeight = 1.sh;
     return Scaffold(
       extendBodyBehindAppBar: true,
       appBar: AppBar(
@@ -42,195 +66,305 @@ class _DestinationDetailScreenState extends State<DestinationDetailScreen> {
           ),
         ),
       ),
-      body: Stack(
-        children: [
-          SizedBox(
-            height: screenHeight * 0.3,
-            width: double.infinity,
+      body: FutureBuilder<Destination?>(
+        future: destinationFuture,
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return const Center(child: CircularProgressIndicator());
+          }
 
-            child: Image.asset('assets/images/Mustang.png', fit: BoxFit.cover),
-          ),
-          Padding(
-            padding: EdgeInsets.only(top: screenHeight * 0.25),
-            child: Container(
-              width: double.infinity,
-              padding: EdgeInsets.all(13.w),
-              decoration: BoxDecoration(
-                color: AppColors.getDetailBackgroundColor(context),
-                borderRadius: BorderRadius.vertical(top: Radius.circular(25.r)),
-                boxShadow: [
-                  BoxShadow(
-                    blurRadius: 25,
-                    offset: const Offset(0, -8),
-                    color: Colors.black.withOpacity(0.08),
-                  ),
-                ],
-              ),
-              child: CustomScrollView(
-                slivers: [
-                  SliverToBoxAdapter(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Row(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            ClipRRect(
-                              borderRadius: BorderRadius.circular(12.r),
-                              child: Image.asset(
-                                'assets/images/Annapurna.png',
-                                width: 135.w,
-                                height: 170.w,
-                                fit: BoxFit.cover,
-                              ),
+          if (snapshot.hasError || snapshot.data == null) {
+            return const Center(child: Text("Failed to load destination"));
+          }
+
+          final destination = snapshot.data!;
+          final extra = destination.extraInfo;
+
+          final backdrop = extra.backdropPath.isNotEmpty
+              ? extra.backdropPath.first
+              : "";
+
+          final frontImage = extra.frontImagePath.isNotEmpty
+              ? extra.frontImagePath.first
+              : "";
+          return _buildPage(destination, backdrop, frontImage);
+        },
+      ),
+    );
+  }
+
+  Widget _buildPage(
+    Destination destination,
+    String backdrop,
+    String frontImage,
+  ) {
+    double screenHeight = 1.sh;
+
+    return Stack(
+      children: [
+        SizedBox(
+          height: screenHeight * 0.3,
+          width: double.infinity,
+
+          child: Image.network("$API_URL$backdrop", fit: BoxFit.cover),
+        ),
+        Padding(
+          padding: EdgeInsets.only(top: screenHeight * 0.25),
+          child: Container(
+            width: double.infinity,
+            padding: EdgeInsets.all(13.w),
+            decoration: BoxDecoration(
+              color: AppColors.getDetailBackgroundColor(context),
+              borderRadius: BorderRadius.vertical(top: Radius.circular(25.r)),
+              boxShadow: [
+                BoxShadow(
+                  blurRadius: 25,
+                  offset: const Offset(0, -8),
+                  color: Colors.black.withOpacity(0.08),
+                ),
+              ],
+            ),
+            child: CustomScrollView(
+              slivers: [
+                SliverToBoxAdapter(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Row(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          ClipRRect(
+                            borderRadius: BorderRadius.circular(12.r),
+                            child: frontImage.isNotEmpty
+                                ? Image.network(
+                              "$API_URL$frontImage",
+                              height: 170.h,
+                              width: 135.w,
+                              fit: BoxFit.cover,
+                              errorBuilder: (_, __, ___) {
+                                return Image.asset(
+                                  'assets/images/Annapurna.png',
+                                  height: 170.h,
+                                  width: 135.w,
+                                  fit: BoxFit.cover,
+                                );
+                              },
+                            )
+                                : Image.asset(
+                              'assets/images/Annapurna.png',
+                              height: 170.h,
+                              width: 135.w,
+                              fit: BoxFit.cover,
                             ),
-                    
-                            const SizedBox(width: 12),
-                            Expanded(
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text(
-                                    'Muktinath, Mustang',
-                                    style: TextStyle(
-                                      fontSize: 18.sp,
-                                      fontWeight: FontWeight.bold,
-                                    ),
-                                  ),
-                    
-                                  4.h.verticalSpace,
-                                  Row(
-                                    children: [
-                                      Icon(
-                                        Icons.location_on,
-                                        size: 14.sp,
-                                        color: AppColors.getIconColors(context),
-                                      ),
-                                      4.w.horizontalSpace,
-                                      Text(
-                                        "Mustang, Nepal",
-                                        style: TextStyle(
-                                          fontSize: 12.sp,
-                                          fontWeight: FontWeight.w500,
-                                          color: AppColors.getSmallTextColor(context),
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                    
-                                  8.h.verticalSpace,
-                                  SizedBox(height: 4.h),
-                                  Row(
-                                    children: [
-                                      Expanded(
-                                        child: _statCard(
-                                          icon: Icons.schedule,
-                                          value: '6 Hours',
-                                          label: SharedRes.strings(context).duration,
-                                          onTap: () {},
-                                          iconColor: const Color(0xFF2ECC71),
-                                        ),
-                                      ),
-                                      8.w.horizontalSpace,
-                                      Expanded(
-                                        child: _statCard(
-                                          icon: Icons.height,
-                                          value: '3400m',
-                                          label: SharedRes.strings(context).elevation,
-                                          onTap: () {},
-                                          iconColor: const Color(0xFF2ECC71),
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                ],
-                              ),
-                            ),
-                          ],
-                        ),
-                        SizedBox(height: 12.h),
-                        ViewAllRow(
-                          firstText: SharedRes.strings(context).aboutThePlace,
-                          onPressed: () {},
-                          isViewAll: false,
-                        ),
-                        SizedBox(height: 4.h),
-                        Text(
-                          "The Everest Base Camp trek is the quintessential high-altitude adventure, taking you through the heart of the Khumbu region. This iconic journey offers breathtaking views of the world's highest peaks, including Everest, Lhotse, and Nuptse. You'll traverse ancient Sherpa villages and vibrant monasteries before emerging onto the stark, beautiful alpine terrain",
-                          style: TextStyle(fontSize: 13.sp, color: Colors.grey),
-                        ),
-                        SizedBox(height: 8.h),
-                        _bestSeasonCard(
-                          seasonText: "March–May, September–November",
-                        ),
-                    
-                        SizedBox(height: 10.h),
-                        _infoRow(
-                          mainText: SharedRes.strings(context).attraction,
-                          contentText: 'Aryaghat, Tengboche Monastery',
-                        ),
-                        _infoRow(
-                          mainText: SharedRes.strings(context).transportation,
-                          contentText: 'Taxi or bus',
-                        ),
-                        _infoRow(
-                          mainText: SharedRes.strings(context).accommodation,
-                          contentText: 'Hotels in Kathmandu',
-                        ),
-                        _infoRow(
-                          mainText: SharedRes.strings(context).safetyTips,
-                          contentText: 'Dress modestly, Non-Hindus restricted',
-                        ),
-                        _infoRow(
-                          mainText: SharedRes.strings(context).highlights,
-                          contentText:
-                              'Religious significance, Bagmati River cremations',
-                        ),
-                    
-                        ViewAllRow(
-                          firstText: SharedRes.strings(context).recommendedForYou,
-                          onPressed: (){
-                            Navigator.pushNamed(
-                                context,
-                                RouteName.viewAllScreen,
-                                arguments: SharedRes.strings(context).recommendedForYou
-                            );
-                          },
-                    
-                        ),
-                    
-                        SizedBox(
-                          height: 220.h,
-                          child: ListView(
-                            scrollDirection: Axis.horizontal,
-                            children: [
-                              DestinationCard(
-                                imagePath: 'assets/images/Bouddha.png',
-                                title: 'Bouddhanath Stupa',
-                                location: 'Kathmandu, Nepal',
-                              ),
-                              DestinationCard(
-                                imagePath: 'assets/images/Annapurna.png',
-                                title: 'Annapurna Base Camp',
-                                location: 'Annapurna, Nepal',
-                              ),
-                              DestinationCard(
-                                imagePath: 'assets/images/Pathivara.png',
-                                title: 'Pathivara Temple',
-                                location: 'Mechi, Nepal',
-                              ),
-                            ],
                           ),
+
+                          const SizedBox(width: 12),
+                          Expanded(
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  destination.placeName,
+                                  style: TextStyle(
+                                    fontSize: 18.sp,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+
+                                4.h.verticalSpace,
+                                Row(
+                                  children: [
+                                    Icon(
+                                      Icons.location_on,
+                                      size: 14.sp,
+                                      color: AppColors.getIconColors(context),
+                                    ),
+                                    4.w.horizontalSpace,
+                                    Text(
+                                      destination.location,
+                                      style: TextStyle(
+                                        fontSize: 12.sp,
+                                        fontWeight: FontWeight.w500,
+                                        color: AppColors.getSmallTextColor(
+                                          context,
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+
+                                8.h.verticalSpace,
+                                SizedBox(height: 4.h),
+                                Row(
+                                  children: [
+                                    Expanded(
+                                      child: _statCard(
+                                        icon: Icons.schedule,
+                                        value: destination.extraInfo.duration,
+                                        label: SharedRes.strings(
+                                          context,
+                                        ).duration,
+                                        onTap: () {},
+                                        iconColor: const Color(0xFF2ECC71),
+                                      ),
+                                    ),
+                                    8.w.horizontalSpace,
+                                    Expanded(
+                                      child: _statCard(
+                                        icon: Icons.height,
+                                        value: destination.extraInfo.elevation.isNotEmpty
+                                            ? '${destination.extraInfo.elevation.first}m'
+                                            : 'N/A',
+                                        label: SharedRes.strings(
+                                          context,
+                                        ).elevation,
+                                        onTap: () {},
+                                        iconColor: const Color(0xFF2ECC71),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ],
+                            ),
+                          ),
+                        ],
+                      ),
+                      SizedBox(height: 12.h),
+                      ViewAllRow(
+                        firstText: SharedRes.strings(context).aboutThePlace,
+                        onPressed: () {},
+                        isViewAll: false,
+                      ),
+                      SizedBox(height: 4.h),
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            destination.description,
+                            maxLines: isDescriptionExpanded ? null : 6,
+                            overflow: isDescriptionExpanded ? TextOverflow.visible : TextOverflow.ellipsis,
+                            style: TextStyle(
+                              fontSize: 13.sp,
+                              color: Colors.grey,
+                              height: 1.4,
+                            ),
+                          ),
+                          SizedBox(height: 4.h),
+                          GestureDetector(
+                            onTap: () {
+                              setState(() {
+                                isDescriptionExpanded = !isDescriptionExpanded;
+                              });
+                            },
+                            child: Text(
+                              isDescriptionExpanded ? "See less" : "See more",
+                              style: TextStyle(
+                                fontSize: 12.sp,
+                                fontWeight: FontWeight.w600,
+                                color: AppColors.getIconColors(context),
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                      SizedBox(height: 8.h),
+                      _bestSeasonCard(
+                        seasonText: destination.extraInfo.bestTimeToVisit,
+                      ),
+
+                      SizedBox(height: 10.h),
+                      _infoRow(
+                        mainText: SharedRes.strings(context).attraction,
+                        contentText: destination.extraInfo.attractions.join(
+                          ", ",
                         ),
-                      ],
-                    ),
+                      ),
+                      _infoRow(
+                        mainText: SharedRes.strings(context).transportation,
+                        contentText: destination.extraInfo.transportation,
+                      ),
+                      _infoRow(
+                        mainText: SharedRes.strings(context).accommodation,
+                        contentText: destination.extraInfo.accommodation,
+                      ),
+                      _infoRow(
+                        mainText: SharedRes.strings(context).safetyTips,
+                        contentText: destination.extraInfo.safetyTips.join(
+                          ", ",
+                        ),
+                      ),
+                      _infoRow(
+                        mainText: SharedRes.strings(context).highlights,
+                        contentText: destination.extraInfo.highlights.join(
+                          ", ",
+                        ),
+                      ),
+
+                      ViewAllRow(
+                        firstText: SharedRes.strings(context).recommendedForYou,
+                        onPressed: () {
+                          Navigator.pushNamed(
+                            context,
+                            RouteName.viewAllScreen,
+                            arguments: SharedRes.strings(
+                              context,
+                            ).recommendedForYou,
+                          );
+                        },
+                      ),
+
+                      SizedBox(
+                        height: 220.h,
+                        child: FutureBuilder(
+                          future: recommendedFuture,
+                          builder: (context, snapshot) {
+                            if (snapshot.connectionState == ConnectionState.waiting) {
+                              return const Center(child: CircularProgressIndicator());
+                            }
+
+                            if (snapshot.hasError || !snapshot.hasData || snapshot.data!.isEmpty) {
+                              return const Center(child: Text("No recommendations found"));
+                            }
+
+                            final recommendedList = snapshot.data!
+                                .where((item) => item.destinationId != destination.destinationId)
+                                .toList();
+
+                            if (recommendedList.isEmpty) {
+                              return const Center(child: Text("No recommendations found"));
+                            }
+                            return ListView.builder(
+                              scrollDirection: Axis.horizontal,
+                              itemCount: recommendedList.length,
+                              itemBuilder: (context, index){
+                                final item = recommendedList[index];
+
+                                final image =
+                                item.extraInfo.frontImagePath.isNotEmpty
+                                    ? item.extraInfo.frontImagePath.first
+                                    : item.extraInfo.photos.isNotEmpty
+                                    ? item.extraInfo.photos.first
+                                    : "";
+                                return DestinationCard(
+                                  imagePath: image.isNotEmpty ? "$API_URL$image" : "",
+                                  title: item.placeName,
+                                  location: item.location,
+                                  isNetworkImage: image.isNotEmpty,
+                                  destinationId: item.destinationId,
+                                );
+                              },
+                            );
+                          }
+                        ),
+                      ),
+                    ],
                   ),
-                ],
-              ),
+                ),
+              ],
             ),
           ),
-        ],
-      ),
+        ),
+      ],
     );
   }
 

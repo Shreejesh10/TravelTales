@@ -2,6 +2,7 @@ import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:traveltales/core/model/genre_model.dart';
 import 'package:traveltales/core/route_config/route_names.dart';
 import 'package:traveltales/core/ui/localization/sharedRes.dart';
 
@@ -19,8 +20,7 @@ class _PreferenceScreenState extends State<PreferenceScreen> {
   bool _saving = false;
   String? _error;
 
-  List<Map<String, dynamic>> _genres = [];
-
+  List<Genre> _genres = [];
   final Set<int> _selectedIds = {};
 
   @override
@@ -49,21 +49,27 @@ class _PreferenceScreenState extends State<PreferenceScreen> {
       log("Preference load error: $e", stackTrace: st);
       setState(() => _error = e.toString());
     } finally {
-      setState(() => _loading = false);
+      if (mounted) {
+        setState(() => _loading = false);
+      }
     }
   }
 
   Future<void> _onNext() async {
-    if(_selectedIds.isEmpty){
+    if (_selectedIds.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text("Please select at least one category to continue"),
-)
+        const SnackBar(
+          content: Text("Please select at least one category to continue"),
+        ),
       );
       return;
     }
+
     setState(() => _saving = true);
+
     try {
       await saveUserPreferencesByIds(_selectedIds.toList());
+
       if (!mounted) return;
       Navigator.pushNamed(context, RouteName.dashBoardScreen);
     } catch (e) {
@@ -72,7 +78,9 @@ class _PreferenceScreenState extends State<PreferenceScreen> {
         SnackBar(content: Text("Failed to save: $e")),
       );
     } finally {
-      if (mounted) setState(() => _saving = false);
+      if (mounted) {
+        setState(() => _saving = false);
+      }
     }
   }
 
@@ -91,22 +99,34 @@ class _PreferenceScreenState extends State<PreferenceScreen> {
         body: Stack(
           fit: StackFit.expand,
           children: [
-            Image.asset('assets/images/OnboardingImage.png', fit: BoxFit.cover),
-            Container(color: cs.secondary.withOpacity(0.25)),
+            Image.asset(
+              'assets/images/OnboardingImage.png',
+              fit: BoxFit.cover,
+            ),
+            Container(
+              color: cs.secondary.withOpacity(0.25),
+            ),
             SafeArea(
               child: Padding(
                 padding: EdgeInsets.symmetric(horizontal: 18.w),
                 child: Stack(
                   children: [
-                    // Skip
                     Positioned(
                       top: 8.h,
                       right: 0,
                       child: InkWell(
                         borderRadius: BorderRadius.circular(10.r),
-                        onTap: () => Navigator.pushNamed(context, RouteName.dashBoardScreen),
+                        onTap: () {
+                          Navigator.pushNamed(
+                            context,
+                            RouteName.dashBoardScreen,
+                          );
+                        },
                         child: Padding(
-                          padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 6.h),
+                          padding: EdgeInsets.symmetric(
+                            horizontal: 10.w,
+                            vertical: 6.h,
+                          ),
                           child: Text(
                             "Skip",
                             style: theme.textTheme.bodyMedium?.copyWith(
@@ -118,8 +138,6 @@ class _PreferenceScreenState extends State<PreferenceScreen> {
                         ),
                       ),
                     ),
-
-                    // Chips
                     Align(
                       alignment: const Alignment(0, -0.12),
                       child: ConstrainedBox(
@@ -127,8 +145,6 @@ class _PreferenceScreenState extends State<PreferenceScreen> {
                         child: _buildChipArea(theme),
                       ),
                     ),
-
-                    // Bottom
                     Align(
                       alignment: Alignment.bottomCenter,
                       child: Padding(
@@ -163,7 +179,9 @@ class _PreferenceScreenState extends State<PreferenceScreen> {
                                     ? SizedBox(
                                   width: 18.w,
                                   height: 18.w,
-                                  child: const CircularProgressIndicator(strokeWidth: 2),
+                                  child: const CircularProgressIndicator(
+                                    strokeWidth: 2,
+                                  ),
                                 )
                                     : Text(
                                   "Next",
@@ -189,7 +207,11 @@ class _PreferenceScreenState extends State<PreferenceScreen> {
   }
 
   Widget _buildChipArea(ThemeData theme) {
-    if (_loading) return const Center(child: CircularProgressIndicator());
+    if (_loading) {
+      return const Center(
+        child: CircularProgressIndicator(),
+      );
+    }
 
     if (_error != null) {
       return Column(
@@ -198,10 +220,15 @@ class _PreferenceScreenState extends State<PreferenceScreen> {
           Text(
             "Failed to load categories\n$_error",
             textAlign: TextAlign.center,
-            style: theme.textTheme.bodyMedium?.copyWith(color: Colors.white),
+            style: theme.textTheme.bodyMedium?.copyWith(
+              color: Colors.white,
+            ),
           ),
           SizedBox(height: 12.h),
-          ElevatedButton(onPressed: _load, child: const Text("Retry")),
+          ElevatedButton(
+            onPressed: _load,
+            child: const Text("Retry"),
+          ),
         ],
       );
     }
@@ -209,7 +236,9 @@ class _PreferenceScreenState extends State<PreferenceScreen> {
     if (_genres.isEmpty) {
       return Text(
         "No categories found.",
-        style: theme.textTheme.bodyMedium?.copyWith(color: Colors.white),
+        style: theme.textTheme.bodyMedium?.copyWith(
+          color: Colors.white,
+        ),
       );
     }
 
@@ -217,9 +246,9 @@ class _PreferenceScreenState extends State<PreferenceScreen> {
       alignment: WrapAlignment.center,
       spacing: 6.w,
       runSpacing: 7.h,
-      children: _genres.map((g) {
-        final id = (g["id"] as num).toInt();
-        final name = g["name"].toString();
+      children: _genres.map((genre) {
+        final id = genre.genreId;
+        final name = genre.name;
         final isSelected = _selectedIds.contains(id);
 
         return _CategoryChip(
@@ -258,8 +287,9 @@ class _CategoryChip extends StatelessWidget {
     final isDark = theme.brightness == Brightness.dark;
 
     final Color bgSelected = cs.primary;
-    final Color bgUnselected =
-    isDark ? Colors.white.withOpacity(0.14) : Colors.white.withOpacity(0.72);
+    final Color bgUnselected = isDark
+        ? Colors.white.withOpacity(0.14)
+        : Colors.white.withOpacity(0.72);
 
     return Material(
       color: Colors.transparent,
@@ -267,12 +297,17 @@ class _CategoryChip extends StatelessWidget {
         borderRadius: BorderRadius.circular(10.r),
         onTap: onTap,
         child: Container(
-          padding: EdgeInsets.symmetric(horizontal: 14.w, vertical: 9.h),
+          padding: EdgeInsets.symmetric(
+            horizontal: 14.w,
+            vertical: 9.h,
+          ),
           decoration: BoxDecoration(
             color: selected ? bgSelected : bgUnselected,
             borderRadius: BorderRadius.circular(10.r),
             border: Border.all(
-              color: selected ? Colors.transparent : Colors.white.withOpacity(0.22),
+              color: selected
+                  ? Colors.transparent
+                  : Colors.white.withOpacity(0.22),
               width: 1,
             ),
           ),

@@ -7,6 +7,7 @@ import 'package:traveltales/core/model/user_info.dart';
 import 'package:traveltales/core/route_config/route_names.dart';
 import 'package:traveltales/core/ui/components/actionDialogBox.dart';
 import 'package:traveltales/core/ui/components/languageDialog.dart';
+import 'package:traveltales/core/ui/components/textField/passwordTextField.dart';
 import 'package:traveltales/core/ui/components/themeDialog.dart';
 import 'package:traveltales/core/ui/components/viewAllRow.dart';
 import 'package:traveltales/core/ui/localization/sharedRes.dart';
@@ -273,35 +274,28 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       context: context,
                       title: SharedRes.strings(context).changePassword,
                       contentWidget: [
-                        TextField(
+                        PasswordTextField(
                           controller: passwordController,
-                          obscureText: true,
-                          decoration: InputDecoration(
-                            labelText: SharedRes.strings(context).password,
-                            border: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(12.r),
-                              ),
-
-
-                          ),
+                          labelText: SharedRes.strings(context).password,
                         ),
                         SizedBox(height: 8.h,),
-                        TextField(
+                        PasswordTextField(
                           controller: confirmPasswordController,
-                          obscureText: true,
-                          decoration: InputDecoration(
-                            labelText: SharedRes.strings(context).password,
-                            border: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(12.r),
-                            ),
+                          labelText: SharedRes.strings(context).confirmPassword,
 
-
-                          ),
                         )
                       ],
                       onConfirm: () {}
                   );
                 },
+              ),
+              SizedBox(height: 8.h),
+              _settingsTile(
+                  icon: Icons.room_preferences_outlined,
+                  title: SharedRes.strings(context).changePreference,
+                  onTap: (){
+                    Navigator.pushNamed(context, RouteName.preferenceScreen);
+                  }
               ),
               SizedBox(height: 8.h),
               _settingsTile(
@@ -396,7 +390,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
     if (profileImageFile != null && isLoading) {
       avatarProvider = FileImage(profileImageFile!);
     } else {
-      // pick which path to use
       final String? pathToUse =
       (profilePhotoUrl != null && profilePhotoUrl!.isNotEmpty)
           ? profilePhotoUrl

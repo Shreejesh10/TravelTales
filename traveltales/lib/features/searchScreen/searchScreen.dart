@@ -59,27 +59,27 @@ class _SearchScreenState extends State<SearchScreen> {
                 Padding(padding: EdgeInsets.only(left: 16, bottom: 16),
                   child: Column(
                     children: [
-                      _bookedEventCard(
-                          imageAsset: "assets/images/Annapurna.png",
-                          title: "Annapurna Base Camp",
-                          statusText: "Annapurna, Nepal",
-                          organizerText: "October - September and May to March",
-                          difficultyText: "Mid",
-                          onTap: (){
-                            Navigator.pushNamed(context, RouteName.destinationDetailScreen);
-                          }
-                      ),
-                      SizedBox(height: 12,),
-                      _bookedEventCard(
-                          imageAsset: "assets/images/Annapurna.png",
-                          title: "Annapurna Base Camp",
-                          statusText: "Annapurna, Nepal",
-                          organizerText: "October - September and May to March",
-                          difficultyText: "Mid",
-                          onTap: (){
-                            Navigator.pushNamed(context, RouteName.destinationDetailScreen);
-                          }
-                      )
+                      // _bookedEventCard(
+                      //     imageAsset: "assets/images/Annapurna.png",
+                      //     title: "Annapurna Base Camp",
+                      //     statusText: "Annapurna, Nepal",
+                      //     organizerText: "October - September and May to March",
+                      //     difficultyText: "Mid",
+                      //     onTap: (){
+                      //       Navigator.pushNamed(context, RouteName.destinationDetailScreen);
+                      //     }
+                      // ),
+                      // SizedBox(height: 12,),
+                      // _bookedEventCard(
+                      //     imageAsset: "assets/images/Annapurna.png",
+                      //     title: "Annapurna Base Camp",
+                      //     statusText: "Annapurna, Nepal",
+                      //     organizerText: "October - September and May to March",
+                      //     difficultyText: "Mid",
+                      //     onTap: (){
+                      //       Navigator.pushNamed(context, RouteName.destinationDetailScreen);
+                      //     }
+                      // )
                     ],
                   ),
 

@@ -37,7 +37,7 @@ class RouteConfig {
       case RouteName.settingScreen:
         return MaterialPageRoute(builder: (_) => SettingsScreen());
       case RouteName.destinationDetailScreen:
-        return MaterialPageRoute(builder: (_) => DestinationDetailScreen());
+        return MaterialPageRoute(builder: (_) => DestinationDetailScreen(), settings: settings);
       case RouteName.searchScreen:
         return MaterialPageRoute(builder: (_) => SearchScreen());
       case RouteName.bookedEventScreen:

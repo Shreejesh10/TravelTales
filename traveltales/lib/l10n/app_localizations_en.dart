@@ -159,7 +159,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get accommodation => 'Accommodation: ';
 
   @override
-  String get highlights => 'highlights: ';
+  String get highlights => 'Highlights: ';
 
   @override
   String get elevation => 'Elevation';
@@ -202,4 +202,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get photographySpot => 'Photography Spot';
+
+  @override
+  String get changePreference => 'Change Preference';
 }

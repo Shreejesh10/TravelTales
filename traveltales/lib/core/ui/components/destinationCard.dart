@@ -9,14 +9,14 @@ class DestinationCard extends StatelessWidget {
   final String title;
   final String location;
   final bool isNetworkImage;
-  final int? destinationId;
+  final int destinationId;
 
   const DestinationCard({
     required this.imagePath,
     required this.title,
     required this.location,
     this.isNetworkImage = false,
-    this.destinationId,
+    required this.destinationId,
     super.key,
   });
 
@@ -24,7 +24,7 @@ class DestinationCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       margin: EdgeInsets.only(right: 12.w),
-
+      padding: EdgeInsets.all(0),
       width: 155.w,
       decoration: BoxDecoration(
         color: AppColors.getContainerBoxColor(context),
