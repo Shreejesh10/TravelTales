@@ -74,8 +74,45 @@
   "paragliding": "Paragliding",
   "photographySpot": "Photography Spot",
 
-  "changePreference": "Change Preference"
+  "changePreference": "Change Preference",
 
+  "planAmazing": "Plan Amazing",
+  "adventureFor": "Adventure For",
+  "explorers": "Explorers!",
+  "selectedDestination": "Selected Destination",
+  "searchResults": "Search Results",
+  "eventInformation": "Event Information",
+  "eventInformationDescription": "Fill in the main information for your event.",
+  "enterEventTitle": "Enter Event Title",
+  "eventTitleHint": "This is Event title",
+  "enterEventDescription": "Enter Event Description",
+  "eventDescriptionHint": "Event Description",
+  "meetingPoint": "Meeting Point",
+  "meetingPointHint": "Event meeting point",
+  "whatToBring": "What to bring",
+  "whatToBringHint": "What to bring",
+  "eventDate": "Event Date",
+  "fromDate": "From Date",
+  "toDate": "To Date",
+  "pricingAndCapacity": "Pricing & Capacity",
+  "price": "Price",
+  "enterPrice": "Enter price",
+  "maximumPeople": "Maximum People",
+  "enterPeople": "Enter people",
+  "createEvent": "Create Event",
+
+  "aboutEvent": "About this Event",
+  "moreInformation": "More Information",
+  "essentialChecklist": "Essential Check List",
+  "seeMore": "See more",
+  "seeLess": "See less",
+  "bookNow": "Book Now",
+  "maxPeople": "Max People",
+  "postedBy": "Posted By",
+  "meetupPoint": "Meet-up Point",
+  "totalPrice": "Total Price",
+  "viewDetails": "View Details",
+  "meetingTime": "Meeting Time"
 
 
 }

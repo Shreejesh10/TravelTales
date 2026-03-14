@@ -6,13 +6,15 @@ import 'dart:io';
 import 'package:http_parser/http_parser.dart';
 import 'package:path/path.dart' as p;
 import 'package:traveltales/core/model/destination_model.dart';
+import 'package:traveltales/core/model/event_create_model.dart';
+import 'package:traveltales/core/model/event_model.dart';
 import 'package:traveltales/core/model/genre_model.dart';
 import 'package:traveltales/core/model/user_info.dart';
 
 final storage = FlutterSecureStorage();
 // const String API_URL = 'http://10.0.2.2:8000';
 final String API_URL = 'http://192.168.1.67:8000';
-// final String API_URL = 'http://100.64.238.232:8000';
+// final String API_URL = 'http://100.64.200.118:8000';
 
 // final String API_URL = Platform.isAndroid
 //     ? 'http://10.0.2.2:8000' // Android emulator → maps to PC localhost
@@ -105,7 +107,7 @@ Future<void> refreshAccessToken() async {
   }
 }
 
-Future<bool> login(String email, String password) async {
+Future<Map<String, dynamic>> login(String email, String password) async {
   final url = Uri.parse('$API_URL/users/login');
   final body = jsonEncode({
     "email": email,
@@ -122,19 +124,27 @@ Future<bool> login(String email, String password) async {
     if (response.statusCode == 200) {
       final data = jsonDecode(response.body);
 
-      // Save tokens securely
       await storage.write(key: 'access_token', value: data['access_token']);
       await storage.write(key: 'refresh_token', value: data['refresh_token']);
 
-      final bool hasCompleted = data['has_completed_preference'] ==true;
+      final String role = data['roles'] ?? "";
+      final bool hasCompleted = data['has_completed_preference'] == true;
 
-      await storage.write(key: 'has_completed_preference', value: hasCompleted.toString(),
-  );
+      await storage.write(key: 'roles', value: role);
+      await storage.write(
+        key: 'has_completed_preference',
+        value: hasCompleted.toString(),
+      );
 
-      log(" Login successful. has_completed_preference: $hasCompleted");
-      return hasCompleted;
+      log("Login successful. has_completed_preference: $hasCompleted");
+      log("Roles: $role");
+
+      return {
+        "roles": role,
+        "has_completed_preference": hasCompleted,
+      };
     } else {
-      log(" Login failed: ${response.statusCode} ${response.body}");
+      log("Login failed: ${response.statusCode} ${response.body}");
       throw Exception("Login failed: ${response.body}");
     }
   } catch (e) {
@@ -170,6 +180,27 @@ Future<void> signup(String email, String password, String userName) async {
   }catch(e){
     log("Error during signup: $e");
     rethrow;
+  }
+}
+Future<List<Destination>>searchDestination(String query)async{
+  final headers = await getHeaders();
+  final url = Uri.parse(
+    '$API_URL/destinations/search-destination',
+  ).replace(
+    queryParameters: {"query": query},
+  );
+
+  final response = await http.get(
+    url,
+    headers: headers,
+
+  );
+  if (response.statusCode == 200) {
+    final List data = jsonDecode(response.body);
+    return data.map((e) => Destination.fromJson(e)).toList();
+  } else {
+    log("Destination search failed: ${response.statusCode} ${response.body}");
+    throw Exception("Failed to search destinations");
   }
 }
 Future<Destination?> getDestinationByID(int destinationId) async {
@@ -367,4 +398,119 @@ Future<List<Destination>> getAllDestinations() async {
 
   throw Exception(
       "All destinations fetch failed: ${response.statusCode} ${response.body}");
+}
+
+
+
+Future<void> createEvent(EventCreateModel event) async {
+  final headers = await getHeaders();
+
+  final url = Uri.parse('$API_URL/events/');
+
+  final response = await http.post(
+    url,
+    headers: headers,
+    body: jsonEncode(event.toJson()),
+  );
+
+  if (response.statusCode == 200 || response.statusCode == 201) {
+    log("Event created successfully");
+  } else {
+    log("Create event failed: ${response.statusCode} ${response.body}");
+    throw Exception("Failed to create event");
+  }
+}
+
+Future<EventCreateModel> getEventById(int eventId) async {
+  final url = Uri.parse('$API_URL/events/$eventId');
+
+  final response = await http.get(
+    url,
+    headers: {
+      "Content-Type": "application/json",
+    },
+  );
+
+  if (response.statusCode == 200) {
+    final data = jsonDecode(response.body);
+    return EventCreateModel.fromJson(data);
+  } else {
+    log("Get event failed: ${response.statusCode} ${response.body}");
+    throw Exception("Failed to load event");
+  }
+}
+
+Future<EventCreateModel> updateEvent(int eventId, Map<String, dynamic> updatedData) async {
+  final headers = await getHeaders();
+  final url = Uri.parse('$API_URL/events/$eventId');
+
+  final response = await http.patch(
+    url,
+    headers: headers,
+    body: jsonEncode(updatedData),
+  );
+
+  if (response.statusCode == 200) {
+    final data = jsonDecode(response.body);
+    log("Event updated successfully");
+    return EventCreateModel.fromJson(data);
+  } else {
+    log("Update event failed: ${response.statusCode} ${response.body}");
+    throw Exception("Failed to update event");
+  }
+}
+
+Future<void> deleteEvent(int eventId) async {
+  final headers = await getHeaders();
+  final url = Uri.parse('$API_URL/events/$eventId');
+
+  final response = await http.delete(
+    url,
+    headers:headers
+  );
+
+  if (response.statusCode == 204) {
+    log("Event deleted successfully");
+  } else {
+    log("Delete event failed: ${response.statusCode} ${response.body}");
+    throw Exception("Failed to delete event");
+  }
+}
+Future<List<EventCreateModel>> getMyEvents() async {
+  final url = Uri.parse('$API_URL/events/me');
+  final headers = await getHeaders();
+
+  final response = await http.get(url, headers: headers);
+
+  if (response.statusCode == 200) {
+    final List data = jsonDecode(response.body);
+    return data.map((e) => EventCreateModel.fromJson(e)).toList();
+  } else {
+    log("Get my events failed: ${response.statusCode} ${response.body}");
+    throw Exception("Failed to load my events");
+  }
+}
+Future<List<Event>> getAllEvents() async {
+  final url = Uri.parse('$API_URL/events/all');
+  final headers = await getHeaders();
+
+  try {
+    final response = await http.get(url, headers: headers);
+
+    log("STATUS CODE: ${response.statusCode}");
+    log("RESPONSE BODY: ${response.body}");
+
+    if (response.statusCode == 200) {
+      final List data = jsonDecode(response.body);
+      return data.map((e) => Event.fromJson(e)).toList();
+    } else {
+      throw Exception(
+        "Failed to load all events: ${response.statusCode} ${response.body}",
+      );
+    }
+  } catch (e, stackTrace) {
+    log("GET ALL EVENTS ERROR: $e");
+    log("STACKTRACE: $stackTrace");
+    rethrow;
+  }
 }

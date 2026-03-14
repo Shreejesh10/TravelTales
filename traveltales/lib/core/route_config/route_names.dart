@@ -15,7 +15,9 @@ class RouteName{
   static const String destinationDetailScreen = '/destination-detail-screen';
   static const String searchScreen = '/search-screen';
   static const String bookedEventScreen = "/booked_detail_screen";
-
+  static const String companyDashboardScreen = "/company_dashboard_screen";
+  static const String eventCreatingScreen = "/event_creating_screen";
+  static const String eventDetailScreen = "/event_detail_screen";
 
 
 

@@ -43,18 +43,25 @@ class SearchFilterBar extends StatelessWidget {
           Expanded(
             child: _isTextField
                 ? TextField(
+              style: TextStyle(
+                color: Colors.black
+              ),
               controller: controller,
               onChanged: onChanged,
               autofocus: false,
               decoration: InputDecoration(
                 hintText: hintText,
+                hintStyle: TextStyle(
+                  color: Colors.black45,
+                  fontSize: 14,
+                ),
                 border: InputBorder.none,
                 isCollapsed: true,
               ),
             )
                 : Text(
               hintText,
-              style: const TextStyle(
+              style:  TextStyle(
                 color: Colors.black45,
                 fontSize: 14,
               ),

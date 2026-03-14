@@ -3,9 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:traveltales/features/eventsScreen/eventsScreen.dart';
 import 'package:traveltales/features/homeScreen/homeScreen.dart';
 import 'package:traveltales/features/profile/profile.dart';
-import 'package:traveltales/features/settings/settingsScreen.dart';
+import 'package:traveltales/features/searchScreen/searchScreen.dart';
 
-import '../searchScreen/searchScreen.dart';
 
 class DashboardScreen extends StatefulWidget {
   const DashboardScreen({super.key});
@@ -19,7 +18,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
 
   final List<Widget> _pages = const [
     HomeScreen(),
-    EventsScreen(),
+    SearchScreen(),
     EventsScreen(),
     ProfileScreen(),
   ];

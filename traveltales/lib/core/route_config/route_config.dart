@@ -1,8 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:traveltales/core/model/event_model.dart';
 import 'package:traveltales/core/route_config/route_names.dart';
 import 'package:traveltales/features/bookedEventsDetail/bookedEventScreen.dart';
+import 'package:traveltales/features/companyDashboard/companyDashboardScreen.dart';
 import 'package:traveltales/features/dashboard/dashboardScreen.dart';
 import 'package:traveltales/features/destinationDetailScreen/destinationDetailScreen.dart';
+import 'package:traveltales/features/eventCreatingScreen/eventCreatingScreen.dart';
+import 'package:traveltales/features/eventsScreen/eventDetailScreen.dart';
 import 'package:traveltales/features/homeScreen/homeScreen.dart';
 import 'package:traveltales/features/auth/login/loginScreen.dart';
 import 'package:traveltales/features/onboardingScreen/onboardingScreen.dart';
@@ -42,6 +46,14 @@ class RouteConfig {
         return MaterialPageRoute(builder: (_) => SearchScreen());
       case RouteName.bookedEventScreen:
         return MaterialPageRoute(builder: (_) => BookedEventsScreen());
+      case RouteName.companyDashboardScreen:
+        return MaterialPageRoute(builder: (_) => CompanyDashboardScreen());
+      case RouteName.eventCreatingScreen:
+        return MaterialPageRoute(builder: (_) => EventCreatingScreen());
+      case RouteName.eventDetailScreen:
+        final event = settings.arguments as Event;
+        return MaterialPageRoute(builder: (_) => EventDetailScreen(event: event,));
+
 
       default:
         return _errorRoute();

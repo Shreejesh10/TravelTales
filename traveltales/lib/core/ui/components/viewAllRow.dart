@@ -23,11 +23,16 @@ class ViewAllRow extends StatelessWidget {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
-        Text(
-          firstText,
-          style: TextStyle(
-            fontSize: 16.sp,
-            fontWeight: FontWeight.w600,
+        Expanded(
+          child: Text(
+            firstText,
+            maxLines: 1,
+            overflow: TextOverflow.ellipsis,
+            style: TextStyle(
+              fontSize: 16.sp,
+              fontWeight: FontWeight.w600,
+              overflow: TextOverflow.ellipsis,
+            ),
           ),
         ),
         if(isViewAll)
@@ -38,7 +43,6 @@ class ViewAllRow extends StatelessWidget {
                   style: TextStyle(
                     color: Theme.of(context).colorScheme.primary,
                     fontSize: 13.sp,
-
                   )
               )
           ),

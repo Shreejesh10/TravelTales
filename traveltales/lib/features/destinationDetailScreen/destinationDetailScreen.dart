@@ -112,7 +112,7 @@ class _DestinationDetailScreenState extends State<DestinationDetailScreen> {
           padding: EdgeInsets.only(top: screenHeight * 0.25),
           child: Container(
             width: double.infinity,
-            padding: EdgeInsets.all(13.w),
+            padding: EdgeInsets.all(12.w),
             decoration: BoxDecoration(
               color: AppColors.getDetailBackgroundColor(context),
               borderRadius: BorderRadius.vertical(top: Radius.circular(25.r)),

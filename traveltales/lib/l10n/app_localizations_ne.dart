@@ -205,4 +205,112 @@ class AppLocalizationsNe extends AppLocalizations {
 
   @override
   String get changePreference => 'प्राथमिकता परिवर्तन';
+
+  @override
+  String get planAmazing => 'धमाकेदार योजना बनाउनुहोस्';
+
+  @override
+  String get adventureFor => 'साहसिक यात्राको लागि';
+
+  @override
+  String get explorers => 'अन्वेषकहरू!';
+
+  @override
+  String get selectedDestination => 'छानिएको गन्तव्य';
+
+  @override
+  String get searchResults => 'खोज परिणामहरू';
+
+  @override
+  String get eventInformation => 'कार्यक्रम जानकारी';
+
+  @override
+  String get eventInformationDescription => 'आफ्नो कार्यक्रमको मुख्य जानकारी भर्नुहोस्।';
+
+  @override
+  String get enterEventTitle => 'कार्यक्रम शीर्षक प्रविष्ट गर्नुहोस्';
+
+  @override
+  String get eventTitleHint => 'यो कार्यक्रमको शीर्षक हो';
+
+  @override
+  String get enterEventDescription => 'कार्यक्रम विवरण प्रविष्ट गर्नुहोस्';
+
+  @override
+  String get eventDescriptionHint => 'कार्यक्रम विवरण';
+
+  @override
+  String get meetingPoint => 'भेट्ने स्थान';
+
+  @override
+  String get meetingPointHint => 'कार्यक्रमको भेट्ने स्थान';
+
+  @override
+  String get whatToBring => 'के ल्याउने';
+
+  @override
+  String get whatToBringHint => 'के ल्याउने';
+
+  @override
+  String get eventDate => 'कार्यक्रम मिति';
+
+  @override
+  String get fromDate => 'सुरु मिति';
+
+  @override
+  String get toDate => 'अन्त्य मिति';
+
+  @override
+  String get pricingAndCapacity => 'मूल्य र क्षमता';
+
+  @override
+  String get price => 'मूल्य';
+
+  @override
+  String get enterPrice => 'मूल्य प्रविष्ट गर्नुहोस्';
+
+  @override
+  String get maximumPeople => 'अधिकतम मानिस';
+
+  @override
+  String get enterPeople => 'मानिस संख्या प्रविष्ट गर्नुहोस्';
+
+  @override
+  String get createEvent => 'कार्यक्रम सिर्जना गर्नुहोस्';
+
+  @override
+  String get aboutEvent => 'यस कार्यक्रम बारे';
+
+  @override
+  String get moreInformation => 'थप जानकारी';
+
+  @override
+  String get essentialChecklist => 'आवश्यक चेकलिस्ट';
+
+  @override
+  String get seeMore => 'थप हेर्नुहोस्';
+
+  @override
+  String get seeLess => 'कम हेर्नुहोस्';
+
+  @override
+  String get bookNow => 'बुक गर्नुहोस्';
+
+  @override
+  String get maxPeople => 'अधिकतम व्यक्ति';
+
+  @override
+  String get postedBy => 'पोस्ट गर्ने';
+
+  @override
+  String get meetupPoint => 'भेट्ने स्थान';
+
+  @override
+  String get totalPrice => 'कुल मूल्य';
+
+  @override
+  String get viewDetails => 'विवरण हेर्नुहोस्';
+
+  @override
+  String get meetingTime => 'भेट्ने समय';
 }

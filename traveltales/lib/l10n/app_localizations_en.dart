@@ -205,4 +205,112 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get changePreference => 'Change Preference';
+
+  @override
+  String get planAmazing => 'Plan Amazing';
+
+  @override
+  String get adventureFor => 'Adventure For';
+
+  @override
+  String get explorers => 'Explorers!';
+
+  @override
+  String get selectedDestination => 'Selected Destination';
+
+  @override
+  String get searchResults => 'Search Results';
+
+  @override
+  String get eventInformation => 'Event Information';
+
+  @override
+  String get eventInformationDescription => 'Fill in the main information for your event.';
+
+  @override
+  String get enterEventTitle => 'Enter Event Title';
+
+  @override
+  String get eventTitleHint => 'This is Event title';
+
+  @override
+  String get enterEventDescription => 'Enter Event Description';
+
+  @override
+  String get eventDescriptionHint => 'Event Description';
+
+  @override
+  String get meetingPoint => 'Meeting Point';
+
+  @override
+  String get meetingPointHint => 'Event meeting point';
+
+  @override
+  String get whatToBring => 'What to bring';
+
+  @override
+  String get whatToBringHint => 'What to bring';
+
+  @override
+  String get eventDate => 'Event Date';
+
+  @override
+  String get fromDate => 'From Date';
+
+  @override
+  String get toDate => 'To Date';
+
+  @override
+  String get pricingAndCapacity => 'Pricing & Capacity';
+
+  @override
+  String get price => 'Price';
+
+  @override
+  String get enterPrice => 'Enter price';
+
+  @override
+  String get maximumPeople => 'Maximum People';
+
+  @override
+  String get enterPeople => 'Enter people';
+
+  @override
+  String get createEvent => 'Create Event';
+
+  @override
+  String get aboutEvent => 'About this Event';
+
+  @override
+  String get moreInformation => 'More Information';
+
+  @override
+  String get essentialChecklist => 'Essential Check List';
+
+  @override
+  String get seeMore => 'See more';
+
+  @override
+  String get seeLess => 'See less';
+
+  @override
+  String get bookNow => 'Book Now';
+
+  @override
+  String get maxPeople => 'Max People';
+
+  @override
+  String get postedBy => 'Posted By';
+
+  @override
+  String get meetupPoint => 'Meet-up Point';
+
+  @override
+  String get totalPrice => 'Total Price';
+
+  @override
+  String get viewDetails => 'View Details';
+
+  @override
+  String get meetingTime => 'Meeting Time';
 }

@@ -17,7 +17,9 @@ def create_event(db: Session, company_user_id: int, event_data: TravelEventCreat
         destination_id=event_data.destination_id,
         title=event_data.title,
         event_description=event_data.event_description,
-        event_date=event_data.event_date,
+        meeting_time = event_data.meeting_time,
+        to_date=event_data.to_date,
+        from_date=event_data.from_date,
         meeting_point=event_data.meeting_point,
         what_to_bring=event_data.what_to_bring,
         max_people=event_data.max_people,
@@ -74,4 +76,12 @@ def get_event_by_id(db: Session, event_id: int) -> Optional[TravelEvent]:
         .options(joinedload(TravelEvent.destination))
         .filter(TravelEvent.event_id == event_id)
         .first()
+    )
+
+def get_all_events(db: Session) -> List[TravelEvent]:
+    return (
+        db.query(TravelEvent)
+        .options(joinedload(TravelEvent.destination))
+        .order_by(TravelEvent.from_date.asc())
+        .all()
     )

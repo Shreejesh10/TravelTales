@@ -1,5 +1,5 @@
 from pydantic import BaseModel, EmailStr, Field, field_validator
-from datetime import datetime
+from datetime import datetime, time
 from typing import Literal, Optional, List, Dict, Any
 from app.model.models import UserStatus
 
@@ -155,7 +155,9 @@ class TravelEventBase(BaseModel):
     destination_id: int
     title: str = Field(..., min_length=1, max_length=255)
     event_description: Optional[str] = None
-    event_date: datetime
+    from_date: datetime
+    to_date: datetime
+    meeting_time: time
     meeting_point: Optional[str] = None
     what_to_bring: Optional[List[str]] = None
     max_people: int = Field(..., gt=0)
@@ -167,7 +169,9 @@ class TravelEventCreate(TravelEventBase):
 class TravelEventUpdate(BaseModel):
     title: Optional[str] = Field(None, min_length=1, max_length=255)
     event_description: Optional[str] = None
-    event_date: Optional[datetime] = None
+    from_date: Optional[datetime] = None
+    to_date: Optional[datetime] = None
+    meeting_time: Optional[time] = None
     meeting_point: Optional[str] = None
     what_to_bring: Optional[List[str]] = None
     max_people: Optional[int] = Field(None, gt=0)
@@ -178,7 +182,9 @@ class TravelEventResponse(BaseModel):
     company_user_id: int
     title: str
     event_description: Optional[str] = None
-    event_date: datetime
+    from_date: datetime
+    to_date: datetime
+    meeting_time: Optional[time] = None
     meeting_point: Optional[str] = None
     what_to_bring: Optional[List[str]] = None
     max_people: int

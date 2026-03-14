@@ -39,6 +39,18 @@ def delete_destination(db: Session, destination_id: int) -> bool:
         db.commit()
         return True
 
+def search_destination(db: Session, query: str) -> List [Destination]:
+          return (
+        db.query(Destination)
+        .filter(
+            or_(
+                Destination.place_name.ilike(f"%{query}%"),
+                Destination.location.ilike(f"%{query}%"),
+                Destination.description.ilike(f"%{query}%")
+            )
+        )
+        .all()
+    )
 
 def update_destination_service(
     db: Session,

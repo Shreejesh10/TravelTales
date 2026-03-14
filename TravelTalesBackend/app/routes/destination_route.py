@@ -10,7 +10,8 @@ from app.services.destination_service import (
     get_destination_by_id, 
     get_all_destinations, 
     delete_destination,
-    update_destination_service,)
+    update_destination_service,
+    search_destination)
 from app.services.recommendation_service import recommend_destinations
 
 
@@ -70,6 +71,13 @@ def get_all_destination_route(
             detail="Internal Server Error"
         )
 
+@router.get("/search-destination")
+def search_destination_route(
+    query: str, 
+    db: Session = Depends(get_db),
+    current_user: User = Depends(get_current_user)
+    ):
+    return search_destination(db, query)
 
 @router.get("/{destination_id}", response_model=DestinationResponse)
 def get_destination_id(
@@ -156,4 +164,5 @@ def get_recommendations(
     db: Session = Depends(get_db)
 ):
     return recommend_destinations(db, current_user.id)
+
 

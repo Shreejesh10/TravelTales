@@ -85,6 +85,41 @@ class Strings {
   String get photographySpot => _l10n.photographySpot;
   String get changePreference => _l10n.changePreference;
 
+  String get selectedDestination => _l10n.selectedDestination;
+  String get searchResults => _l10n.searchResults;
+  String get eventInformation => _l10n.eventInformation;
+  String get eventInformationDescription => _l10n.eventInformationDescription;
+  String get enterEventTitle => _l10n.enterEventTitle;
+  String get eventTitleHint => _l10n.eventTitleHint;
+  String get enterEventDescription => _l10n.enterEventDescription;
+  String get eventDescriptionHint => _l10n.eventDescriptionHint;
+  String get meetingPoint => _l10n.meetingPoint;
+  String get meetingPointHint => _l10n.meetingPointHint;
+  String get whatToBring => _l10n.whatToBring;
+  String get whatToBringHint => _l10n.whatToBringHint;
+  String get eventDate => _l10n.eventDate;
+  String get fromDate => _l10n.fromDate;
+  String get toDate => _l10n.toDate;
+  String get pricingAndCapacity => _l10n.pricingAndCapacity;
+  String get price => _l10n.price;
+  String get enterPrice => _l10n.enterPrice;
+  String get maximumPeople => _l10n.maximumPeople;
+  String get enterPeople => _l10n.enterPeople;
+  String get createEvent => _l10n.createEvent;
+
+  String get viewDetails => _l10n.viewDetails;
+  String get aboutEvent => _l10n.aboutEvent;
+  String get moreInformation => _l10n.moreInformation;
+  String get essentialChecklist => _l10n.essentialChecklist;
+  String get seeMore => _l10n.seeMore;
+  String get seeLess => _l10n.seeLess;
+  String get bookNow => _l10n.bookNow;
+  String get maxPeople => _l10n.maxPeople;
+  String get postedBy => _l10n.postedBy;
+  String get meetupPoint => _l10n.meetupPoint;
+  String get totalPrice => _l10n.totalPrice;
+  String get meetingTime => _l10n.meetingTime;
+
 
 
 }

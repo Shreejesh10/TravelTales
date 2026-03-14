@@ -36,20 +36,38 @@ class LoginScreenState extends State<LoginScreen> {
     final password = _passwordController.text;
 
     try {
-      final bool hasCompletedPreference = await login(email, password);
+      final result = await login(email, password);
+
+      final String role = result["roles"];
+      final bool hasCompletedPreference = result["has_completed_preference"];
 
       if (!mounted) return;
 
-      if(hasCompletedPreference){
-        Navigator.pushReplacementNamed( context, RouteName.dashBoardScreen);
-      } else{
-        Navigator.pushReplacementNamed( context, RouteName.preferenceScreen);
+      if (role == "company") {
+        Navigator.pushReplacementNamed(
+          context,
+          RouteName.companyDashboardScreen,
+        );
+      } else {
+        if (hasCompletedPreference) {
+          Navigator.pushReplacementNamed(
+            context,
+            RouteName.dashBoardScreen,
+          );
+        } else {
+          Navigator.pushReplacementNamed(
+            context,
+            RouteName.preferenceScreen,
+          );
+        }
       }
     } catch (e) {
       if (!mounted) return;
 
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text("Check you email and password and try again")),
+        const SnackBar(
+          content: Text("Check your email and password and try again"),
+        ),
       );
     }
   }

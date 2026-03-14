@@ -490,6 +490,222 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Change Preference'**
   String get changePreference;
+
+  /// No description provided for @planAmazing.
+  ///
+  /// In en, this message translates to:
+  /// **'Plan Amazing'**
+  String get planAmazing;
+
+  /// No description provided for @adventureFor.
+  ///
+  /// In en, this message translates to:
+  /// **'Adventure For'**
+  String get adventureFor;
+
+  /// No description provided for @explorers.
+  ///
+  /// In en, this message translates to:
+  /// **'Explorers!'**
+  String get explorers;
+
+  /// No description provided for @selectedDestination.
+  ///
+  /// In en, this message translates to:
+  /// **'Selected Destination'**
+  String get selectedDestination;
+
+  /// No description provided for @searchResults.
+  ///
+  /// In en, this message translates to:
+  /// **'Search Results'**
+  String get searchResults;
+
+  /// No description provided for @eventInformation.
+  ///
+  /// In en, this message translates to:
+  /// **'Event Information'**
+  String get eventInformation;
+
+  /// No description provided for @eventInformationDescription.
+  ///
+  /// In en, this message translates to:
+  /// **'Fill in the main information for your event.'**
+  String get eventInformationDescription;
+
+  /// No description provided for @enterEventTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter Event Title'**
+  String get enterEventTitle;
+
+  /// No description provided for @eventTitleHint.
+  ///
+  /// In en, this message translates to:
+  /// **'This is Event title'**
+  String get eventTitleHint;
+
+  /// No description provided for @enterEventDescription.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter Event Description'**
+  String get enterEventDescription;
+
+  /// No description provided for @eventDescriptionHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Event Description'**
+  String get eventDescriptionHint;
+
+  /// No description provided for @meetingPoint.
+  ///
+  /// In en, this message translates to:
+  /// **'Meeting Point'**
+  String get meetingPoint;
+
+  /// No description provided for @meetingPointHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Event meeting point'**
+  String get meetingPointHint;
+
+  /// No description provided for @whatToBring.
+  ///
+  /// In en, this message translates to:
+  /// **'What to bring'**
+  String get whatToBring;
+
+  /// No description provided for @whatToBringHint.
+  ///
+  /// In en, this message translates to:
+  /// **'What to bring'**
+  String get whatToBringHint;
+
+  /// No description provided for @eventDate.
+  ///
+  /// In en, this message translates to:
+  /// **'Event Date'**
+  String get eventDate;
+
+  /// No description provided for @fromDate.
+  ///
+  /// In en, this message translates to:
+  /// **'From Date'**
+  String get fromDate;
+
+  /// No description provided for @toDate.
+  ///
+  /// In en, this message translates to:
+  /// **'To Date'**
+  String get toDate;
+
+  /// No description provided for @pricingAndCapacity.
+  ///
+  /// In en, this message translates to:
+  /// **'Pricing & Capacity'**
+  String get pricingAndCapacity;
+
+  /// No description provided for @price.
+  ///
+  /// In en, this message translates to:
+  /// **'Price'**
+  String get price;
+
+  /// No description provided for @enterPrice.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter price'**
+  String get enterPrice;
+
+  /// No description provided for @maximumPeople.
+  ///
+  /// In en, this message translates to:
+  /// **'Maximum People'**
+  String get maximumPeople;
+
+  /// No description provided for @enterPeople.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter people'**
+  String get enterPeople;
+
+  /// No description provided for @createEvent.
+  ///
+  /// In en, this message translates to:
+  /// **'Create Event'**
+  String get createEvent;
+
+  /// No description provided for @aboutEvent.
+  ///
+  /// In en, this message translates to:
+  /// **'About this Event'**
+  String get aboutEvent;
+
+  /// No description provided for @moreInformation.
+  ///
+  /// In en, this message translates to:
+  /// **'More Information'**
+  String get moreInformation;
+
+  /// No description provided for @essentialChecklist.
+  ///
+  /// In en, this message translates to:
+  /// **'Essential Check List'**
+  String get essentialChecklist;
+
+  /// No description provided for @seeMore.
+  ///
+  /// In en, this message translates to:
+  /// **'See more'**
+  String get seeMore;
+
+  /// No description provided for @seeLess.
+  ///
+  /// In en, this message translates to:
+  /// **'See less'**
+  String get seeLess;
+
+  /// No description provided for @bookNow.
+  ///
+  /// In en, this message translates to:
+  /// **'Book Now'**
+  String get bookNow;
+
+  /// No description provided for @maxPeople.
+  ///
+  /// In en, this message translates to:
+  /// **'Max People'**
+  String get maxPeople;
+
+  /// No description provided for @postedBy.
+  ///
+  /// In en, this message translates to:
+  /// **'Posted By'**
+  String get postedBy;
+
+  /// No description provided for @meetupPoint.
+  ///
+  /// In en, this message translates to:
+  /// **'Meet-up Point'**
+  String get meetupPoint;
+
+  /// No description provided for @totalPrice.
+  ///
+  /// In en, this message translates to:
+  /// **'Total Price'**
+  String get totalPrice;
+
+  /// No description provided for @viewDetails.
+  ///
+  /// In en, this message translates to:
+  /// **'View Details'**
+  String get viewDetails;
+
+  /// No description provided for @meetingTime.
+  ///
+  /// In en, this message translates to:
+  /// **'Meeting Time'**
+  String get meetingTime;
 }
 
 class _AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {

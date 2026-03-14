@@ -7,7 +7,7 @@ from app.model.models import User
 from app.utils.db_utils import get_db
 
 from app.schemas.schemas import TravelEventResponse, TravelEventCreate, TravelEventUpdate
-from app.services.event_service import create_event, get_company_events, delete_event, update_event, get_event_by_id
+from app.services.event_service import create_event, get_company_events, delete_event, update_event, get_event_by_id, get_all_events
 
 _SHOW_NAME = "events"
 router = APIRouter(
@@ -40,6 +40,18 @@ def create_event_route(
         raise HTTPException(
             status_code=status.HTTP_400_BAD_REQUEST,
             detail=str(e)
+        )
+    
+@router.get("/all", response_model=List[TravelEventResponse])
+def get_all_events_route(
+    db: Session = Depends(get_db),
+):
+    try:
+        return get_all_events(db)
+    except ValueError as e:
+        raise HTTPException(
+            status_code= status.HTTP_400_BAD_REQUEST,
+            detail= str(e)
         )
 
 @router.get("/me", response_model=List[TravelEventResponse])
