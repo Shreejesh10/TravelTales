@@ -25,7 +25,7 @@ class AppActionDialog extends StatelessWidget {
 
     return AlertDialog(
       shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(16.r),
+        borderRadius: BorderRadius.circular(12.r),
       ),
       title: Text(
         title,
@@ -54,7 +54,7 @@ class AppActionDialog extends StatelessWidget {
             backgroundColor:
             isDestructive ? Colors.red : cs.primary,
             shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(12.r),
+              borderRadius: BorderRadius.circular(10.r),
             ),
           ),
           onPressed: () {

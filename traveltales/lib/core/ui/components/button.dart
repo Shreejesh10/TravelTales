@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class AppButton extends StatelessWidget {
@@ -17,22 +18,32 @@ class AppButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final bool isWeb = kIsWeb;
+
     return SizedBox(
       width: width,
-      height: height.h,
+      height: isWeb ? height : height.h,
       child: ElevatedButton(
         style: ElevatedButton.styleFrom(
           foregroundColor: Colors.white,
           elevation: 0,
           shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(14.r),
+            borderRadius: BorderRadius.circular(
+              isWeb ? 14 : 14.r,
+            ),
           ),
-          padding: EdgeInsets.symmetric(horizontal: 22.w),
+          padding: EdgeInsets.symmetric(
+            horizontal: isWeb ? 22 : 22.w,
+          ),
         ),
         onPressed: onPressed,
-        child: Text(text, style: TextStyle(
-          fontSize: 18.sp,
-          fontWeight: FontWeight.w700,)),
+        child: Text(
+          text,
+          style: TextStyle(
+            fontSize: isWeb ? 16 : 18.sp,
+            fontWeight: FontWeight.w700,
+          ),
+        ),
       ),
     );
   }

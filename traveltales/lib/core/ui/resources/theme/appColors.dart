@@ -10,6 +10,8 @@ class AppColors {
   static const leadingDetailPageColor = Color(0x60000000);
   static const borderColor = Color(0xFFE4E7EC);
   static const darkBorderColor = Color(0xFF2E587C);
+  static const primaryColor = Color(0xFF00A6FF);
+  static const secondaryColor = Color(0xFF0A2A4A);
 
   static Color getBorderColor(BuildContext context) {
     return Theme.of(context).brightness == Brightness.light

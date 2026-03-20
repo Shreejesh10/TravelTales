@@ -1,11 +1,17 @@
 import 'dart:developer';
+import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_image_compress/flutter_image_compress.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:image_picker/image_picker.dart';
+import 'package:path/path.dart' as p;
+import 'package:path_provider/path_provider.dart';
 import 'package:traveltales/api/api.dart';
 import 'package:traveltales/core/model/user_info.dart';
 import 'package:traveltales/core/route_config/route_names.dart';
 import 'package:traveltales/core/ui/components/actionDialogBox.dart';
+import 'package:traveltales/core/ui/components/functions/dateTime/app_formatters.dart';
 import 'package:traveltales/core/ui/components/languageDialog.dart';
 import 'package:traveltales/core/ui/components/textField/passwordTextField.dart';
 import 'package:traveltales/core/ui/components/themeDialog.dart';
@@ -13,12 +19,6 @@ import 'package:traveltales/core/ui/components/viewAllRow.dart';
 import 'package:traveltales/core/ui/localization/sharedRes.dart';
 import 'package:traveltales/core/ui/resources/theme/appColors.dart';
 import 'package:traveltales/core/ui/resources/theme/dimens.dart';
-import 'dart:io';
-import 'package:image_picker/image_picker.dart';
-import 'package:flutter_image_compress/flutter_image_compress.dart';
-import 'package:path_provider/path_provider.dart';
-import 'package:path/path.dart' as p;
-
 
 class ProfileScreen extends StatefulWidget {
   const ProfileScreen({super.key});
@@ -29,8 +29,9 @@ class ProfileScreen extends StatefulWidget {
 
 class _ProfileScreenState extends State<ProfileScreen> {
   final ImagePicker picker = ImagePicker();
-  TextEditingController passwordController = TextEditingController();
-  TextEditingController confirmPasswordController = TextEditingController();
+  final TextEditingController passwordController = TextEditingController();
+  final TextEditingController confirmPasswordController =
+  TextEditingController();
 
   File? profileImageFile;
   String? profilePhotoUrl;
@@ -44,34 +45,44 @@ class _ProfileScreenState extends State<ProfileScreen> {
     _loadUser();
   }
 
-  Future<void> _loadUser()async{
+  @override
+  void dispose() {
+    passwordController.dispose();
+    confirmPasswordController.dispose();
+    super.dispose();
+  }
+
+  Future<void> _loadUser() async {
     setState(() {
       userError = null;
       isLoading = true;
     });
-    try{
+
+    try {
       final user = await fetchMeUserInfo();
       setState(() {
         me = user;
         isLoading = false;
       });
-    }catch(e){
+    } catch (e) {
       setState(() {
         userError = e.toString();
         isLoading = false;
       });
-
     }
   }
 
-  Future<void> logout() async{
+  Future<void> logout() async {
     await logoutAndClearAuth();
     if (!mounted) return;
-    Navigator.pushNamedAndRemoveUntil(context, AuthRouteName.loginScreen, (route) => false);
+    Navigator.pushNamedAndRemoveUntil(
+      context,
+      AuthRouteName.loginScreen,
+          (route) => false,
+    );
   }
 
   Future<void> _changeProfilePicture() async {
-
     try {
       final XFile? picked = await picker.pickImage(
         source: ImageSource.gallery,
@@ -82,7 +93,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
       final file = File(picked.path);
       final converted = await convertToJpg(file);
-
 
       setState(() {
         profileImageFile = converted;
@@ -95,9 +105,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
       setState(() {
         profilePhotoUrl = uploadedUrl;
       });
+
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text("Profile picture updated!")),
-
       );
     } catch (e) {
       if (!mounted) return;
@@ -106,7 +116,11 @@ class _ProfileScreenState extends State<ProfileScreen> {
       );
       log("Could not update photo: $e");
     } finally {
-      if (mounted) setState(() => isLoading = false);
+      if (mounted) {
+        setState(() {
+          isLoading = false;
+        });
+      }
     }
   }
 
@@ -124,7 +138,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
       format: CompressFormat.jpeg,
     );
 
-    if (result == null) throw Exception("Image conversion failed");
+    if (result == null) {
+      throw Exception("Image conversion failed");
+    }
 
     return File(result.path);
   }
@@ -133,6 +149,52 @@ class _ProfileScreenState extends State<ProfileScreen> {
   Widget build(BuildContext context) {
     final cs = Theme.of(context).colorScheme;
 
+    if (isLoading && me == null) {
+      return Scaffold(
+        appBar: AppBar(
+          automaticallyImplyLeading: false,
+          leadingWidth: compactDimens.extraLarge,
+          leading: Padding(
+            padding: EdgeInsets.only(left: compactDimens.small3),
+            child: Image.asset(
+              Theme.of(context).brightness == Brightness.dark
+                  ? 'assets/images/MountainDark.png'
+                  : 'assets/images/Mountain.png',
+              height: compactDimens.medium2,
+              fit: BoxFit.contain,
+            ),
+          ),
+        ),
+        body: const Center(child: CircularProgressIndicator()),
+      );
+    }
+
+    if (userError != null && me == null) {
+      return Scaffold(
+        appBar: AppBar(
+          automaticallyImplyLeading: false,
+          leadingWidth: compactDimens.extraLarge,
+          leading: Padding(
+            padding: EdgeInsets.only(left: compactDimens.small3),
+            child: Image.asset(
+              Theme.of(context).brightness == Brightness.dark
+                  ? 'assets/images/MountainDark.png'
+                  : 'assets/images/Mountain.png',
+              height: compactDimens.medium2,
+              fit: BoxFit.contain,
+            ),
+          ),
+        ),
+        body: Center(
+          child: Text(
+            userError!,
+            textAlign: TextAlign.center,
+          ),
+        ),
+      );
+    }
+
+    final user = me!;
 
     return Scaffold(
       appBar: AppBar(
@@ -151,9 +213,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
         actions: [
           IconButton(
             onPressed: () {
-              Navigator.pushNamed(context, RouteName.settingScreen);
+              Navigator.pushNamed(context, RouteName.addFriendScreen);
             },
-            icon: Icon(Icons.edit, size: compactDimens.medium1),
+            icon: Icon(Icons.add_reaction_outlined, size: compactDimens.medium1),
           ),
         ],
       ),
@@ -161,41 +223,42 @@ class _ProfileScreenState extends State<ProfileScreen> {
         padding: EdgeInsets.symmetric(horizontal: compactDimens.small3),
         children: [
           _profile(
-            imagePath: me?.profilePictureUrl ?? "",
-            userName:me?.userName ?? "",
-            email: me?.email ?? "",
+            imagePath: user.profilePictureUrl ?? "",
+            userName: user.userName,
+            email: user.email,
           ),
           SizedBox(height: 16.h),
           Row(
             children: [
               Expanded(
-                  child: _statCard(
-                    iconColor: cs.primary,
-                    icon: Icons.person_outline,
-                    value: "15",
-                    label: SharedRes.strings(context).totalFriends,
-                    onTap: () {},
-                  )
+                child: _statCard(
+                  iconColor: cs.primary,
+                  icon: Icons.person_outline,
+                  value: "15",
+                  label: SharedRes.strings(context).totalFriends,
+                  onTap: () {},
+                ),
               ),
               SizedBox(width: 10.w),
               Expanded(
-                  child: _statCard(
-                    iconColor: Colors.green,
-                    icon: Icons.event_available_outlined,
-                    value: "234",
-                    label: SharedRes.strings(context).eventsBooked,
-                    onTap: () {},)
+                child: _statCard(
+                  iconColor: Colors.green,
+                  icon: Icons.event_available_outlined,
+                  value: "234",
+                  label: SharedRes.strings(context).eventsBooked,
+                  onTap: () {},
+                ),
               ),
               SizedBox(width: 10.w),
               Expanded(
-                  child: _statCard(
-                    iconColor: Colors.red,
-                    icon: Icons.pending_outlined,
-                    value: "5",
-                    label: SharedRes.strings(context).requestPending,
-                    onTap: () {},)
-              )
-
+                child: _statCard(
+                  iconColor: Colors.red,
+                  icon: Icons.pending_outlined,
+                  value: "5",
+                  label: SharedRes.strings(context).requestPending,
+                  onTap: () {},
+                ),
+              ),
             ],
           ),
           SizedBox(height: 16.h),
@@ -203,41 +266,41 @@ class _ProfileScreenState extends State<ProfileScreen> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               ViewAllRow(
-                  firstText: SharedRes.strings(context).recentBookedEvents,
-                  onPressed:(){}
+                firstText: SharedRes.strings(context).recentBookedEvents,
+                onPressed: () {},
               ),
               SizedBox(height: 8.h),
               _bookedEventCard(
                 context,
-                  imageAsset: "assets/images/Bouddha.png",
-                  title: "Everest Base Camp",
-                  statusText: "Completed Oct 15, 2025",
-                  organizerText: "Kalpa Tours and Travels",
-                  difficultyText: "Hard",
-                  onTap: (){
+                imageAsset: "assets/images/Bouddha.png",
+                title: "Everest Base Camp",
+                statusText: "Completed Oct 15, 2025",
+                organizerText: "Kalpa Tours and Travels",
+                difficultyText: "Hard",
+                onTap: () {
                   Navigator.pushNamed(context, RouteName.bookedEventScreen);
-                  }
+                },
               ),
               SizedBox(height: 8.h),
               _bookedEventCard(
-                  context,
-                  imageAsset: "assets/images/Bouddha.png",
-                  title: "Everest Base Camp",
-                  statusText: "Completed Oct 15, 2025",
-                  organizerText: "Kalpa Tours and Travels",
-                  difficultyText: "Hard",
-                  onTap: (){}
+                context,
+                imageAsset: "assets/images/Bouddha.png",
+                title: "Everest Base Camp",
+                statusText: "Completed Oct 15, 2025",
+                organizerText: "Kalpa Tours and Travels",
+                difficultyText: "Hard",
+                onTap: () {},
               ),
               SizedBox(height: 8.h),
               _bookedEventCard(
-                  context,
-                  imageAsset: "assets/images/Bouddha.png",
-                  title: "Everest Base Camp",
-                  statusText: "Completed Oct 15, 2025",
-                  organizerText: "Kalpa Tours and Travels",
-                  difficultyText: "Hard",
-                  onTap: (){}
-              )
+                context,
+                imageAsset: "assets/images/Bouddha.png",
+                title: "Everest Base Camp",
+                statusText: "Completed Oct 15, 2025",
+                organizerText: "Kalpa Tours and Travels",
+                difficultyText: "Hard",
+                onTap: () {},
+              ),
             ],
           ),
           SizedBox(height: 16.h),
@@ -245,15 +308,15 @@ class _ProfileScreenState extends State<ProfileScreen> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               ViewAllRow(
-                  firstText: SharedRes.strings(context).settings,
-                  onPressed:(){},
+                firstText: SharedRes.strings(context).settings,
+                onPressed: () {},
                 isViewAll: false,
               ),
               SizedBox(height: 8.h),
               _settingsTile(
                 icon: Icons.person_outline,
                 title: SharedRes.strings(context).accountSetting,
-                onTap: (){
+                onTap: () {
                   Navigator.pushNamed(context, RouteName.settingScreen);
                 },
               ),
@@ -261,7 +324,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
               _settingsTile(
                 icon: Icons.do_not_disturb_on_total_silence_rounded,
                 title: SharedRes.strings(context).language,
-                onTap: (){
+                onTap: () {
                   AppLanguageDialog.show(context);
                 },
               ),
@@ -269,39 +332,38 @@ class _ProfileScreenState extends State<ProfileScreen> {
               _settingsTile(
                 icon: Icons.password,
                 title: SharedRes.strings(context).changePassword,
-                onTap: (){
+                onTap: () {
                   showAppActionDialog(
-                      context: context,
-                      title: SharedRes.strings(context).changePassword,
-                      contentWidget: [
-                        PasswordTextField(
-                          controller: passwordController,
-                          labelText: SharedRes.strings(context).password,
-                        ),
-                        SizedBox(height: 8.h,),
-                        PasswordTextField(
-                          controller: confirmPasswordController,
-                          labelText: SharedRes.strings(context).confirmPassword,
-
-                        )
-                      ],
-                      onConfirm: () {}
+                    context: context,
+                    title: SharedRes.strings(context).changePassword,
+                    contentWidget: [
+                      PasswordTextField(
+                        controller: passwordController,
+                        labelText: SharedRes.strings(context).password,
+                      ),
+                      SizedBox(height: 8.h),
+                      PasswordTextField(
+                        controller: confirmPasswordController,
+                        labelText: SharedRes.strings(context).confirmPassword,
+                      ),
+                    ],
+                    onConfirm: () {},
                   );
                 },
               ),
               SizedBox(height: 8.h),
               _settingsTile(
-                  icon: Icons.room_preferences_outlined,
-                  title: SharedRes.strings(context).changePreference,
-                  onTap: (){
-                    Navigator.pushNamed(context, RouteName.preferenceScreen);
-                  }
+                icon: Icons.room_preferences_outlined,
+                title: SharedRes.strings(context).changePreference,
+                onTap: () {
+                  Navigator.pushNamed(context, RouteName.preferenceScreen);
+                },
               ),
               SizedBox(height: 8.h),
               _settingsTile(
                 icon: Icons.light_mode_outlined,
                 title: SharedRes.strings(context).theme,
-                onTap: (){
+                onTap: () {
                   AppThemeDialog.show(context);
                 },
               ),
@@ -309,13 +371,14 @@ class _ProfileScreenState extends State<ProfileScreen> {
               _settingsTile(
                 icon: Icons.logout,
                 title: SharedRes.strings(context).logout,
-                onTap: (){
+                textColor: Colors.red,
+                iconColor: Colors.red,
+                onTap: () {
                   showAppActionDialog(
                     context: context,
                     title: SharedRes.strings(context).logout,
                     contentWidget: [
-                      Text(
-                          SharedRes.strings(context).logoutMessage),
+                      Text(SharedRes.strings(context).logoutMessage),
                     ],
                     confirmText: SharedRes.strings(context).ok,
                     isDestructive: true,
@@ -324,16 +387,14 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     },
                   );
                 },
-                textColor: Colors.red,
-                iconColor: Colors.red,
               ),
-            ]
-          )
+            ],
+          ),
         ],
       ),
-
     );
   }
+
   Widget _settingsTile({
     required IconData icon,
     required String title,
@@ -378,6 +439,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
       ),
     );
   }
+
   Widget _profile({
     required String imagePath,
     required String userName,
@@ -385,30 +447,17 @@ class _ProfileScreenState extends State<ProfileScreen> {
   }) {
     final cs = Theme.of(context).colorScheme;
 
-    ImageProvider avatarProvider;
+    final String pathToUse =
+    profilePhotoUrl != null && profilePhotoUrl!.isNotEmpty
+        ? profilePhotoUrl!
+        : imagePath;
 
-    if (profileImageFile != null && isLoading) {
-      avatarProvider = FileImage(profileImageFile!);
-    } else {
-      final String? pathToUse =
-      (profilePhotoUrl != null && profilePhotoUrl!.isNotEmpty)
-          ? profilePhotoUrl
-          : (imagePath.isNotEmpty ? imagePath : null);
-
-      if (pathToUse != null && pathToUse.startsWith("/")) {
-        final fullUrl = "$API_URL$pathToUse";
-        log("PROFILE IMAGE URL => $fullUrl");
-        avatarProvider = NetworkImage(fullUrl);
-      } else {
-        avatarProvider = const AssetImage("assets/images/Annapurna.png");
-      }
-    }
+    final String imageUrl = AppFormatters.buildProfileImageUrl(pathToUse);
 
     return Align(
       child: Column(
         children: [
           SizedBox(height: 16.h),
-
           Stack(
             clipBehavior: Clip.none,
             children: [
@@ -418,13 +467,30 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 decoration: BoxDecoration(
                   shape: BoxShape.circle,
                   border: Border.all(color: Colors.white, width: 2),
-                  image: DecorationImage(
-                    image: avatarProvider,
+                ),
+                child: ClipOval(
+                  child: profileImageFile != null && isLoading
+                      ? Image.file(
+                    profileImageFile!,
+                    fit: BoxFit.cover,
+                  )
+                      : imageUrl.isNotEmpty
+                      ? Image.network(
+                    imageUrl,
+                    fit: BoxFit.cover,
+                    errorBuilder: (_, __, ___) {
+                      return Image.asset(
+                        "assets/images/Annapurna.png",
+                        fit: BoxFit.cover,
+                      );
+                    },
+                  )
+                      : Image.asset(
+                    "assets/images/Annapurna.png",
                     fit: BoxFit.cover,
                   ),
                 ),
               ),
-
               Positioned(
                 right: -2,
                 bottom: -2,
@@ -455,7 +521,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
               ),
             ],
           ),
-
           SizedBox(height: 10.h),
           Text(
             userName,
@@ -478,14 +543,12 @@ class _ProfileScreenState extends State<ProfileScreen> {
   }
 
   Widget _statCard({
-        required IconData icon,
-        required String value,
-        required String label,
-        required VoidCallback onTap,
-        required iconColor
-      }) {
-    final cs = Theme.of(context).colorScheme;
-
+    required IconData icon,
+    required String value,
+    required String label,
+    required VoidCallback onTap,
+    required Color iconColor,
+  }) {
     return InkWell(
       onTap: onTap,
       borderRadius: BorderRadius.circular(14.r),
@@ -494,7 +557,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
         decoration: BoxDecoration(
           color: AppColors.getContainerBoxColor(context),
           borderRadius: BorderRadius.circular(14.r),
-
         ),
         child: Column(
           mainAxisSize: MainAxisSize.min,
@@ -524,6 +586,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
       ),
     );
   }
+
   Widget _bookedEventCard(
       BuildContext context, {
         required String imageAsset,
@@ -533,22 +596,19 @@ class _ProfileScreenState extends State<ProfileScreen> {
         required String difficultyText,
         required VoidCallback onTap,
       }) {
-    final cs = Theme.of(context).colorScheme;
-
     return InkWell(
       onTap: onTap,
       borderRadius: BorderRadius.circular(14.r),
       child: Container(
         padding: EdgeInsets.all(12.w),
         decoration: BoxDecoration(
-            color: Theme.of(context).brightness == Brightness.light
-                ? AppColors.containerBoxColor
-                : AppColors.darkContainerBoxColor,
+          color: Theme.of(context).brightness == Brightness.light
+              ? AppColors.containerBoxColor
+              : AppColors.darkContainerBoxColor,
           borderRadius: BorderRadius.circular(14.r),
         ),
         child: Row(
           children: [
-            // Image Section
             ClipRRect(
               borderRadius: BorderRadius.circular(12.r),
               child: Image.asset(
@@ -559,14 +619,16 @@ class _ProfileScreenState extends State<ProfileScreen> {
               ),
             ),
             SizedBox(width: 12.w),
-
             Expanded(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
                     title,
-                    style: TextStyle(fontSize: 14.sp, fontWeight: FontWeight.w700),
+                    style: TextStyle(
+                      fontSize: 14.sp,
+                      fontWeight: FontWeight.w700,
+                    ),
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
                   ),
@@ -578,8 +640,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
               ),
             ),
             SizedBox(width: 10.w),
-
-            // Difficulty Badge
             Container(
               padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 6.h),
               decoration: BoxDecoration(
@@ -609,7 +669,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
         Expanded(
           child: Text(
             text,
-            style: TextStyle(fontSize: 11.sp, color: Colors.grey),
+            style: TextStyle(
+              fontSize: 11.sp,
+              color: Colors.grey,
+            ),
             maxLines: 1,
             overflow: TextOverflow.ellipsis,
           ),
@@ -617,10 +680,4 @@ class _ProfileScreenState extends State<ProfileScreen> {
       ],
     );
   }
-
-
 }
-
-
-
-

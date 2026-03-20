@@ -18,6 +18,8 @@ class RouteName{
   static const String companyDashboardScreen = "/company_dashboard_screen";
   static const String eventCreatingScreen = "/event_creating_screen";
   static const String eventDetailScreen = "/event_detail_screen";
+  static const String addFriendScreen = "/add_friend_screen";
+  static const String adminDashboardScreen = "/admin_dashboard_screen";
 
 
 

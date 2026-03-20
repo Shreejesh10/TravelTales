@@ -7,6 +7,7 @@ import 'package:traveltales/core/ui/components/button.dart';
 import 'package:traveltales/core/ui/components/functions/dateTime/app_formatters.dart';
 import 'package:traveltales/core/ui/localization/sharedRes.dart';
 import 'package:traveltales/core/ui/resources/theme/dimens.dart';
+import '../../core/ui/components/actionDialogBox.dart';
 import '../../core/ui/resources/theme/appColors.dart';
 
 class EventsScreen extends StatefulWidget {
@@ -18,17 +19,61 @@ class EventsScreen extends StatefulWidget {
 
 class _EventsScreenState extends State<EventsScreen> {
   late Future<List<Event>> _eventsFuture;
+  String? currentCompanyId;
 
   @override
   void initState() {
     super.initState();
     _eventsFuture = getAllEvents();
+    _loadCompanyId();
+  }
+  Future<void> _loadCompanyId() async{
+    currentCompanyId = await storage.read(key: 'user_id');
+    setState(() {
+
+    });
   }
 
   Future<void> _reloadEvents() async {
     setState(() {
       _eventsFuture = getAllEvents();
     });
+  }
+  Future<void> _deleteEvent(int eventId) async {
+    await showAppActionDialog(
+      context: context,
+      title: "Delete Event",
+      isDestructive: true,
+      confirmText: "Yes",
+      cancelText: "No",
+      contentWidget: [
+        Text(
+          "Are you sure you want to delete this event?",
+          style: TextStyle(fontSize: 14.sp),
+        ),
+      ],
+      onConfirm: () async {
+        try {
+          await deleteEvent(eventId);
+
+          _reloadEvents();
+
+          if (mounted) {
+            ScaffoldMessenger.of(context).showSnackBar(
+              const SnackBar(content: Text("Event deleted successfully")),
+            );
+          }
+        } catch (e) {
+          print("Delete failed: $e");
+
+          if (mounted) {
+            ScaffoldMessenger.of(context).showSnackBar(
+              const SnackBar(content: Text("Failed to delete event")),
+            );
+          }
+        }
+      },
+    );
   }
 
 
@@ -114,8 +159,11 @@ class _EventsScreenState extends State<EventsScreen> {
               itemCount: events.length,
               separatorBuilder: (_, __) => SizedBox(height: 16.h),
               itemBuilder: (context, index) {
+
                 final event = events[index];
                 final destination = event.destination;
+                print("currentCompanyId: $currentCompanyId");
+                print("event.companyUserId: ${event.companyUserId}");
 
                 final List<String> frontImages =
                     destination.extraInfo.backdropPath;
@@ -139,6 +187,9 @@ class _EventsScreenState extends State<EventsScreen> {
                   difficultyBgColor: AppColors.difficultyBgColor(
                     destination.extraInfo.difficultyLevel,
                   ),
+                  isMyEvent: currentCompanyId == event.companyUserId.toString(),
+                  onDeleteTap:() => _deleteEvent(event.eventId),
+
                   onShareTap: () {},
                   onViewDetailsTap: () {
                     Navigator.pushNamed(
@@ -167,8 +218,10 @@ class _EventsScreenState extends State<EventsScreen> {
     required String addedText,
     required Color difficultyColor,
     required Color difficultyBgColor,
+    required bool isMyEvent,
     VoidCallback? onShareTap,
     VoidCallback? onViewDetailsTap,
+    VoidCallback? onDeleteTap,
   }) {
     return Container(
       width: double.infinity,
@@ -345,6 +398,22 @@ class _EventsScreenState extends State<EventsScreen> {
                         overflow: TextOverflow.ellipsis,
                       ),
                     ),
+                    if (isMyEvent)
+                      Container(
+                        height: 42,
+                          width: 42,
+                        decoration: BoxDecoration(
+                          border: Border.all(
+                            color: AppColors.getBorderColor(context),
+                          ),
+                          borderRadius: BorderRadius.circular(14),
+                        ),
+                        child: IconButton(
+                          onPressed: onDeleteTap,
+                          icon: const Icon(Icons.delete_outline, color: Colors.red,),
+                        )
+                      ),
+                    if (isMyEvent) const SizedBox(width: 12),
                     Container(
                       height: 42,
                       width: 42,

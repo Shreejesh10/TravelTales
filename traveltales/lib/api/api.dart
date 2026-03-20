@@ -14,11 +14,7 @@ import 'package:traveltales/core/model/user_info.dart';
 final storage = FlutterSecureStorage();
 // const String API_URL = 'http://10.0.2.2:8000';
 final String API_URL = 'http://192.168.1.67:8000';
-// final String API_URL = 'http://100.64.200.118:8000';
-
-// final String API_URL = Platform.isAndroid
-//     ? 'http://10.0.2.2:8000' // Android emulator → maps to PC localhost
-//     : 'http://192.168.1.80:8000'; // physical device on same LAN
+// final String API_URL = 'http://100.64.194.22:8000';
 
 
 Future<Map<String, String>> getHeaders() async {
@@ -130,12 +126,18 @@ Future<Map<String, dynamic>> login(String email, String password) async {
       final String role = data['roles'] ?? "";
       final bool hasCompleted = data['has_completed_preference'] == true;
 
+
+      await storage.write(
+        key: 'user_id',
+        value: data['user_id'].toString(),
+      );
       await storage.write(key: 'roles', value: role);
       await storage.write(
         key: 'has_completed_preference',
         value: hasCompleted.toString(),
       );
 
+      log("Saved user_id: ${data['user_id']}");
       log("Login successful. has_completed_preference: $hasCompleted");
       log("Roles: $role");
 
@@ -152,12 +154,13 @@ Future<Map<String, dynamic>> login(String email, String password) async {
     rethrow;
   }
 }
-Future<void> signup(String email, String password, String userName) async {
+Future<void> signup(String email, String password, String userName, String roles) async {
   final url = Uri.parse('$API_URL/users/signup');
   final body = jsonEncode({
     "email": email,
     "password": password,
-    "user_name": userName
+    "user_name": userName,
+    "roles": roles
   });
 
   try{

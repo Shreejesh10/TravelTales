@@ -18,10 +18,14 @@ class SignUpScreen extends StatefulWidget {
 
 class _SignUpScreenState extends State<SignUpScreen> {
   final _formKey = GlobalKey<FormState>();
+
   final _emailController = TextEditingController();
   final _userNameController = TextEditingController();
   final _passwordController = TextEditingController();
   final _confirmPasswordController = TextEditingController();
+
+  bool isCompany = false;
+  List<bool> isSelected = [true, false]; // [User, Company]
 
   @override
   void dispose() {
@@ -31,17 +35,30 @@ class _SignUpScreenState extends State<SignUpScreen> {
     _userNameController.dispose();
     super.dispose();
   }
+
   void _submit() async {
     if (!_formKey.currentState!.validate()) return;
 
     final userName = _userNameController.text.trim();
     final email = _emailController.text.trim();
     final password = _passwordController.text;
+    final roles = isCompany ? "company" : "user";
+
 
     try {
-      await signup(email, password, userName);
+      await signup(email, password, userName, roles);
 
       if (!mounted) return;
+
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(
+            isCompany
+                ? "Your Account is undergoing review, wait till admin verify your account"
+                : "User account created successfully",
+          ),
+        ),
+      );
 
       Navigator.pushReplacementNamed(
         context,
@@ -55,8 +72,11 @@ class _SignUpScreenState extends State<SignUpScreen> {
       );
     }
   }
+
   @override
   Widget build(BuildContext context) {
+    final primary = Theme.of(context).colorScheme.primary;
+
     return Scaffold(
       body: SingleChildScrollView(
         child: Padding(
@@ -67,39 +87,79 @@ class _SignUpScreenState extends State<SignUpScreen> {
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
                 SizedBox(height: 120.h),
+
                 Center(
                   child: Image.asset(
                     'assets/images/TravelTalesFull.png',
                     width: compactDimens.loginImageSize,
                   ),
                 ),
+
                 Padding(
-                    padding: const EdgeInsets.symmetric(vertical: 24),
-                    child: Text(
-                      SharedRes.strings(context).welcome,
-                      style: TextStyle(
-                        fontSize: compactDimens.medium1,
-                        fontWeight: FontWeight.w500,
-                        color: Theme.of(context).colorScheme.primary,
+                  padding: const EdgeInsets.symmetric(vertical: 24),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text(
+                        SharedRes.strings(context).welcome,
+                        style: TextStyle(
+                          fontSize: compactDimens.medium1,
+                          fontWeight: FontWeight.w500,
+                          color: primary,
+                        ),
                       ),
-                    )
+
+                      ToggleButtons(
+                        isSelected: isSelected,
+                        onPressed: (index) {
+                          setState(() {
+                            for (int i = 0; i < isSelected.length; i++) {
+                              isSelected[i] = i == index;
+                            }
+                            isCompany = index == 1;
+                          });
+                        },
+                        borderRadius: BorderRadius.circular(12),
+                        selectedColor: Colors.white,
+                        fillColor: primary,
+                        color: primary,
+                        constraints: BoxConstraints(
+                          minHeight: 25.h,
+                          minWidth: 40.w,
+                        ),
+                        children: [
+                          Padding(
+                            padding: EdgeInsets.symmetric(horizontal: 12.w),
+                            child: const Text("User"),
+                          ),
+                          Padding(
+                            padding: EdgeInsets.symmetric(horizontal: 12.w),
+                            child: const Text("Company"),
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
                 ),
+
                 EmailTextField(
                   controller: _emailController,
                   labelText: SharedRes.strings(context).email,
                   hintText: SharedRes.strings(context).enterEmail,
                 ),
+
                 const SizedBox(height: 16),
-                Text("Username", style: TextStyle(
-                  fontSize: 14,
-                  fontWeight: FontWeight.w500
-                ),),
+
+                const Text(
+                  "Username",
+                  style: TextStyle(fontSize: 14, fontWeight: FontWeight.w500),
+                ),
                 const SizedBox(height: 6),
                 TextFormField(
                   controller: _userNameController,
-                  decoration: InputDecoration(
+                  decoration: const InputDecoration(
                     hintText: "Enter username",
-                    border: OutlineInputBorder()
+                    border: OutlineInputBorder(),
                   ),
                   validator: (value) {
                     if (value == null || value.isEmpty) {
@@ -108,12 +168,15 @@ class _SignUpScreenState extends State<SignUpScreen> {
                     return null;
                   },
                 ),
+
                 const SizedBox(height: 16),
+
                 PasswordTextField(
                   controller: _passwordController,
                   labelText: SharedRes.strings(context).password,
                   hintText: SharedRes.strings(context).enterPassword,
                 ),
+
                 const SizedBox(height: 16),
 
                 PasswordTextField(
@@ -122,12 +185,17 @@ class _SignUpScreenState extends State<SignUpScreen> {
                   hintText: SharedRes.strings(context).enterConfirmPassword,
                   isConfirmPassword: true,
                   compareWithController: _passwordController,
+                ),
 
+                const SizedBox(height: 20),
+
+                AppButton(
+                  text: SharedRes.strings(context).signup,
+                  onPressed: _submit,
                 ),
-                const SizedBox(height: 16),
-                AppButton(text: SharedRes.strings(context).signup,
-                    onPressed: _submit
-                ),
+
+                const SizedBox(height: 12),
+
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
@@ -139,22 +207,23 @@ class _SignUpScreenState extends State<SignUpScreen> {
                       ),
                     ),
                     TextButton(
-                        onPressed: (){
-                          Navigator.pushNamed(context,AuthRouteName.loginScreen);
-                        },
-                        child: Text(
-                          SharedRes.strings(context).login,
-                          style: TextStyle(
-                            decoration: TextDecoration.underline,
-                          ),
-                        )
-                    )
+                      onPressed: () {
+                        Navigator.pushNamed(
+                          context,
+                          AuthRouteName.loginScreen,
+                        );
+                      },
+                      child: Text(
+                        SharedRes.strings(context).login,
+                        style: const TextStyle(
+                          decoration: TextDecoration.underline,
+                        ),
+                      ),
+                    ),
                   ],
                 ),
-
               ],
             ),
-
           ),
         ),
       ),

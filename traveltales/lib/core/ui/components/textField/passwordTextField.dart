@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:traveltales/core/ui/localization/sharedRes.dart';
 
 class PasswordTextField extends StatefulWidget {
@@ -31,14 +32,10 @@ class _PasswordTextFieldState extends State<PasswordTextField> {
       return SharedRes.strings(context).passwordRequired;
     }
 
-    // Main password rules
     if (!widget.isConfirmPassword && value.length < 6) {
-      return SharedRes
-          .strings(context)
-          .passwordMustBeAtLeast6Characters;
+      return SharedRes.strings(context).passwordMustBeAtLeast6Characters;
     }
 
-    // Confirm password rule
     if (widget.isConfirmPassword) {
       final originalPassword = widget.compareWithController?.text ?? '';
       if (value != originalPassword) {
@@ -53,13 +50,15 @@ class _PasswordTextFieldState extends State<PasswordTextField> {
 
   @override
   Widget build(BuildContext context) {
+    final bool isWeb = kIsWeb;
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
           widget.labelText,
-          style: const TextStyle(
-            fontSize: 14,
+          style: TextStyle(
+            fontSize: isWeb ? 14 : 14,
             fontWeight: FontWeight.w500,
           ),
         ),
@@ -69,12 +68,27 @@ class _PasswordTextFieldState extends State<PasswordTextField> {
           enabled: widget.enabled,
           obscureText: _obscureText,
           validator: (value) => _validator(context, value),
+          style: TextStyle(
+            fontSize: isWeb ? 16 : 16,
+          ),
           decoration: InputDecoration(
             hintText: widget.hintText,
             border: const OutlineInputBorder(),
+            contentPadding: EdgeInsets.symmetric(
+              horizontal: isWeb ? 16 : 16,
+              vertical: isWeb ? 18 : 16,
+            ),
+            hintStyle: TextStyle(
+              fontSize: isWeb ? 16 : 16,
+            ),
+            suffixIconConstraints: BoxConstraints(
+              minHeight: isWeb ? 48 : 48,
+              minWidth: isWeb ? 48 : 48,
+            ),
             suffixIcon: IconButton(
               icon: Icon(
                 _obscureText ? Icons.visibility_off : Icons.visibility,
+                size: isWeb ? 20 : 20,
               ),
               onPressed: () {
                 setState(() {

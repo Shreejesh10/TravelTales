@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:traveltales/core/ui/localization/sharedRes.dart';
 
 class EmailTextField extends StatelessWidget {
@@ -35,27 +36,38 @@ class EmailTextField extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final bool isWeb = kIsWeb;
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
           labelText,
-          style: const TextStyle(
-            fontSize: 14,
+          style: TextStyle(
+            fontSize: isWeb ? 14 : 14,
             fontWeight: FontWeight.w500,
           ),
         ),
         const SizedBox(height: 6),
-
         TextFormField(
           controller: controller,
           enabled: enabled,
           keyboardType: TextInputType.emailAddress,
           validator: (value) => _validateEmail(context, value),
           onChanged: onChanged,
-          decoration:  InputDecoration(
+          style: TextStyle(
+            fontSize: isWeb ? 16 : 16,
+          ),
+          decoration: InputDecoration(
             hintText: hintText,
-            border: OutlineInputBorder(),
+            border: const OutlineInputBorder(),
+            contentPadding: EdgeInsets.symmetric(
+              horizontal: isWeb ? 16 : 16,
+              vertical: isWeb ? 18 : 16,
+            ),
+            hintStyle: TextStyle(
+              fontSize: isWeb ? 16 : 16,
+            ),
           ),
         ),
       ],

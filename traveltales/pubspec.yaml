@@ -41,6 +41,7 @@ dependencies:
   path_provider: ^2.1.4
   path: ^1.9.0
   http_parser: ^4.0.2
+  fl_chart: 0.70.2
   flutter_localizations:
     sdk: flutter
   intl: any

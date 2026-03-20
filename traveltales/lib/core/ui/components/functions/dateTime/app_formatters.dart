@@ -1,4 +1,5 @@
 import 'package:intl/intl.dart';
+import 'package:traveltales/api/api.dart';
 
 class AppFormatters {
   AppFormatters._();
@@ -48,6 +49,15 @@ class AppFormatters {
     if (difference <= 0) return "Added today";
     if (difference == 1) return "Added 1 day ago";
     return "Added $difference days ago";
+  }
+  static String buildProfileImageUrl(String? path) {
+    if (path == null || path.isEmpty) return "";
+
+    if (path.startsWith("http://") || path.startsWith("https://")) {
+      return path;
+    }
+
+    return "$API_URL$path";
   }
 
 
