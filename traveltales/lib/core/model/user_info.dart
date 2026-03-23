@@ -25,4 +25,15 @@ class UserInfo {
       profilePictureUrl: json['profile_picture_url']?.toString(),
     );
   }
+
+  Map<String, dynamic> toJson() {
+    return {
+      'id': id,
+      'email': email,
+      'user_name': userName,
+      'roles': roles,
+      'status': status,
+      'profile_picture_url': profilePictureUrl,
+    };
+  }
 }

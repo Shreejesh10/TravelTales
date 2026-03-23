@@ -309,8 +309,8 @@ class _TravelTalesState extends State<TravelTales> {
             ),
           ),
 
-          // initialRoute: AuthRouteName.loginScreen,
-          initialRoute: RouteName.adminDashboardScreen,
+          initialRoute: AuthRouteName.loginScreen,
+          // initialRoute: RouteName.adminDashboardScreen,
           onGenerateRoute: RouteConfig.generateRoute,
 
           localizationsDelegates: const [

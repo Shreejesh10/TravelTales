@@ -42,7 +42,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
     final userName = _userNameController.text.trim();
     final email = _emailController.text.trim();
     final password = _passwordController.text;
-    final roles = isCompany ? "company" : "user";
+    final roles = isCompany ? "company" : "customer";
 
 
     try {
@@ -130,7 +130,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                         children: [
                           Padding(
                             padding: EdgeInsets.symmetric(horizontal: 12.w),
-                            child: const Text("User"),
+                            child: const Text("Customer"),
                           ),
                           Padding(
                             padding: EdgeInsets.symmetric(horizontal: 12.w),

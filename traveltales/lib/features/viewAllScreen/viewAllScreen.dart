@@ -9,6 +9,7 @@ import 'package:traveltales/core/route_config/route_names.dart';
 import 'package:traveltales/core/ui/components/preference.dart';
 import 'package:traveltales/core/ui/resources/theme/appColors.dart';
 import 'package:traveltales/core/ui/resources/theme/dimens.dart';
+import 'package:traveltales/api/destinationAPI.dart';
 
 class ViewAllScreen extends StatefulWidget {
   final String title;

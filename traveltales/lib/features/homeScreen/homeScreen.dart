@@ -13,6 +13,7 @@ import 'package:traveltales/core/ui/components/searchField.dart';
 import 'package:traveltales/core/ui/components/viewAllRow.dart';
 import 'package:traveltales/core/ui/localization/sharedRes.dart';
 import 'package:traveltales/core/ui/resources/theme/dimens.dart';
+import 'package:traveltales/api/destinationAPI.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});

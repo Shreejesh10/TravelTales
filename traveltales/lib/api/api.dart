@@ -9,6 +9,7 @@ import 'package:traveltales/core/model/destination_model.dart';
 import 'package:traveltales/core/model/event_create_model.dart';
 import 'package:traveltales/core/model/event_model.dart';
 import 'package:traveltales/core/model/genre_model.dart';
+import 'package:traveltales/core/model/pending_company_model.dart';
 import 'package:traveltales/core/model/user_info.dart';
 
 final storage = FlutterSecureStorage();
@@ -185,78 +186,10 @@ Future<void> signup(String email, String password, String userName, String roles
     rethrow;
   }
 }
-Future<List<Destination>>searchDestination(String query)async{
-  final headers = await getHeaders();
-  final url = Uri.parse(
-    '$API_URL/destinations/search-destination',
-  ).replace(
-    queryParameters: {"query": query},
-  );
 
-  final response = await http.get(
-    url,
-    headers: headers,
 
-  );
-  if (response.statusCode == 200) {
-    final List data = jsonDecode(response.body);
-    return data.map((e) => Destination.fromJson(e)).toList();
-  } else {
-    log("Destination search failed: ${response.statusCode} ${response.body}");
-    throw Exception("Failed to search destinations");
-  }
-}
-Future<Destination?> getDestinationByID(int destinationId) async {
-  final url = Uri.parse('$API_URL/destinations/$destinationId');
-  final headers = await getHeaders();
 
-  try {
-    final response = await http.get(url, headers: headers);
 
-    if (response.statusCode == 200) {
-      final data = jsonDecode(response.body);
-      return Destination.fromJson(data);
-    } else {
-      log("Destination fetch failed: ${response.statusCode} ${response.body}");
-      return null;
-    }
-  } catch (e) {
-    log("Error during fetching destination: $e");
-    return null;
-  }
-}
-Future<List<Destination>> getRecommendedDestinations() async {
-  final url = Uri.parse('$API_URL/destinations/recommend/me');
-  final headers = await getHeaders();
-
-  final response = await http.get(url, headers: headers);
-
-  if (response.statusCode == 200) {
-    final data = jsonDecode(response.body);
-
-    return List<Map<String, dynamic>>.from(data)
-        .map((e) => Destination.fromJson(e))
-        .toList();
-  }
-
-  throw Exception(
-      "Recommended fetch failed: ${response.statusCode} ${response.body}");
-}
-
-Future<List<Map<String, dynamic>>> getBestDestinations() async {
-  final url = Uri.parse('$API_URL/destinations/best');
-  final headers = await getHeaders();
-
-  final response = await http.get(url, headers: headers);
-
-  if (response.statusCode == 200) {
-    final data = jsonDecode(response.body);
-    return List<Map<String, dynamic>>.from(data);
-  }
-
-  throw Exception("Best fetch failed: ${response.statusCode} ${response.body}");
-
-}
 
 
 Future<List<Genre>> fetchAllGenres() async {
@@ -385,23 +318,6 @@ Future<void> logoutAndClearAuth() async {
   await storage.delete(key: 'profile_picture_url');
 }
 
-Future<List<Destination>> getAllDestinations() async {
-  final url = Uri.parse('$API_URL/destinations/');
-  final headers = await getHeaders();
-
-  final response = await http.get(url, headers: headers);
-
-  if (response.statusCode == 200) {
-    final data = jsonDecode(response.body);
-
-    return List<Map<String, dynamic>>.from(data)
-        .map((e) => Destination.fromJson(e))
-        .toList();
-  }
-
-  throw Exception(
-      "All destinations fetch failed: ${response.statusCode} ${response.body}");
-}
 
 
 
@@ -515,5 +431,64 @@ Future<List<Event>> getAllEvents() async {
     log("GET ALL EVENTS ERROR: $e");
     log("STACKTRACE: $stackTrace");
     rethrow;
+  }
+}
+
+Future<List<PendingCompany>> getPendingCompanies() async {
+  final token = await storage.read(key: 'access_token');
+
+  final response = await http.get(
+    Uri.parse('$API_URL/admin/companies/pending'),
+    headers: {
+      "Content-Type": "application/json",
+      "Authorization": "Bearer $token",
+    },
+  );
+
+  if (response.statusCode == 200) {
+    return pendingCompanyFromJson(response.body);
+  } else {
+    throw Exception(
+      "Failed to load pending companies: ${response.statusCode} ${response.body}",
+    );
+  }
+}
+
+Future<void> approveCompany(int userId) async {
+  final token = await storage.read(key: 'access_token');
+
+  final response = await http.post(
+    Uri.parse('$API_URL/admin/companies/$userId/approve'),
+    headers: {
+      "Content-Type": "application/json",
+      "Authorization": "Bearer $token",
+    },
+  );
+
+  if (response.statusCode != 200) {
+    throw Exception(
+      "Failed to approve company: ${response.statusCode} ${response.body}",
+    );
+  }
+}
+
+Future<void> rejectCompany(int userId, String reason) async {
+  final token = await storage.read(key: 'access_token');
+
+  final response = await http.post(
+    Uri.parse('$API_URL/admin/companies/$userId/reject'),
+    headers: {
+      "Content-Type": "application/json",
+      "Authorization": "Bearer $token",
+    },
+    body: jsonEncode({
+      "reason": reason,
+    }),
+  );
+
+  if (response.statusCode != 200) {
+    throw Exception(
+      "Failed to reject company: ${response.statusCode} ${response.body}",
+    );
   }
 }

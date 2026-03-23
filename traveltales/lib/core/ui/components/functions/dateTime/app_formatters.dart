@@ -1,5 +1,6 @@
 import 'package:intl/intl.dart';
 import 'package:traveltales/api/api.dart';
+import 'package:http_parser/http_parser.dart';
 
 class AppFormatters {
   AppFormatters._();
@@ -60,5 +61,22 @@ class AppFormatters {
     return "$API_URL$path";
   }
 
-
 }
+MediaType getMediaType(String filename) {
+  final lower = filename.toLowerCase();
+
+  if (lower.endsWith('.png')) {
+    return MediaType('image', 'png');
+  } else if (lower.endsWith('.webp')) {
+    return MediaType('image', 'webp');
+  } else if (lower.endsWith('.heic')) {
+    return MediaType('image', 'heic');
+  } else if (lower.endsWith('.heif')) {
+    return MediaType('image', 'heif');
+  } else if (lower.endsWith('.jpg') || lower.endsWith('.jpeg')) {
+    return MediaType('image', 'jpeg');
+  }
+
+  return MediaType('application', 'octet-stream');
+}
+
