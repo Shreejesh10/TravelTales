@@ -7,6 +7,7 @@ import 'package:traveltales/core/ui/components/destinationCard.dart';
 import 'package:traveltales/core/ui/components/viewAllRow.dart';
 import 'package:traveltales/core/ui/localization/sharedRes.dart';
 import 'package:traveltales/core/ui/resources/theme/appColors.dart';
+import 'package:traveltales/api/destinationAPI.dart';
 
 class DestinationDetailScreen extends StatefulWidget {
   const DestinationDetailScreen({super.key});

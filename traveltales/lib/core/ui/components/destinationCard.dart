@@ -101,6 +101,7 @@ class DestinationCard extends StatelessWidget {
                       overflow: TextOverflow.ellipsis,
                     ),
                   ),
+
                   Row(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [

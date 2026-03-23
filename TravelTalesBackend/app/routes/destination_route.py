@@ -2,7 +2,7 @@ from typing import List, Optional
 from app.auth.auth import get_current_user
 from app.model.models import User
 from fastapi.exceptions import RequestValidationError
-from fastapi import APIRouter, Depends, HTTPException, Query, status
+from fastapi import APIRouter, Depends, HTTPException, Query, status, UploadFile, File
 from sqlalchemy.orm import Session
 from app.utils.db_utils import get_db
 from app.services.destination_service import (
@@ -11,7 +11,9 @@ from app.services.destination_service import (
     get_all_destinations, 
     delete_destination,
     update_destination_service,
-    search_destination)
+    search_destination, 
+    upload_destination_backdrop_service,
+    upload_destination_front_image_service)
 from app.services.recommendation_service import recommend_destinations
 
 
@@ -20,6 +22,7 @@ from app.schemas.schemas import(
     DestinationCreate,
     DestinationUpdate
 )
+import os, uuid
 
 _SHOW_NAME = "destinations"
 router = APIRouter(
@@ -56,11 +59,11 @@ def create_destination(
 
 @router.get("/", response_model=List[DestinationResponse])
 def get_all_destination_route(
-    limit: int = Query(10, ge=1),
+    
     db: Session = Depends(get_db)
 ):
     try:
-        destinations = get_all_destinations(db, limit)
+        destinations = get_all_destinations(db)
         if destinations is None:
             return []
         return destinations 
@@ -165,4 +168,47 @@ def get_recommendations(
 ):
     return recommend_destinations(db, current_user.id)
 
+@router.post("/{destination_id}/upload-backdrop", response_model=DestinationResponse)
+def upload_destination_backdrop(
+    destination_id: int,
+    photo: UploadFile = File(...),
+    db: Session = Depends(get_db),
+    current_user: User = Depends(get_current_user),
+):
+    
+    if current_user.roles != "admin":
+        raise HTTPException(status_code=403, detail="Only admin can upload destination images")
 
+    destination = upload_destination_backdrop_service(
+        db=db,
+        destination_id=destination_id,
+        photo=photo,
+    )
+
+    if not destination:
+        raise HTTPException(status_code=404, detail="Destination not found")
+
+    return destination
+
+
+@router.post("/{destination_id}/upload-front-image", response_model=DestinationResponse)
+def upload_destination_front_image(
+    destination_id: int,
+    photo: UploadFile = File(...),
+    db: Session = Depends(get_db),
+    current_user: User = Depends(get_current_user),
+):
+    
+    if current_user.roles != "admin":
+        raise HTTPException(status_code=403, detail="Only admin can upload destination images")
+
+    destination = upload_destination_front_image_service(
+        db=db,
+        destination_id=destination_id,
+        photo=photo,
+    )
+
+    if not destination:
+        raise HTTPException(status_code=404, detail="Destination not found")
+
+    return destination
