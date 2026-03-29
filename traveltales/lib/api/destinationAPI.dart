@@ -205,3 +205,53 @@ Future<Destination?> uploadDestinationFrontImageWeb({
     return null;
   }
 }
+
+Future<Destination> updateDestination({
+  required int destinationId,
+  required Map<String, dynamic> body,
+}) async {
+  final headers = await getHeaders();
+
+  final response = await http.patch(
+    Uri.parse('$API_URL/destinations/$destinationId'),
+    headers: {
+      ...headers,
+      'Content-Type': 'application/json',
+    },
+    body: jsonEncode(body),
+  );
+
+  log("Update destination status: ${response.statusCode}");
+  log("Update destination body: ${response.body}");
+
+  if (response.statusCode == 200) {
+    final data = jsonDecode(response.body);
+    return Destination.fromJson(data);
+  } else {
+    throw Exception(
+      "Failed to update destination: ${response.statusCode} ${response.body}",
+    );
+  }
+}
+
+Future<void> deleteDestination(int destinationId) async {
+  final headers = await getHeaders();
+
+  final response = await http.delete(
+    Uri.parse('$API_URL/destinations/$destinationId'),
+    headers: headers,
+  );
+
+  if (response.statusCode == 204) {
+    return;
+  } else if (response.statusCode == 404) {
+    log("Delete destination failed: ${response.statusCode} ${response.body}");
+    throw Exception("Destination not found");
+  } else if (response.statusCode == 403) {
+    log("Delete destination failed: ${response.statusCode} ${response.body}");
+    throw Exception("Only admin can delete destination");
+  } else {
+    log("Delete destination failed: ${response.statusCode} ${response.body}");
+    throw Exception("Failed to delete destination");
+  }
+}

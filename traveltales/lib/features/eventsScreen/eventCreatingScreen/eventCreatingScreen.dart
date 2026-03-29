@@ -13,7 +13,7 @@ import 'package:traveltales/core/ui/resources/theme/appColors.dart';
 import 'package:traveltales/core/ui/resources/theme/dimens.dart';
 import 'package:traveltales/api/destinationAPI.dart';
 
-import '../../core/model/event_create_model.dart';
+import '../../../core/model/event_create_model.dart';
 
 class EventCreatingScreen extends StatefulWidget {
   const EventCreatingScreen({super.key});

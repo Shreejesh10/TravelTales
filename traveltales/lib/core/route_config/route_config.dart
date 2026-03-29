@@ -1,14 +1,17 @@
 import 'package:flutter/material.dart';
+import 'package:traveltales/core/model/destination_model.dart';
 import 'package:traveltales/core/model/event_model.dart';
 import 'package:traveltales/core/route_config/route_names.dart';
 import 'package:traveltales/features/addFriend/addFriendScreen.dart';
 import 'package:traveltales/features/adminScreen/adminDashboard/adminDashboard.dart';
+import 'package:traveltales/features/adminScreen/createDestinationPage/adminDestinationDetailScreen.dart';
 import 'package:traveltales/features/auth/login/loginScreen.dart';
 import 'package:traveltales/features/bookedEventsDetail/bookedEventScreen.dart';
 import 'package:traveltales/features/companyDashboard/companyDashboardScreen.dart';
 import 'package:traveltales/features/dashboard/dashboardScreen.dart';
 import 'package:traveltales/features/destinationDetailScreen/destinationDetailScreen.dart';
-import 'package:traveltales/features/eventCreatingScreen/eventCreatingScreen.dart';
+import 'package:traveltales/features/eventsScreen/eventBookingScreen/eventBookingScreen.dart';
+import 'package:traveltales/features/eventsScreen/eventCreatingScreen/eventCreatingScreen.dart';
 import 'package:traveltales/features/eventsScreen/eventDetailScreen.dart';
 import 'package:traveltales/features/homeScreen/homeScreen.dart';
 import 'package:traveltales/features/onboardingScreen/onboardingScreen.dart';
@@ -65,6 +68,14 @@ class RouteConfig {
         return MaterialPageRoute(builder: (_) => AddFriendScreen());
       case RouteName.adminDashboardScreen:
         return MaterialPageRoute(builder: (_) => AdminDashboardScreen());
+      case RouteName.eventBookingScreen:
+        final event = settings.arguments as Event;
+        return MaterialPageRoute(builder: (_) => EventBookingScreen(event: event));
+      case RouteName.adminDestinationDetailScreen:
+        final destination = settings.arguments as Destination;
+        return MaterialPageRoute(builder: (_) => AdminDestinationDetailScreen(destination: destination));
+
+
 
       default:
         return _errorRoute();

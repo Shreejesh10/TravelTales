@@ -2,7 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:intl/intl.dart';
 import 'package:traveltales/api/api.dart';
+import 'package:traveltales/api/bookingAPI.dart';
+import 'package:traveltales/core/model/booking_model.dart';
 import 'package:traveltales/core/model/event_model.dart';
+import 'package:traveltales/core/route_config/route_names.dart';
 import 'package:traveltales/core/ui/components/button.dart';
 import 'package:traveltales/core/ui/components/functions/dateTime/app_formatters.dart';
 import 'package:traveltales/core/ui/components/viewAllRow.dart';
@@ -23,8 +26,10 @@ class EventDetailScreen extends StatefulWidget {
 
 class _EventDetailScreenState extends State<EventDetailScreen> {
   final ScrollController _scrollController = ScrollController();
+  final BookingService _bookingService = BookingService();
   final GlobalKey _eventDateKey = GlobalKey();
   final GlobalKey _checklistKey = GlobalKey();
+  late Future<List<Booking>> _bookingsFuture;
 
   double screenHeight = 1.sh;
   bool isDescriptionExpanded = false;
@@ -32,6 +37,13 @@ class _EventDetailScreenState extends State<EventDetailScreen> {
   bool isChecklistExpanded = false;
 
   Event get event => widget.event;
+
+
+  @override
+  void initState() {
+    super.initState();
+    _bookingsFuture = _bookingService.getMyBookings();
+  }
 
   @override
   void dispose() {
@@ -378,9 +390,28 @@ class _EventDetailScreenState extends State<EventDetailScreen> {
           ),
         ],
       ),
-      bottomNavigationBar: Padding(
-        padding: EdgeInsets.fromLTRB(16.w, 0, 16.w, 18.h),
-        child: _priceBottomBar(),
+      bottomNavigationBar: FutureBuilder<List<Booking>>(
+        future: _bookingsFuture,
+        builder: (context, snapshot) {
+          if (!snapshot.hasData) return const SizedBox.shrink();
+
+          final bookings = snapshot.data!;
+
+          final alreadyBooked = bookings.any(
+                (b) =>
+            b.eventId == event.eventId &&
+                (b.status == "pending" || b.status == "completed"),
+          );
+
+          if (alreadyBooked) {
+            return const SizedBox.shrink();
+          }
+
+          return Padding(
+            padding: EdgeInsets.fromLTRB(16.w, 0, 16.w, 18.h),
+            child: _priceBottomBar(),
+          );
+        },
       ),
     );
   }
@@ -436,7 +467,9 @@ class _EventDetailScreenState extends State<EventDetailScreen> {
               width: 160.w,
               height: 54.h,
               child: AppButton(
-                onPressed: () {},
+                onPressed: () {
+                  Navigator.pushNamed(context, RouteName.eventBookingScreen, arguments: event);
+                },
                 text: SharedRes.strings(context).bookNow,
               ),
             ),

@@ -2,13 +2,17 @@ import 'package:flutter/material.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 
 class EsewaWebViewScreen extends StatefulWidget {
-  final String formUrl;
-  final Map<String, dynamic> fields;
+  final String paymentUrl;
+  final Map<String, dynamic> formData;
+  final String successUrlPrefix;
+  final String failureUrlPrefix;
 
   const EsewaWebViewScreen({
     super.key,
-    required this.formUrl,
-    required this.fields,
+    required this.paymentUrl,
+    required this.formData,
+    required this.successUrlPrefix,
+    required this.failureUrlPrefix,
   });
 
   @override
@@ -18,9 +22,10 @@ class EsewaWebViewScreen extends StatefulWidget {
 class _EsewaWebViewScreenState extends State<EsewaWebViewScreen> {
   late final WebViewController _controller;
   bool isLoading = true;
+  bool hasReturned = false;
 
   String _buildHtmlForm() {
-    final inputs = widget.fields.entries.map((entry) {
+    final inputs = widget.formData.entries.map((entry) {
       return '<input type="hidden" name="${entry.key}" value="${entry.value}">';
     }).join();
 
@@ -28,13 +33,25 @@ class _EsewaWebViewScreenState extends State<EsewaWebViewScreen> {
 <!DOCTYPE html>
 <html>
   <body onload="document.forms[0].submit();">
-    <form method="POST" action="${widget.formUrl}">
+    <form method="POST" action="${widget.paymentUrl}">
       $inputs
     </form>
     <p>Redirecting to eSewa...</p>
   </body>
 </html>
 ''';
+  }
+
+  void _handleFinalResult(String url) {
+    if (hasReturned) return;
+
+    if (url.startsWith(widget.successUrlPrefix)) {
+      hasReturned = true;
+      Navigator.pop(context, true);
+    } else if (url.startsWith(widget.failureUrlPrefix)) {
+      hasReturned = true;
+      Navigator.pop(context, false);
+    }
   }
 
   @override
@@ -46,28 +63,15 @@ class _EsewaWebViewScreenState extends State<EsewaWebViewScreen> {
       ..setNavigationDelegate(
         NavigationDelegate(
           onPageStarted: (_) {
-            setState(() {
-              isLoading = true;
-            });
+            if (!mounted) return;
+            setState(() => isLoading = true);
           },
-          onPageFinished: (_) {
-            setState(() {
-              isLoading = false;
-            });
+          onPageFinished: (url) {
+            if (!mounted) return;
+            setState(() => isLoading = false);
+            _handleFinalResult(url);
           },
           onNavigationRequest: (request) {
-            final url = request.url;
-
-            if (url.contains('/bookings/esewa/success')) {
-              Navigator.pop(context, "success");
-              return NavigationDecision.prevent;
-            }
-
-            if (url.contains('/bookings/esewa/failure')) {
-              Navigator.pop(context, "failure");
-              return NavigationDecision.prevent;
-            }
-
             return NavigationDecision.navigate;
           },
         ),
@@ -78,9 +82,7 @@ class _EsewaWebViewScreenState extends State<EsewaWebViewScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text("Pay with eSewa"),
-      ),
+      appBar: AppBar(title: const Text("Pay with eSewa")),
       body: Stack(
         children: [
           WebViewWidget(controller: _controller),

@@ -20,7 +20,8 @@ class RouteName{
   static const String eventDetailScreen = "/event_detail_screen";
   static const String addFriendScreen = "/add_friend_screen";
   static const String adminDashboardScreen = "/admin_dashboard_screen";
-
+  static const String eventBookingScreen = "/event_booking_screen";
+  static const String adminDestinationDetailScreen = "/admin_destination_detail_screen";
 
 
 }

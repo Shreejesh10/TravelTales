@@ -8,6 +8,9 @@ import 'package:image_picker/image_picker.dart';
 import 'package:path/path.dart' as p;
 import 'package:path_provider/path_provider.dart';
 import 'package:traveltales/api/api.dart';
+import 'package:traveltales/api/bookingAPI.dart';
+import 'package:traveltales/core/model/booking_model.dart';
+import 'package:traveltales/core/model/event_model.dart';
 import 'package:traveltales/core/model/user_info.dart';
 import 'package:traveltales/core/route_config/route_names.dart';
 import 'package:traveltales/core/ui/components/actionDialogBox.dart';
@@ -29,9 +32,11 @@ class ProfileScreen extends StatefulWidget {
 
 class _ProfileScreenState extends State<ProfileScreen> {
   final ImagePicker picker = ImagePicker();
+  final BookingService _bookingService = BookingService();
+  late Future<List<Booking>> _bookingsFuture;
+  late Future<List<Event>> _eventsFuture;
   final TextEditingController passwordController = TextEditingController();
-  final TextEditingController confirmPasswordController =
-  TextEditingController();
+  final TextEditingController confirmPasswordController = TextEditingController();
 
   File? profileImageFile;
   String? profilePhotoUrl;
@@ -43,6 +48,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
   void initState() {
     super.initState();
     _loadUser();
+
+    _bookingsFuture = _bookingService.getMyBookings();
+    _eventsFuture = getAllEvents();
   }
 
   @override
@@ -270,36 +278,70 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 onPressed: () {},
               ),
               SizedBox(height: 8.h),
-              _bookedEventCard(
-                context,
-                imageAsset: "assets/images/Bouddha.png",
-                title: "Everest Base Camp",
-                statusText: "Completed Oct 15, 2025",
-                organizerText: "Kalpa Tours and Travels",
-                difficultyText: "Hard",
-                onTap: () {
-                  Navigator.pushNamed(context, RouteName.bookedEventScreen);
+              FutureBuilder<List<dynamic>>(
+                future: Future.wait([
+                  _bookingsFuture,
+                  _eventsFuture,
+                ]),
+                builder: (context, snapshot) {
+                  if (snapshot.connectionState == ConnectionState.waiting) {
+                    return const Center(child: CircularProgressIndicator());
+                  }
+
+                  if (snapshot.hasError) {
+                    return const Text("Failed to load bookings");
+                  }
+
+                  final bookings = snapshot.data![0] as List<Booking>;
+                  final events = snapshot.data![1] as List<Event>;
+
+                  final eventMap = {
+                    for (var e in events) e.eventId: e,
+                  };
+
+                  final completedBookings =
+                  bookings.where((b) => b.status == "completed" || b.status == "pending").take(3).toList();
+
+                  if (completedBookings.isEmpty) {
+                    return const Text("No completed bookings yet");
+                  }
+
+                  return Column(
+                    children: completedBookings.map((booking) {
+                      final event = eventMap[booking.eventId];
+                      if (event == null) return const SizedBox.shrink();
+
+                      final destination = event.destination;
+
+                      final List<String> images =
+                          destination.extraInfo.backdropPath;
+
+                      final String imageUrl = images.isNotEmpty
+                          ? "$API_URL${images.first}"
+                          : "";
+
+                      return Padding(
+                        padding: EdgeInsets.only(bottom: 8.h),
+                        child: _bookedEventCard(
+                          context,
+                          imageAsset: imageUrl,
+                          title: destination.placeName,
+                          statusText:
+                          "Completed ${event.toDate.toString().split('T').first}",
+                          organizerText: "Booked for ${booking.totalPeople} people",
+                          difficultyText: destination.extraInfo.difficultyLevel ?? "Normal",
+                          onTap: () {
+                            Navigator.pushNamed(
+                              context,
+                              RouteName.eventDetailScreen,
+                              arguments: event,
+                            );
+                          },
+                        ),
+                      );
+                    }).toList(),
+                  );
                 },
-              ),
-              SizedBox(height: 8.h),
-              _bookedEventCard(
-                context,
-                imageAsset: "assets/images/Bouddha.png",
-                title: "Everest Base Camp",
-                statusText: "Completed Oct 15, 2025",
-                organizerText: "Kalpa Tours and Travels",
-                difficultyText: "Hard",
-                onTap: () {},
-              ),
-              SizedBox(height: 8.h),
-              _bookedEventCard(
-                context,
-                imageAsset: "assets/images/Bouddha.png",
-                title: "Everest Base Camp",
-                statusText: "Completed Oct 15, 2025",
-                organizerText: "Kalpa Tours and Travels",
-                difficultyText: "Hard",
-                onTap: () {},
               ),
             ],
           ),
@@ -611,7 +653,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
           children: [
             ClipRRect(
               borderRadius: BorderRadius.circular(12.r),
-              child: Image.asset(
+              child: Image.network(
                 imageAsset,
                 height: 54.w,
                 width: 54.w,
@@ -643,7 +685,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
             Container(
               padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 6.h),
               decoration: BoxDecoration(
-                color: Colors.red.withOpacity(0.12),
+                color: AppColors.difficultyBgColor(difficultyText),
                 borderRadius: BorderRadius.circular(99.r),
               ),
               child: Text(
@@ -651,7 +693,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 style: TextStyle(
                   fontSize: 11.sp,
                   fontWeight: FontWeight.w700,
-                  color: Colors.red,
+                  color: AppColors.difficultyColor(difficultyText),
                 ),
               ),
             ),

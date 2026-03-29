@@ -12,6 +12,14 @@ class AppColors {
   static const darkBorderColor = Color(0xFF2E587C);
   static const primaryColor = Color(0xFF00A6FF);
   static const secondaryColor = Color(0xFF0A2A4A);
+  static const richTextColor = Color(0xFF0A2A4A);
+  static const darkRichTextColor = Color(0xFFF7FCFF);
+
+  static Color getRichTextColor(BuildContext context) {
+    return Theme.of(context).brightness == Brightness.light
+        ? richTextColor
+        : darkRichTextColor;
+  }
 
   static Color getBorderColor(BuildContext context) {
     return Theme.of(context).brightness == Brightness.light

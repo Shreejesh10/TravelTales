@@ -2,12 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:provider/provider.dart';
 import 'package:traveltales/api/api.dart';
 import 'package:traveltales/core/route_config/route_names.dart';
 import 'package:traveltales/core/ui/components/textField/emailTextField.dart';
 import 'package:traveltales/core/ui/components/textField/passwordTextField.dart';
 import 'package:traveltales/core/ui/localization/sharedRes.dart';
 import 'package:traveltales/core/ui/resources/theme/dimens.dart';
+import 'package:traveltales/features/auth/login/authProvider.dart';
 
 import '../../../core/ui/components/button.dart';
 
@@ -23,7 +25,6 @@ class LoginScreenState extends State<LoginScreen> {
   final _passwordController = TextEditingController();
   final _formKey = GlobalKey<FormState>();
 
-  bool _isLoading = false;
 
   @override
   void dispose() {
@@ -33,61 +34,52 @@ class LoginScreenState extends State<LoginScreen> {
   }
 
   Future<void> _submit() async {
-    if (_isLoading) return;
     if (!_formKey.currentState!.validate()) return;
 
     final email = _emailController.text.trim();
     final password = _passwordController.text;
 
-    setState(() {
-      _isLoading = true;
-    });
+    final authProvider = context.read<AuthProvider>();
 
-    try {
-      final result = await login(email, password);
+    final success = await authProvider.loginUser(
+      email: email,
+      password: password,
+    );
 
-      final String role = result["roles"];
-      final bool hasCompletedPreference = result["has_completed_preference"];
+    if (!mounted) return;
 
-      if (!mounted) return;
-
-      if (role == "company") {
-        Navigator.pushReplacementNamed(
-          context,
-          RouteName.companyDashboardScreen,
-        );
-      } else if(role == "admin"){
-        Navigator.pushReplacementNamed(
-          context,
-          RouteName.adminDashboardScreen,
-        );
-      }
-      else {
-        if (hasCompletedPreference) {
-          Navigator.pushReplacementNamed(
-            context,
-            RouteName.dashBoardScreen,
-          );
-        } else {
-          Navigator.pushReplacementNamed(
-            context,
-            RouteName.preferenceScreen,
-          );
-        }
-      }
-    } catch (e) {
-      if (!mounted) return;
-
+    if (!success) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text("Check your email and password and try again"),
+        SnackBar(
+          content: Text(
+            authProvider.errorMessage ?? "Check your email and password and try again",
+          ),
         ),
       );
-    } finally {
-      if (mounted) {
-        setState(() {
-          _isLoading = false;
-        });
+      return;
+    }
+
+    if (authProvider.role == "company") {
+      Navigator.pushReplacementNamed(
+        context,
+        RouteName.companyDashboardScreen,
+      );
+    } else if (authProvider.role == "admin") {
+      Navigator.pushReplacementNamed(
+        context,
+        RouteName.adminDashboardScreen,
+      );
+    } else {
+      if (authProvider.hasCompletedPreference) {
+        Navigator.pushReplacementNamed(
+          context,
+          RouteName.dashBoardScreen,
+        );
+      } else {
+        Navigator.pushReplacementNamed(
+          context,
+          RouteName.preferenceScreen,
+        );
       }
     }
   }
@@ -120,7 +112,10 @@ class LoginScreenState extends State<LoginScreen> {
   }
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context,) {
+    final authProvider = context.watch<AuthProvider>();
+    final isLoading = authProvider.isLoading;
+
     return PopScope(
       canPop: !kIsWeb,
       onPopInvokedWithResult: (didPop, result) {
@@ -182,7 +177,7 @@ class LoginScreenState extends State<LoginScreen> {
 
                               EmailTextField(
                                 controller: _emailController,
-                                enabled: !_isLoading,
+                                enabled: !isLoading,
                                 labelText: SharedRes.strings(context).email,
                                 hintText: SharedRes.strings(context).enterEmail,
 
@@ -192,7 +187,7 @@ class LoginScreenState extends State<LoginScreen> {
 
                               PasswordTextField(
                                 controller: _passwordController,
-                                enabled: !_isLoading,
+                                enabled: !isLoading,
                                 labelText: SharedRes.strings(context).password,
                                 hintText: SharedRes.strings(context).enterPassword,
                               ),
@@ -200,10 +195,10 @@ class LoginScreenState extends State<LoginScreen> {
                               const SizedBox(height: 24),
 
                               AppButton(
-                                text: _isLoading
+                                text: isLoading
                                     ? "Loading..."
                                     : SharedRes.strings(context).login,
-                                onPressed: _isLoading ? null : _submit,
+                                onPressed: isLoading ? null : _submit,
                               ),
 
                               const SizedBox(height: 12),
@@ -223,7 +218,7 @@ class LoginScreenState extends State<LoginScreen> {
                                       ),
                                     ),
                                     TextButton(
-                                      onPressed: _isLoading
+                                      onPressed: isLoading
                                           ? null
                                           : () {
                                         Navigator.pushNamed(

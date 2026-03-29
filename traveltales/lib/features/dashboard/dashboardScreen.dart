@@ -1,5 +1,6 @@
 import 'package:curved_navigation_bar/curved_navigation_bar.dart';
 import 'package:flutter/material.dart';
+import 'package:traveltales/features/bookedEventsDetail/bookedEventHomeScreen.dart';
 import 'package:traveltales/features/eventsScreen/eventsScreen.dart';
 import 'package:traveltales/features/homeScreen/homeScreen.dart';
 import 'package:traveltales/features/profile/profile.dart';
@@ -18,7 +19,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
 
   final List<Widget> _pages = const [
     HomeScreen(),
-    SearchScreen(),
+    BookedEventHomeScreen(),
     EventsScreen(),
     ProfileScreen(),
   ];

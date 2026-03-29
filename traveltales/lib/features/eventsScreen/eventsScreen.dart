@@ -1,12 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:traveltales/api/api.dart';
+import 'package:traveltales/core/model/booking_model.dart';
 import 'package:traveltales/core/model/event_model.dart';
 import 'package:traveltales/core/route_config/route_names.dart';
 import 'package:traveltales/core/ui/components/button.dart';
 import 'package:traveltales/core/ui/components/functions/dateTime/app_formatters.dart';
 import 'package:traveltales/core/ui/localization/sharedRes.dart';
 import 'package:traveltales/core/ui/resources/theme/dimens.dart';
+import 'package:traveltales/api/bookingAPI.dart';
 import '../../core/ui/components/actionDialogBox.dart';
 import '../../core/ui/resources/theme/appColors.dart';
 
@@ -18,13 +20,17 @@ class EventsScreen extends StatefulWidget {
 }
 
 class _EventsScreenState extends State<EventsScreen> {
+  final BookingService _bookingService = BookingService();
   late Future<List<Event>> _eventsFuture;
+  late Future<List<Booking>> _bookingsFuture;
+
   String? currentCompanyId;
 
   @override
   void initState() {
     super.initState();
     _eventsFuture = getAllEvents();
+    _bookingsFuture = _bookingService.getMyBookings();
     _loadCompanyId();
   }
   Future<void> _loadCompanyId() async{
@@ -37,6 +43,7 @@ class _EventsScreenState extends State<EventsScreen> {
   Future<void> _reloadEvents() async {
     setState(() {
       _eventsFuture = getAllEvents();
+      _bookingsFuture = _bookingService.getMyBookings();
     });
   }
   Future<void> _deleteEvent(int eventId) async {
@@ -100,8 +107,11 @@ class _EventsScreenState extends State<EventsScreen> {
           ),
         ],
       ),
-      body: FutureBuilder<List<Event>>(
-        future: _eventsFuture,
+      body: FutureBuilder<List<dynamic>>(
+        future: Future.wait([
+          _eventsFuture,
+          _bookingsFuture,
+        ]),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return const Center(child: CircularProgressIndicator());
@@ -134,7 +144,19 @@ class _EventsScreenState extends State<EventsScreen> {
             );
           }
 
-          final events = snapshot.data ?? [];
+          final allEvents = snapshot.data![0] as List<Event>;
+          final myBookings = snapshot.data![1] as List<Booking>;
+
+          final bookedEventIds = myBookings
+              .where((booking) =>
+          booking.status == "pending" ||
+              booking.status == "completed")
+              .map((booking) => booking.eventId)
+              .toSet();
+
+          final events = allEvents
+              .where((event) => !bookedEventIds.contains(event.eventId))
+              .toList();
 
           if (events.isEmpty) {
             return Center(
@@ -159,14 +181,13 @@ class _EventsScreenState extends State<EventsScreen> {
               itemCount: events.length,
               separatorBuilder: (_, __) => SizedBox(height: 16.h),
               itemBuilder: (context, index) {
-
                 final event = events[index];
                 final destination = event.destination;
+
                 print("currentCompanyId: $currentCompanyId");
                 print("event.companyUserId: ${event.companyUserId}");
 
-                final List<String> frontImages =
-                    destination.extraInfo.backdropPath;
+                final List<String> frontImages = destination.extraInfo.backdropPath;
 
                 final String imageUrl = frontImages.isNotEmpty
                     ? "$API_URL${frontImages.first}"
@@ -188,8 +209,7 @@ class _EventsScreenState extends State<EventsScreen> {
                     destination.extraInfo.difficultyLevel,
                   ),
                   isMyEvent: currentCompanyId == event.companyUserId.toString(),
-                  onDeleteTap:() => _deleteEvent(event.eventId),
-
+                  onDeleteTap: () => _deleteEvent(event.eventId),
                   onShareTap: () {},
                   onViewDetailsTap: () {
                     Navigator.pushNamed(

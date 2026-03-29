@@ -1,4 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:traveltales/api/api.dart';
+import 'package:traveltales/core/route_config/route_names.dart';
+import 'package:traveltales/core/ui/components/actionDialogBox.dart';
+import 'package:traveltales/core/ui/localization/sharedRes.dart';
 import 'package:traveltales/core/ui/resources/theme/appColors.dart';
 import 'package:traveltales/features/adminScreen/analyticsScreen/analyticsScreen.dart';
 import 'package:traveltales/features/adminScreen/createDestinationPage/createDestinationScreen.dart';
@@ -13,6 +17,16 @@ class AdminDashboardScreen extends StatefulWidget {
 
 class _AdminDashboardScreenState extends State<AdminDashboardScreen> {
   int selectedIndex = 0;
+
+  Future<void> logout() async {
+    await logoutAndClearAuth();
+    if (!mounted) return;
+    Navigator.pushNamedAndRemoveUntil(
+      context,
+      AuthRouteName.loginScreen,
+          (route) => false,
+    );
+  }
 
   final List<String> menuItems = [
     "Analytics Dashboard",
@@ -51,6 +65,8 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 const SizedBox(height: 24),
+
+                // Title
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 20),
                   child: Text(
@@ -62,7 +78,10 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen> {
                     ),
                   ),
                 ),
+
                 const SizedBox(height: 30),
+
+                // MENU
                 ...List.generate(menuItems.length, (index) {
                   final isSelected = selectedIndex == index;
 
@@ -73,28 +92,20 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen> {
                       });
                     },
                     child: Container(
-                      margin: const EdgeInsets.symmetric(
-                        horizontal: 12,
-                        vertical: 6,
-                      ),
-                      padding: const EdgeInsets.symmetric(
-                        vertical: 12,
-                        horizontal: 16,
-                      ),
+                      margin: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                      padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 16),
                       decoration: BoxDecoration(
                         color: isSelected
                             ? AppColors.primaryColor.withValues(alpha: 0.12)
                             : Colors.transparent,
                         borderRadius: BorderRadius.circular(8),
-
                       ),
                       child: Text(
                         menuItems[index],
                         style: TextStyle(
                           fontSize: 14,
-                          fontWeight: isSelected
-                              ? FontWeight.w600
-                              : FontWeight.w400,
+                          fontWeight:
+                          isSelected ? FontWeight.w600 : FontWeight.w400,
                           color: isSelected
                               ? AppColors.primaryColor
                               : AppColors.getSmallTextColor(context),
@@ -103,6 +114,56 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen> {
                     ),
                   );
                 }),
+
+                const Spacer(),
+
+                // ADMIN SECTION
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 18),
+                  child: Row(
+                    children: [
+                      const CircleAvatar(
+                        radius: 18,
+                        backgroundColor: Colors.grey,
+                        child: Icon(Icons.person, color: Colors.white),
+                      ),
+                      const SizedBox(width: 10),
+                      const Text(
+                        "Admin",
+                        style: TextStyle(fontWeight: FontWeight.w600),
+                      ),
+                    ],
+                  ),
+                ),
+
+                const SizedBox(height: 10),
+
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 12),
+                  child: TextButton.icon(
+                    onPressed: () {
+                      showAppActionDialog(
+                        context: context,
+                        title: SharedRes.strings(context).logout,
+                        contentWidget: [
+                          Text(SharedRes.strings(context).logoutMessage),
+                        ],
+                        confirmText: SharedRes.strings(context).ok,
+                        isDestructive: true,
+                        onConfirm: () async {
+                          await logout();
+                        },
+                      );
+                    },
+                    icon: const Icon(Icons.logout, size: 18, color: Colors.red),
+                    label: const Text(
+                      "Log out",
+                      style: TextStyle(color: Colors.red),
+                    ),
+                  ),
+                ),
+
+                const SizedBox(height: 20),
               ],
             ),
           ),
@@ -128,48 +189,6 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen> {
                           fontSize: 18,
                           fontWeight: FontWeight.w600,
                         ),
-                      ),
-                      Row(
-                        children: [
-                          Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            crossAxisAlignment: CrossAxisAlignment.end,
-                            children:  [
-                              Text(
-                                "Admin",
-                                style: TextStyle(
-                                  fontWeight: FontWeight.w600,
-                                ),
-                              ),
-                              SizedBox(height: 2),
-                              Text(
-                                "View Profile",
-                                style: TextStyle(
-                                  fontSize: 12,
-                                ),
-                              ),
-                            ],
-                          ),
-                          const SizedBox(width: 12),
-                          const CircleAvatar(
-                            radius: 18,
-                            backgroundColor: Colors.grey,
-                            child: Icon(Icons.person, color: Colors.white),
-                          ),
-                          const SizedBox(width: 16),
-                          TextButton.icon(
-                            onPressed: () {},
-                            icon: const Icon(
-                              Icons.logout,
-                              size: 18,
-                              color: Colors.red,
-                            ),
-                            label: const Text(
-                              "Log out",
-                              style: TextStyle(color: Colors.red),
-                            ),
-                          ),
-                        ],
                       ),
                     ],
                   ),

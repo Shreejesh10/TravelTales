@@ -15,7 +15,8 @@ import 'package:traveltales/core/model/user_info.dart';
 final storage = FlutterSecureStorage();
 // const String API_URL = 'http://10.0.2.2:8000';
 final String API_URL = 'http://192.168.1.67:8000';
-// final String API_URL = 'http://100.64.194.22:8000';
+// final String API_URL = 'http://100.64.226.32:8000';
+// final String API_URL = 'http://100.74.129.4:8000';
 
 
 Future<Map<String, String>> getHeaders() async {

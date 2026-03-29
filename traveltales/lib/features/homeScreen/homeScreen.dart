@@ -3,6 +3,7 @@ import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:provider/provider.dart';
 import 'package:traveltales/api/api.dart';
 import 'package:traveltales/core/model/destination_model.dart';
 import 'package:traveltales/core/model/genre_model.dart';
@@ -14,6 +15,7 @@ import 'package:traveltales/core/ui/components/viewAllRow.dart';
 import 'package:traveltales/core/ui/localization/sharedRes.dart';
 import 'package:traveltales/core/ui/resources/theme/dimens.dart';
 import 'package:traveltales/api/destinationAPI.dart';
+import 'package:traveltales/features/homeScreen/home_provider.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -23,9 +25,7 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  late Future<List<Destination>> recommendedFuture;
-  late Future<List<Destination>> allDestinationsFuture;
-  late Future<List<Genre>> allGenresFuture;
+
 
   String selectedGenre = "All";
   Map<String, int> genreIndexMap = {};
@@ -33,9 +33,10 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   void initState() {
     super.initState();
-    recommendedFuture = getRecommendedDestinations();
-    allDestinationsFuture = getAllDestinations();
-    allGenresFuture = fetchAllGenres();
+
+    Future.microtask((){
+      context.read<HomeProvider>().loadHomeData();
+    });
   }
 
   bool matchesGenre(Destination destination, String selectedGenre) {
@@ -55,98 +56,65 @@ class _HomeScreenState extends State<HomeScreen> {
     return score > 0.5;
   }
 
-  Widget buildGenreFilter() {
-    return FutureBuilder<List<Genre>>(
-      future: allGenresFuture,
-      builder: (context, snapshot) {
-        if (snapshot.connectionState == ConnectionState.waiting) {
-          return SizedBox(
-            height: 36.h,
-            child: const Center(child: CircularProgressIndicator()),
-          );
-        }
+  Widget buildGenreFilter(HomeProvider homeProvider) {
+    final genres = homeProvider.genres;
 
-        if (snapshot.hasError) {
-          return SizedBox(
-            height: 36.h,
-            child: const Center(child: Text("Failed to load genres")),
-          );
-        }
+    if (genres.isEmpty) {
+      return SizedBox(
+        height: 36.h,
+        child: const Center(child: CircularProgressIndicator()),
+      );
+    }
 
-        final genres = snapshot.data ?? [];
+    genreIndexMap = {
+      for (int i = 0; i < genres.length; i++)
+        genres[i].name.trim().toLowerCase(): i,
+    };
 
-        genreIndexMap = {
-          for (int i = 0; i < genres.length; i++) genres[i].name.trim().toLowerCase(): i,
-        };
+    final genreNames = [
+      "All",
+      ...genres.map((g) => g.name).where((name) => name.trim().isNotEmpty),
+    ];
 
-        final genreNames = [
-          "All",
-          ...genres.map((g) => g.name).where((name) => name.trim().isNotEmpty),
-        ];
-
-        return DestinationPreference(
-          genres: genreNames,
-          selectedGenre: selectedGenre,
-          onGenreSelected: (genre) {
-            setState(() {
-              selectedGenre = genre;
-            });
-          },
-        );
+    return DestinationPreference(
+      genres: genreNames,
+      selectedGenre: selectedGenre,
+      onGenreSelected: (genre) {
+        setState(() {
+          selectedGenre = genre;
+        });
       },
     );
   }
 
-  Widget buildDestinationList(Future<List<Destination>> futureList) {
-    return FutureBuilder<List<Destination>>(
-      future: futureList,
-      builder: (context, snapshot) {
-        if (snapshot.connectionState == ConnectionState.waiting) {
-          return const Center(child: CircularProgressIndicator());
-        }
+  Widget buildDestinationList(List<Destination> destinations) {
+    final filtered = destinations
+        .where((d) => matchesGenre(d, selectedGenre))
+        .toList();
 
-        if (snapshot.hasError) {
-          log("Destination fetch error: ${snapshot.error}");
-          return const Center(
-            child: Text("Failed to load destinations"),
-          );
-        }
+    if (filtered.isEmpty) {
+      return Center(child: Text("No $selectedGenre destinations found"));
+    }
 
-        final destinations = snapshot.data ?? [];
+    return ListView.builder(
+      scrollDirection: Axis.horizontal,
+      itemCount: filtered.length,
+      itemBuilder: (context, index) {
+        final destination = filtered[index];
 
-        final filteredDestinations = destinations
-            .where((destination) => matchesGenre(destination, selectedGenre))
-            .toList();
+        final image =
+        destination.extraInfo?.frontImagePath.isNotEmpty == true
+            ? destination.extraInfo!.frontImagePath.first
+            : destination.extraInfo?.photos.isNotEmpty == true
+            ? destination.extraInfo!.photos.first
+            : "";
 
-        if (filteredDestinations.isEmpty) {
-          return Center(
-            child: Text("No $selectedGenre destinations found"),
-          );
-        }
-
-        return ListView.builder(
-          scrollDirection: Axis.horizontal,
-          itemCount: filteredDestinations.length,
-          itemBuilder: (context, index) {
-            final destination = filteredDestinations[index];
-
-            final image =
-            destination.extraInfo?.frontImagePath.isNotEmpty == true
-                ? destination.extraInfo!.frontImagePath.first
-                : destination.extraInfo?.photos.isNotEmpty == true
-                ? destination.extraInfo!.photos.first
-                : "";
-
-            log("IMAGE URL: $image");
-
-            return DestinationCard(
-              imagePath: "$API_URL$image",
-              title: destination.placeName,
-              location: destination.location,
-              isNetworkImage: image.isNotEmpty,
-              destinationId: destination.destinationId,
-            );
-          },
+        return DestinationCard(
+          imagePath: "$API_URL$image",
+          title: destination.placeName,
+          location: destination.location,
+          isNetworkImage: image.isNotEmpty,
+          destinationId: destination.destinationId,
         );
       },
     );
@@ -154,6 +122,11 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final homeProvider = context.watch<HomeProvider>();
+
+    if (homeProvider.isLoading && !homeProvider.hasLoaded) {
+      return const Center(child: CircularProgressIndicator());
+    }
     return PopScope(
       canPop: false,
       onPopInvokedWithResult: (didPop, result) {
@@ -184,69 +157,73 @@ class _HomeScreenState extends State<HomeScreen> {
             ),
           ],
         ),
-        body: ListView(
-          padding: EdgeInsets.symmetric(horizontal: compactDimens.small3),
-          children: [
-            Text(
-              SharedRes.strings(context).adventureAwaitsLetsGo,
-              style: headingStyle(),
-            ),
-            Row(
-              children: [
-                Text(
-                  SharedRes.strings(context).explore,
-                  style: headingStyle(),
-                ),
-                SizedBox(width: compactDimens.small1),
-                ClipRRect(
-                  borderRadius: BorderRadius.circular(16.r),
-                  child: Image.asset(
-                    'assets/images/HomePageImage.png',
-                    height: compactDimens.medium2,
-                    width: compactDimens.homeScreenImageSize,
-                    fit: BoxFit.fitWidth,
+        body: RefreshIndicator(
+          onRefresh:() => context.read<HomeProvider>().refresh() ,
+          backgroundColor: Colors.white,
+          child: ListView(
+            padding: EdgeInsets.symmetric(horizontal: compactDimens.small3),
+            children: [
+              Text(
+                SharedRes.strings(context).adventureAwaitsLetsGo,
+                style: headingStyle(),
+              ),
+              Row(
+                children: [
+                  Text(
+                    SharedRes.strings(context).explore,
+                    style: headingStyle(),
                   ),
-                ),
-              ],
-            ),
-            const SizedBox(height: 12),
-            SearchFilterBar(
-              onTap: () => Navigator.pushNamed(context, RouteName.searchScreen),
-              hintText: SharedRes.strings(context).searchDestination,
-              isFilter: false,
-            ),
-            const SizedBox(height: 12),
-            buildGenreFilter(),
-            const Divider(thickness: 1.5),
-            ViewAllRow(
-              firstText: SharedRes.strings(context).recommendedForYou,
-              onPressed: () {
-                Navigator.pushNamed(
-                  context,
-                  RouteName.viewAllScreen,
-                  arguments: SharedRes.strings(context).recommendedForYou,
-                );
-              },
-            ),
-            SizedBox(
-              height: 220.h,
-              child: buildDestinationList(recommendedFuture),
-            ),
-            ViewAllRow(
-              firstText: SharedRes.strings(context).bestPlaceToVisit,
-              onPressed: () {
-                Navigator.pushNamed(
-                  context,
-                  RouteName.viewAllScreen,
-                  arguments: SharedRes.strings(context).bestPlaceToVisit,
-                );
-              },
-            ),
-            SizedBox(
-              height: 220.h,
-              child: buildDestinationList(allDestinationsFuture),
-            ),
-          ],
+                  SizedBox(width: compactDimens.small1),
+                  ClipRRect(
+                    borderRadius: BorderRadius.circular(16.r),
+                    child: Image.asset(
+                      'assets/images/HomePageImage.png',
+                      height: compactDimens.medium2,
+                      width: compactDimens.homeScreenImageSize,
+                      fit: BoxFit.fitWidth,
+                    ),
+                  ),
+                ],
+              ),
+              const SizedBox(height: 12),
+              SearchFilterBar(
+                onTap: () => Navigator.pushNamed(context, RouteName.searchScreen),
+                hintText: SharedRes.strings(context).searchDestination,
+                isFilter: false,
+              ),
+              const SizedBox(height: 12),
+              buildGenreFilter(homeProvider),
+              const Divider(thickness: 1.5),
+              ViewAllRow(
+                firstText: SharedRes.strings(context).recommendedForYou,
+                onPressed: () {
+                  Navigator.pushNamed(
+                    context,
+                    RouteName.viewAllScreen,
+                    arguments: SharedRes.strings(context).recommendedForYou,
+                  );
+                },
+              ),
+              SizedBox(
+                height: 220.h,
+                child: buildDestinationList(homeProvider.recommended),
+              ),
+              ViewAllRow(
+                firstText: SharedRes.strings(context).bestPlaceToVisit,
+                onPressed: () {
+                  Navigator.pushNamed(
+                    context,
+                    RouteName.viewAllScreen,
+                    arguments: SharedRes.strings(context).bestPlaceToVisit,
+                  );
+                },
+              ),
+              SizedBox(
+                height: 220.h,
+                child: buildDestinationList(homeProvider.all),
+              ),
+            ],
+          ),
         ),
       ),
     );

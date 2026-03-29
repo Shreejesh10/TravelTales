@@ -1,12 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:traveltales/api/api.dart';
 import 'package:traveltales/api/bookingAPI.dart';
 import 'package:traveltales/core/ui/components/button.dart';
 import 'package:traveltales/core/ui/localization/sharedRes.dart';
 import 'package:traveltales/core/ui/resources/theme/appColors.dart';
 import 'package:traveltales/features/bookedEventsDetail/esewa_webview_screen.dart';
 
-import '../../core/model/event_model.dart';
+import '../../../core/model/booking_model.dart';
+import '../../../core/model/event_model.dart';
 
 
 class EventBookingScreen extends StatefulWidget {
@@ -36,13 +38,15 @@ class _EventBookingScreenState extends State<EventBookingScreen> {
       setState(() => isLoading = true);
 
       final booking = await _bookingService.createBooking(
-        eventId: event.eventId, // ⚠️ replace with your actual eventId
-        totalPeople: 1, // ⚠️ replace with selected people
+        eventId: event.eventId,
+        totalPeople: 1,
       );
 
       final paymentData = await _bookingService.initiateEsewaPayment(
         booking.bookingId,
       );
+      debugPrint("paymentUrl: ${paymentData.paymentUrl}");
+      debugPrint("formData: ${paymentData.formData}");
 
       setState(() => isLoading = false);
 
@@ -50,42 +54,58 @@ class _EventBookingScreenState extends State<EventBookingScreen> {
         context,
         MaterialPageRoute(
           builder: (_) => EsewaWebViewScreen(
-            formUrl: paymentData.formUrl,
-            fields: paymentData.fields,
+            paymentUrl: paymentData.paymentUrl,
+            formData: paymentData.formData,
+            successUrlPrefix: '$API_URL/bookings/esewa/success',
+            failureUrlPrefix: '$API_URL/bookings/esewa/failure',
           ),
         ),
       );
 
-      if (result == "success") {
-        await Future.delayed(const Duration(seconds: 2));
+      if (!mounted) return;
 
-        final updatedBooking = await _bookingService.getBookingById(
-          booking.bookingId,
-        );
+      if (result == true) {
+        setState(() => isLoading = true);
+
+        Booking? updatedBooking;
+
+        for (int i = 0; i < 6; i++) {
+          await Future.delayed(const Duration(seconds: 2));
+          updatedBooking = await _bookingService.getBookingById(booking.bookingId);
+
+          if (updatedBooking.status.toLowerCase() == "completed") {
+            break;
+          }
+        }
 
         if (!mounted) return;
+        setState(() => isLoading = false);
 
-        if (updatedBooking.status == "completed") {
+        if (updatedBooking != null &&
+            updatedBooking.status.toLowerCase() == "completed") {
           ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(content: Text("Payment successful ")),
+            const SnackBar(content: Text("Payment successful")),
           );
-        } else if (updatedBooking.status == "pending") {
+        } else if (updatedBooking != null &&
+            updatedBooking.status.toLowerCase() == "pending") {
           ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(content: Text("Payment pending...")),
+            const SnackBar(
+              content: Text("Payment received, but verification is still pending"),
+            ),
           );
         } else {
           ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(content: Text("Payment failed")),
+            const SnackBar(content: Text("Payment verification failed")),
           );
         }
-      } else if (result == "failure") {
+      } else {
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text("Payment failed")),
+          const SnackBar(content: Text("Payment cancelled or failed")),
         );
       }
     } catch (e) {
+      if (!mounted) return;
       setState(() => isLoading = false);
-
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text("Error: $e")),
       );
