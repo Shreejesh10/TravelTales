@@ -194,3 +194,52 @@ class TravelEventResponse(BaseModel):
 
     class Config:
         from_attributes = True
+
+
+# For Booking
+class BookingBase(BaseModel):
+    event_id: int
+    total_people: int = Field(..., gt=0)
+
+class BookingCreate(BookingBase):
+    pass
+
+
+class BookingResponse(BaseModel):
+    booking_id: int
+    user_id: int
+    transaction_uuid: str
+    event_id: int
+    total_price: float
+    total_people: int
+    status: str
+    booked_at: datetime
+
+    class Config:
+        from_attributes = True
+
+
+class EsewaInitResponse(BaseModel):
+    payment_url: str
+    form_data: dict
+    booking_id: int
+    transaction_uuid: str
+
+# For Referal
+class ReferralBase(BaseModel):
+    referred_to: int
+    booking_id: int
+
+
+class ReferralCreate(ReferralBase):
+    pass
+
+
+class ReferralResponse(BaseModel):
+    referral_id: int
+    referred_by: int
+    referred_to: int
+    booking_id: int
+
+    class Config:
+        from_attributes = True

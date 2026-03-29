@@ -1,6 +1,6 @@
 import enum
 from app.utils.db_utils import Base
-from sqlalchemy import Column, ForeignKey, Integer,Text,String, Enum ,DateTime, func, Boolean, ARRAY, Time
+from sqlalchemy import Column, ForeignKey, Integer,Text,String, Enum ,DateTime, func, Boolean, ARRAY, Time, Float
 from sqlalchemy.dialects.postgresql import JSONB, ENUM as pgEnum
 from sqlalchemy.orm import relationship
 
@@ -29,6 +29,10 @@ class User(Base):
     # status = Column( pgEnum(UserStatus,name="user_status",create_type=False, native_enum = True), nullable=False, default=UserStatus.PENDING)
     profile_picture_url = Column(String, nullable=True, default="/media/default/default_pp.png")
     reject_reason = Column(Text, nullable=True)
+
+    bookings = relationship("Booking", back_populates="user", cascade="all, delete-orphan")
+    referrals_made = relationship("Referral",foreign_keys="Referral.referred_by",back_populates="referrer",cascade="all, delete-orphan")
+    referrals_received = relationship("Referral",foreign_keys="Referral.referred_to",back_populates="referred_user",cascade="all, delete-orphan")
 
     
 class Company(Base):
@@ -86,8 +90,44 @@ class TravelEvent(Base):
     price = Column(Integer, nullable=True)
 
     created_at = Column(DateTime(timezone=True), server_default=func.now(), nullable= False)
-
+    is_closed = Column(Boolean, default=False, nullable=False)
     
 
     company = relationship("User")
     destination = relationship("Destination")
+    bookings = relationship("Booking", back_populates="event", cascade="all, delete-orphan")
+
+# Booking
+class Booking(Base):
+    __tablename__ = "bookings"
+
+    booking_id = Column(Integer, primary_key=True, index=True) 
+    transaction_uuid = Column(String(100), unique=True, nullable=False)
+    user_id = Column(Integer, ForeignKey("users.id", ondelete="CASCADE"), nullable=False)
+    event_id = Column(Integer, ForeignKey("events.event_id", ondelete="CASCADE"), nullable=False)
+
+    total_price = Column(Float, nullable=False)
+    booked_at = Column(DateTime(timezone=True), server_default=func.now(), nullable=False)
+    total_people = Column(Integer, nullable=False)
+
+    # Pending Completed Faliure
+    status = Column(String(20), nullable=False, server_default="pending")
+    user = relationship("User", back_populates="bookings")
+    event = relationship("TravelEvent", back_populates="bookings")
+    referrals = relationship("Referral", back_populates="booking", cascade="all, delete-orphan")
+
+
+class Referral(Base):
+    __tablename__ = "referrals"
+
+    referral_id = Column(Integer, primary_key=True, index=True)
+
+    referred_by = Column(Integer, ForeignKey("users.id", ondelete="CASCADE"), nullable=False)
+    referred_to = Column(Integer, ForeignKey("users.id", ondelete="CASCADE"), nullable=False)
+
+    booking_id = Column(Integer, ForeignKey("bookings.booking_id", ondelete="CASCADE"), nullable=False) 
+
+    booking = relationship("Booking", back_populates="referrals")
+
+    referrer = relationship("User", foreign_keys=[referred_by], back_populates="referrals_made")
+    referred_user = relationship("User", foreign_keys=[referred_to], back_populates="referrals_received")

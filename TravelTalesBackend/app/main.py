@@ -1,9 +1,10 @@
 from fastapi import FastAPI
-from app.routes import  destination_route, user_route, genre_route, admin_route, event_route
+from app.routes import  destination_route, user_route, genre_route, admin_route, event_route, booking_route
+from app.utils.db_utils import ensure_create_all
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
-import os
 from pathlib import Path
+from app.utils.db_utils import Base
 
 app = FastAPI()
 
@@ -27,11 +28,16 @@ app.mount("/media", StaticFiles(directory=str(MEDIA_DIR)), name="media")
 
 print("Serving MEDIA from:", MEDIA_DIR)
 
+# # Run this after creating a new table in models
+# print("Ensuring all the tables are created")
+# ensure_create_all()
+
 app.include_router(user_route.router)
 app.include_router(destination_route.router)
 app.include_router(genre_route.router)
 app.include_router(admin_route.router)
 app.include_router(event_route.router)
+app.include_router(booking_route.router)
 
 
 @app.get("/")
