@@ -5,7 +5,7 @@ import 'package:traveltales/api/api.dart';
 import 'package:traveltales/core/model/booking_model.dart';
 import 'package:traveltales/core/model/esewa_payment_response.dart';
 
-class BookingService {
+class BookingApi {
 
 
   Future<Booking> createBooking({

@@ -22,7 +22,7 @@ class EventBookingScreen extends StatefulWidget {
 class _EventBookingScreenState extends State<EventBookingScreen> {
   int selectedPayment = 0;
   bool isEsewaSelected = false;
-  final BookingService _bookingService = BookingService();
+  final BookingApi _bookingService = BookingApi();
   bool isLoading = false;
   Event get event => widget.event;
 

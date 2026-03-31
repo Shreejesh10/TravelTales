@@ -2,11 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:traveltales/core/model/destination_model.dart';
 import 'package:traveltales/core/model/event_model.dart';
 import 'package:traveltales/core/route_config/route_names.dart';
+import 'package:traveltales/features/addFriend/acceptFriendScreen.dart';
 import 'package:traveltales/features/addFriend/addFriendScreen.dart';
+import 'package:traveltales/features/addFriend/viewFriendScreen.dart';
 import 'package:traveltales/features/adminScreen/adminDashboard/adminDashboard.dart';
 import 'package:traveltales/features/adminScreen/createDestinationPage/adminDestinationDetailScreen.dart';
 import 'package:traveltales/features/auth/login/loginScreen.dart';
 import 'package:traveltales/features/bookedEventsDetail/bookedEventScreen.dart';
+import 'package:traveltales/features/bookmark/bookmarkScreen.dart';
 import 'package:traveltales/features/companyDashboard/companyDashboardScreen.dart';
 import 'package:traveltales/features/dashboard/dashboardScreen.dart';
 import 'package:traveltales/features/destinationDetailScreen/destinationDetailScreen.dart';
@@ -37,7 +40,10 @@ class RouteConfig {
       case RouteName.homeScreen:
         return MaterialPageRoute(builder: (_) => const HomeScreen());
       case RouteName.dashBoardScreen:
-        return MaterialPageRoute(builder: (_) => const DashboardScreen());
+        return MaterialPageRoute(
+          builder: (_) => const DashboardScreen(),
+          settings: settings,
+        );
       case RouteName.viewAllScreen:
         return MaterialPageRoute(
           builder: (_) => ViewAllScreen(title: args as String),
@@ -70,11 +76,21 @@ class RouteConfig {
         return MaterialPageRoute(builder: (_) => AdminDashboardScreen());
       case RouteName.eventBookingScreen:
         final event = settings.arguments as Event;
-        return MaterialPageRoute(builder: (_) => EventBookingScreen(event: event));
+        return MaterialPageRoute(
+          builder: (_) => EventBookingScreen(event: event),
+        );
       case RouteName.adminDestinationDetailScreen:
         final destination = settings.arguments as Destination;
-        return MaterialPageRoute(builder: (_) => AdminDestinationDetailScreen(destination: destination));
-
+        return MaterialPageRoute(
+          builder: (_) =>
+              AdminDestinationDetailScreen(destination: destination),
+        );
+      case RouteName.totalFriendScreen:
+        return MaterialPageRoute(builder: (_) => ViewAllFriendScreen());
+      case RouteName.acceptFriendScreen:
+        return MaterialPageRoute(builder: (_) => AcceptFriendScreen());
+      case RouteName.bookmarkScreen:
+        return MaterialPageRoute(builder: (_) => BookmarkScreen());
 
 
       default:

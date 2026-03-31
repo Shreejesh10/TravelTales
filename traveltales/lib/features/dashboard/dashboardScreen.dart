@@ -4,8 +4,6 @@ import 'package:traveltales/features/bookedEventsDetail/bookedEventHomeScreen.da
 import 'package:traveltales/features/eventsScreen/eventsScreen.dart';
 import 'package:traveltales/features/homeScreen/homeScreen.dart';
 import 'package:traveltales/features/profile/profile.dart';
-import 'package:traveltales/features/searchScreen/searchScreen.dart';
-
 
 class DashboardScreen extends StatefulWidget {
   const DashboardScreen({super.key});
@@ -16,6 +14,7 @@ class DashboardScreen extends StatefulWidget {
 
 class _DashboardScreenState extends State<DashboardScreen> {
   int _currentIndex = 0;
+  bool _isInitialized = false;
 
   final List<Widget> _pages = const [
     HomeScreen(),
@@ -25,13 +24,23 @@ class _DashboardScreenState extends State<DashboardScreen> {
   ];
 
   @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+
+    if (!_isInitialized) {
+      final index = ModalRoute.of(context)?.settings.arguments as int?;
+      if (index != null) {
+        _currentIndex = index;
+      }
+      _isInitialized = true;
+    }
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
-      body: IndexedStack(
-        index: _currentIndex,
-        children: _pages,
-      ),
+      body: IndexedStack(index: _currentIndex, children: _pages),
       bottomNavigationBar: CurvedNavigationBar(
         backgroundColor: Theme.of(context).scaffoldBackgroundColor,
         color: Colors.transparent,
@@ -42,30 +51,30 @@ class _DashboardScreenState extends State<DashboardScreen> {
             _currentIndex = index;
           });
         },
-        items:  [
+        items: [
           Icon(
-              Icons.home,
-              color: _currentIndex == 0
-                ?Theme.of(context).primaryColor
-                  :Colors.grey
+            Icons.home,
+            color: _currentIndex == 0
+                ? Theme.of(context).primaryColor
+                : Colors.grey,
           ),
           Icon(
-              Icons.search,
-              color: _currentIndex == 1
-                  ?Theme.of(context).primaryColor
-                  :Colors.grey
+            Icons.list_alt,
+            color: _currentIndex == 1
+                ? Theme.of(context).primaryColor
+                : Colors.grey,
           ),
           Icon(
-              Icons.event_sharp,
-              color: _currentIndex == 2
-                  ?Theme.of(context).primaryColor
-                  :Colors.grey
+            Icons.event_sharp,
+            color: _currentIndex == 2
+                ? Theme.of(context).primaryColor
+                : Colors.grey,
           ),
           Icon(
-              Icons.person_outline,
-              color: _currentIndex == 3
-                  ?Theme.of(context).primaryColor
-                  :Colors.grey
+            Icons.person_outline,
+            color: _currentIndex == 3
+                ? Theme.of(context).primaryColor
+                : Colors.grey,
           ),
         ],
       ),

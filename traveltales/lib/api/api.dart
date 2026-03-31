@@ -45,6 +45,22 @@ Future<String?> getUserId() async {
   return payloadMap['sub']?.toString();
 }
 
+Future<UserInfo> getUserById(int userId) async {
+  final url = Uri.parse('$API_URL/users/id/$userId');
+  final headers = await getHeaders();
+
+  final response = await http.get(url, headers: headers);
+
+  if (response.statusCode == 200) {
+    final data = jsonDecode(response.body);
+    return UserInfo.fromJson(data);
+  } else {
+    throw Exception(
+      "Failed to fetch user: ${response.statusCode} ${response.body}",
+    );
+  }
+}
+
 
 Future<void> addUserData({
   required String userName,
@@ -188,7 +204,27 @@ Future<void> signup(String email, String password, String userName, String roles
   }
 }
 
+Future<List<UserInfo>> searchUsers(String query) async {
+  final url = Uri.parse('$API_URL/users/search-users?query=$query');
+  final headers = await getHeaders();
 
+  try {
+    final response = await http.get(url, headers: headers);
+
+    if (response.statusCode == 200) {
+      final List data = jsonDecode(response.body);
+
+      return data.map((u) => UserInfo.fromJson(u)).toList();
+    } else {
+      throw Exception(
+        "Search failed: ${response.statusCode} ${response.body}",
+      );
+    }
+  } catch (e) {
+    log("SEARCH ERROR: $e");
+    rethrow;
+  }
+}
 
 
 
@@ -310,6 +346,78 @@ Future<String> uploadProfilePicture(File imageFile) async {
   }
 
   throw Exception("Upload failed: ${streamedResponse.statusCode} $responseBody");
+}
+
+Future<UserInfo> updateUser({
+  required String userName,
+  required String email,
+}) async {
+  final url = Uri.parse('$API_URL/users/me/update');
+  final headers = await getHeaders();
+
+  final body = jsonEncode({
+    "user_name": userName,
+    "email": email,
+  });
+
+  try {
+    final response = await http.put(
+      url,
+      headers: headers,
+      body: body,
+    );
+
+    log("UPDATE STATUS: ${response.statusCode}");
+    log("UPDATE RESPONSE: ${response.body}");
+
+    if (response.statusCode == 200) {
+      final data = jsonDecode(response.body);
+
+      return UserInfo.fromJson(data);
+    } else {
+      final error = jsonDecode(response.body);
+
+      throw Exception(
+        error["detail"] ?? "Failed to update user",
+      );
+    }
+  } catch (e) {
+    log("UPDATE ERROR: $e");
+    rethrow;
+  }
+}
+Future<void> changePassword({
+  required String currentPassword,
+  required String newPassword,
+}) async {
+  final url = Uri.parse('$API_URL/users/me/change-password');
+  final headers = await getHeaders();
+
+  final body = jsonEncode({
+    "current_password": currentPassword,
+    "new_password": newPassword,
+  });
+
+  try {
+    final response = await http.put(
+      url,
+      headers: headers,
+      body: body,
+    );
+
+    log("CHANGE PASSWORD STATUS: ${response.statusCode}");
+    log("CHANGE PASSWORD RESPONSE: ${response.body}");
+
+    if (response.statusCode == 200) {
+      return;
+    } else {
+      final error = jsonDecode(response.body);
+      throw Exception(error["detail"] ?? "Failed to change password");
+    }
+  } catch (e) {
+    log("CHANGE PASSWORD ERROR: $e");
+    rethrow;
+  }
 }
 
 Future<void> logoutAndClearAuth() async {

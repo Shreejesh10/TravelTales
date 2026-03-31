@@ -22,6 +22,8 @@ class RouteName{
   static const String adminDashboardScreen = "/admin_dashboard_screen";
   static const String eventBookingScreen = "/event_booking_screen";
   static const String adminDestinationDetailScreen = "/admin_destination_detail_screen";
-
+  static const String totalFriendScreen = "/total_friend_screen";
+  static const String acceptFriendScreen = "/accept_friend_screen";
+  static const String bookmarkScreen = "/bookmark_screen";
 
 }

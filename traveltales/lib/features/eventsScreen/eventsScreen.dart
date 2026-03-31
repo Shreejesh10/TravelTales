@@ -20,7 +20,7 @@ class EventsScreen extends StatefulWidget {
 }
 
 class _EventsScreenState extends State<EventsScreen> {
-  final BookingService _bookingService = BookingService();
+  final BookingApi _bookingService = BookingApi();
   late Future<List<Event>> _eventsFuture;
   late Future<List<Booking>> _bookingsFuture;
 

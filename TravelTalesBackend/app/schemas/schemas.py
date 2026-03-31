@@ -29,10 +29,17 @@ class UserResponse(BaseModel):
     created_at: datetime
     roles: str
     status: UserStatus
-    profile_photo_url: Optional[str] = None
+    profile_picture_url: Optional[str] = None
     class Config:
         
         from_attributes = True  
+class UserUpdate(BaseModel):
+    user_name: Optional[str] = None
+    email: EmailStr
+
+class ChangePassword(BaseModel):
+    current_password: str
+    new_password: str
 
 #Company
 class CompanyBase(BaseModel):
@@ -240,6 +247,55 @@ class ReferralResponse(BaseModel):
     referred_by: int
     referred_to: int
     booking_id: int
+
+    class Config:
+        from_attributes = True
+
+
+# For Friend Request
+class FriendRequestCreate(BaseModel):
+    receiver_id: int = Field(..., gt=0)
+
+
+class FriendRequestAction(BaseModel):
+    action: Literal["accept", "reject"]
+
+
+class FriendRequestResponse(BaseModel):
+    id: int
+    sender_id: int
+    receiver_id: int
+    status: str
+    created_at: datetime
+    responded_at: Optional[datetime] = None
+
+    class Config:
+        from_attributes = True
+
+
+# For Friend
+
+class FriendResponse(BaseModel):
+    id: int
+    user_id: int
+    friend_user_id: int
+
+    class Config:
+        from_attributes = True
+
+class RemoveFriendRequest(BaseModel):
+    friend_user_id: int = Field(..., gt=0)   
+
+# For Bookmark
+class BookmarkCreate(BaseModel):
+    destination_id: int
+
+
+class BookmarkResponse(BaseModel):
+    id: int
+    user_id: int
+    destination_id: int
+    created_at: datetime
 
     class Config:
         from_attributes = True

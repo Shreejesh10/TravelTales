@@ -18,7 +18,7 @@ class BookedEventHomeScreen extends StatefulWidget {
 }
 
 class _BookedEventHomeScreenState extends State<BookedEventHomeScreen> {
-  final BookingService _bookingService = BookingService();
+  final BookingApi _bookingService = BookingApi();
   late Future<List<Booking>> _bookingsFuture;
   late Future<List<Event>> _eventsFuture;
 
@@ -88,7 +88,6 @@ class _BookedEventHomeScreenState extends State<BookedEventHomeScreen> {
           return ListView(
             padding: EdgeInsets.symmetric(horizontal: compactDimens.small3),
             children: [
-              SizedBox(height: 16.h),
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [

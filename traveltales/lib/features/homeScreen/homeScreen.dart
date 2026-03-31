@@ -126,7 +126,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
     if (homeProvider.isLoading && !homeProvider.hasLoaded) {
       return const Center(child: CircularProgressIndicator());
-    }
+    } //for initial API Loading
     return PopScope(
       canPop: false,
       onPopInvokedWithResult: (didPop, result) {

@@ -288,7 +288,7 @@ class _CategoryChip extends StatelessWidget {
 
     final Color bgSelected = cs.primary;
     final Color bgUnselected = isDark
-        ? Colors.white.withOpacity(0.14)
+        ? Colors.white.withOpacity(0.72)
         : Colors.white.withOpacity(0.72);
 
     return Material(

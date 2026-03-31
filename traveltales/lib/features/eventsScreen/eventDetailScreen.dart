@@ -26,7 +26,7 @@ class EventDetailScreen extends StatefulWidget {
 
 class _EventDetailScreenState extends State<EventDetailScreen> {
   final ScrollController _scrollController = ScrollController();
-  final BookingService _bookingService = BookingService();
+  final BookingApi _bookingService = BookingApi();
   final GlobalKey _eventDateKey = GlobalKey();
   final GlobalKey _checklistKey = GlobalKey();
   late Future<List<Booking>> _bookingsFuture;

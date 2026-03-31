@@ -6,6 +6,7 @@ import 'package:provider/provider.dart';
 import 'package:traveltales/core/route_config/route_config.dart';
 import 'package:traveltales/core/route_config/route_names.dart';
 import 'package:traveltales/features/auth/login/authProvider.dart';
+import 'package:traveltales/features/auth/login/redirectionLogic.dart';
 import 'package:traveltales/features/homeScreen/home_provider.dart';
 import 'package:traveltales/l10n/app_localizations.dart';
 
@@ -317,7 +318,7 @@ class _TravelTalesState extends State<TravelTales> {
               ),
             ),
 
-            initialRoute: AuthRouteName.loginScreen,
+            home: const AuthGate(),
             // initialRoute: RouteName.adminDashboardScreen,
             onGenerateRoute: RouteConfig.generateRoute,
 

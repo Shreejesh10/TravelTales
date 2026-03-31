@@ -69,21 +69,13 @@ class AuthProvider extends ChangeNotifier {
       final token = await _storage.read(key: 'access_token');
       final storedRole = await _storage.read(key: 'roles');
       final storedUserId = await _storage.read(key: 'user_id');
-      final storedPreference = await _storage.read(
-        key: 'has_completed_preference',
-      );
+      final storedPreference = await _storage.read(key: 'has_completed_preference');
 
       if (token != null && token.isNotEmpty) {
         _isLoggedIn = true;
         _role = storedRole;
         _userId = storedUserId;
         _hasCompletedPreference = storedPreference == "true";
-
-        try {
-          _userInfo = await fetchMeUserInfo();
-        } catch (_) {
-          _userInfo = null;
-        }
       } else {
         _clearLocalState();
       }

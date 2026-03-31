@@ -1,6 +1,7 @@
+from datetime import datetime
 import enum
 from app.utils.db_utils import Base
-from sqlalchemy import Column, ForeignKey, Integer,Text,String, Enum ,DateTime, func, Boolean, ARRAY, Time, Float
+from sqlalchemy import Column, ForeignKey, Integer,Text,String, Enum ,DateTime, UniqueConstraint, func, Boolean, ARRAY, Time, Float
 from sqlalchemy.dialects.postgresql import JSONB, ENUM as pgEnum
 from sqlalchemy.orm import relationship
 
@@ -33,6 +34,7 @@ class User(Base):
     bookings = relationship("Booking", back_populates="user", cascade="all, delete-orphan")
     referrals_made = relationship("Referral",foreign_keys="Referral.referred_by",back_populates="referrer",cascade="all, delete-orphan")
     referrals_received = relationship("Referral",foreign_keys="Referral.referred_to",back_populates="referred_user",cascade="all, delete-orphan")
+    bookmarks = relationship("Bookmark", back_populates="user", cascade="all, delete-orphan")
 
     
 class Company(Base):
@@ -55,6 +57,7 @@ class Destination(Base):
     location = Column(String(255), nullable=False)
     description = Column(Text, nullable=False)
     extra_info = Column(JSONB, nullable=True)
+    bookmarks = relationship("Bookmark", back_populates="destination", cascade="all, delete-orphan")
 
 class Genre(Base):
     __tablename__ = "genre"
@@ -131,3 +134,59 @@ class Referral(Base):
 
     referrer = relationship("User", foreign_keys=[referred_by], back_populates="referrals_made")
     referred_user = relationship("User", foreign_keys=[referred_to], back_populates="referrals_received")
+
+class Friend(Base):
+    __tablename__ = "friends"
+
+    id = Column(Integer, primary_key=True, index=True)
+
+    user_id = Column(Integer, ForeignKey("users.id", ondelete="CASCADE"), nullable=False)
+    friend_user_id = Column(Integer, ForeignKey("users.id", ondelete="CASCADE"), nullable=False)
+
+    __table_args__ = (
+        UniqueConstraint("user_id", "friend_user_id", name="uq_friend_pair"),
+    )
+
+    user = relationship("User", foreign_keys=[user_id], backref="friendships")
+    friend_user = relationship("User", foreign_keys=[friend_user_id])
+
+
+class FriendRequestStatus(str, enum.Enum):
+    PENDING = "pending"
+    ACCEPTED = "accepted"
+    REJECTED = "rejected"
+
+
+class FriendRequest(Base):
+    __tablename__ = "friend_requests"
+
+    id = Column(Integer, primary_key=True, index=True)
+
+    sender_id = Column(Integer, ForeignKey("users.id", ondelete="CASCADE"), nullable=False)
+    receiver_id = Column(Integer, ForeignKey("users.id", ondelete="CASCADE"), nullable=False)
+
+    status = Column(pgEnum(FriendRequestStatus, name="friend_request_status", values_callable=lambda enum: [e.value for e in enum]),nullable=False,default=FriendRequestStatus.PENDING)
+    created_at = Column(DateTime, default=datetime.utcnow)
+    responded_at = Column(DateTime, nullable=True)
+
+    __table_args__ = (
+        UniqueConstraint("sender_id", "receiver_id", name="uq_friend_request_pair"),
+    )
+
+    sender = relationship("User", foreign_keys=[sender_id])
+    receiver = relationship("User", foreign_keys=[receiver_id])
+
+class Bookmark(Base):
+    __tablename__ = "bookmarks"
+
+    id = Column(Integer, primary_key=True, index=True)
+    user_id = Column(Integer, ForeignKey("users.id", ondelete="CASCADE"), nullable=False)
+    destination_id = Column(Integer, ForeignKey("destination.destination_id", ondelete="CASCADE"), nullable=False)
+    created_at = Column(DateTime(timezone=True), server_default=func.now(), nullable= False)
+
+    __table_args__ = (
+        UniqueConstraint("user_id", "destination_id", name="unique_user_destination_bookmark"),
+    )
+
+    user = relationship("User", back_populates="bookmarks")
+    destination = relationship("Destination", back_populates="bookmarks")

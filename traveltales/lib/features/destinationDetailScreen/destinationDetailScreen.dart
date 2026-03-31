@@ -1,13 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:traveltales/api/api.dart';
+import 'package:traveltales/api/bookmarkAPI.dart';
+import 'package:traveltales/api/destinationAPI.dart';
 import 'package:traveltales/core/model/destination_model.dart';
 import 'package:traveltales/core/route_config/route_names.dart';
 import 'package:traveltales/core/ui/components/destinationCard.dart';
 import 'package:traveltales/core/ui/components/viewAllRow.dart';
 import 'package:traveltales/core/ui/localization/sharedRes.dart';
 import 'package:traveltales/core/ui/resources/theme/appColors.dart';
-import 'package:traveltales/api/destinationAPI.dart';
 
 class DestinationDetailScreen extends StatefulWidget {
   const DestinationDetailScreen({super.key});
@@ -22,6 +23,9 @@ class _DestinationDetailScreenState extends State<DestinationDetailScreen> {
   late Future<List<Destination>> recommendedFuture;
   bool _isLoaded = false;
   bool isDescriptionExpanded = false;
+  bool isBookmarked = false;
+  bool isBookmarkLoading = false;
+  int? currentDestinationId;
 
   @override
   void didChangeDependencies() {
@@ -35,10 +39,42 @@ class _DestinationDetailScreenState extends State<DestinationDetailScreen> {
     final args = ModalRoute.of(context)?.settings.arguments;
 
     if (args is int) {
+      currentDestinationId = args;
       destinationFuture = getDestinationByID(args);
+      _loadBookmarkStatus(args);
     } else {
       destinationFuture = Future.value(null);
     }
+  }
+  Future<void> _loadBookmarkStatus(int destinationId) async {
+    try {
+      final result = await checkBookmark(destinationId);
+      setState(() {
+        isBookmarked = result;
+      });
+    } catch (e) {
+      print("Bookmark load error: $e");
+    }
+  }
+
+  Future<void> _toggleBookmark(int destinationId) async {
+    if (isBookmarkLoading) return;
+
+    setState(() => isBookmarkLoading = true);
+
+    try {
+      if (isBookmarked) {
+        await removeBookmark(destinationId);
+        isBookmarked = false;
+      } else {
+        await addBookmark(destinationId);
+        isBookmarked = true;
+      }
+    } catch (e) {
+      print("Bookmark error: $e");
+    }
+
+    setState(() => isBookmarkLoading = false);
   }
 
   @override
@@ -66,6 +102,30 @@ class _DestinationDetailScreenState extends State<DestinationDetailScreen> {
             ),
           ),
         ),
+        actions: [
+          Padding(
+            padding: EdgeInsets.all(8.h),
+            child: Center(
+              child: Container(
+                height: 40.h,
+                width: 40.h,
+                decoration: BoxDecoration(
+                  shape: BoxShape.circle,
+                  color: AppColors.leadingDetailPageColor,
+                ),
+                child: IconButton(
+                  onPressed: () => _toggleBookmark(currentDestinationId!),
+                  icon: Icon(
+                    isBookmarked
+                        ? Icons.bookmark
+                        : Icons.bookmark_border,
+                    color: isBookmarked ? Colors.orange : Colors.white,
+                  ),
+                ),
+              ),
+            ),
+          ),
+        ],
       ),
       body: FutureBuilder<Destination?>(
         future: destinationFuture,
@@ -138,25 +198,25 @@ class _DestinationDetailScreenState extends State<DestinationDetailScreen> {
                             borderRadius: BorderRadius.circular(12.r),
                             child: frontImage.isNotEmpty
                                 ? Image.network(
-                              "$API_URL$frontImage",
-                              height: 170.h,
-                              width: 135.w,
-                              fit: BoxFit.cover,
-                              errorBuilder: (_, __, ___) {
-                                return Image.asset(
-                                  'assets/images/Annapurna.png',
-                                  height: 170.h,
-                                  width: 135.w,
-                                  fit: BoxFit.cover,
-                                );
-                              },
-                            )
+                                    "$API_URL$frontImage",
+                                    height: 170.h,
+                                    width: 135.w,
+                                    fit: BoxFit.cover,
+                                    errorBuilder: (_, __, ___) {
+                                      return Image.asset(
+                                        'assets/images/Annapurna.png',
+                                        height: 170.h,
+                                        width: 135.w,
+                                        fit: BoxFit.cover,
+                                      );
+                                    },
+                                  )
                                 : Image.asset(
-                              'assets/images/Annapurna.png',
-                              height: 170.h,
-                              width: 135.w,
-                              fit: BoxFit.cover,
-                            ),
+                                    'assets/images/Annapurna.png',
+                                    height: 170.h,
+                                    width: 135.w,
+                                    fit: BoxFit.cover,
+                                  ),
                           ),
 
                           const SizedBox(width: 12),
@@ -213,7 +273,11 @@ class _DestinationDetailScreenState extends State<DestinationDetailScreen> {
                                     Expanded(
                                       child: _statCard(
                                         icon: Icons.height,
-                                        value: destination.extraInfo.elevation.isNotEmpty
+                                        value:
+                                            destination
+                                                .extraInfo
+                                                .elevation
+                                                .isNotEmpty
                                             ? '${destination.extraInfo.elevation.first}m'
                                             : 'N/A',
                                         label: SharedRes.strings(
@@ -243,7 +307,9 @@ class _DestinationDetailScreenState extends State<DestinationDetailScreen> {
                           Text(
                             destination.description,
                             maxLines: isDescriptionExpanded ? null : 6,
-                            overflow: isDescriptionExpanded ? TextOverflow.visible : TextOverflow.ellipsis,
+                            overflow: isDescriptionExpanded
+                                ? TextOverflow.visible
+                                : TextOverflow.ellipsis,
                             style: TextStyle(
                               fontSize: 13.sp,
                               color: Colors.grey,
@@ -319,35 +385,50 @@ class _DestinationDetailScreenState extends State<DestinationDetailScreen> {
                         child: FutureBuilder(
                           future: recommendedFuture,
                           builder: (context, snapshot) {
-                            if (snapshot.connectionState == ConnectionState.waiting) {
-                              return const Center(child: CircularProgressIndicator());
+                            if (snapshot.connectionState ==
+                                ConnectionState.waiting) {
+                              return const Center(
+                                child: CircularProgressIndicator(),
+                              );
                             }
 
-                            if (snapshot.hasError || !snapshot.hasData || snapshot.data!.isEmpty) {
-                              return const Center(child: Text("No recommendations found"));
+                            if (snapshot.hasError ||
+                                !snapshot.hasData ||
+                                snapshot.data!.isEmpty) {
+                              return const Center(
+                                child: Text("No recommendations found"),
+                              );
                             }
 
                             final recommendedList = snapshot.data!
-                                .where((item) => item.destinationId != destination.destinationId)
+                                .where(
+                                  (item) =>
+                                      item.destinationId !=
+                                      destination.destinationId,
+                                )
                                 .toList();
 
                             if (recommendedList.isEmpty) {
-                              return const Center(child: Text("No recommendations found"));
+                              return const Center(
+                                child: Text("No recommendations found"),
+                              );
                             }
                             return ListView.builder(
                               scrollDirection: Axis.horizontal,
                               itemCount: recommendedList.length,
-                              itemBuilder: (context, index){
+                              itemBuilder: (context, index) {
                                 final item = recommendedList[index];
 
                                 final image =
-                                item.extraInfo.frontImagePath.isNotEmpty
+                                    item.extraInfo.frontImagePath.isNotEmpty
                                     ? item.extraInfo.frontImagePath.first
                                     : item.extraInfo.photos.isNotEmpty
                                     ? item.extraInfo.photos.first
                                     : "";
                                 return DestinationCard(
-                                  imagePath: image.isNotEmpty ? "$API_URL$image" : "",
+                                  imagePath: image.isNotEmpty
+                                      ? "$API_URL$image"
+                                      : "",
                                   title: item.placeName,
                                   location: item.location,
                                   isNetworkImage: image.isNotEmpty,
@@ -355,7 +436,7 @@ class _DestinationDetailScreenState extends State<DestinationDetailScreen> {
                                 );
                               },
                             );
-                          }
+                          },
                         ),
                       ),
                     ],
