@@ -17,3 +17,6 @@ samples, guidance on mobile development, and a full API reference.
 
 ### localization run
 flutter gen-l10n
+
+### create splash screen
+dart run flutter_native_splash:create
