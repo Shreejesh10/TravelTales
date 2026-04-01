@@ -160,7 +160,7 @@ def initiate_esewa_payment(db: Session, booking_id: int, user_id: int) -> EsewaI
 
     if not booking:
         raise HTTPException(status_code=404, detail="Booking not found")
-
+ 
     if booking.status == "completed":
         raise HTTPException(status_code=400, detail="Booking already completed")
 

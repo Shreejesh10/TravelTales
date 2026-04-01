@@ -72,6 +72,9 @@ class _EventDetailScreenState extends State<EventDetailScreen> {
   String get cardImageUrl =>
       "$API_URL${event.destination.extraInfo.frontImagePath.first}";
 
+  DateTime _dateOnly(DateTime date) {
+    return DateTime(date.year, date.month, date.day);
+  }
 
 
 
@@ -394,6 +397,13 @@ class _EventDetailScreenState extends State<EventDetailScreen> {
         future: _bookingsFuture,
         builder: (context, snapshot) {
           if (!snapshot.hasData) return const SizedBox.shrink();
+
+          final today = _dateOnly(DateTime.now());
+          final isExpired = _dateOnly(event.toDate).isBefore(today);
+
+          if (isExpired) {
+            return const SizedBox.shrink();
+          }
 
           final bookings = snapshot.data!;
 

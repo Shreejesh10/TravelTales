@@ -6,10 +6,12 @@ import 'package:traveltales/core/model/event_model.dart';
 import 'package:traveltales/core/route_config/route_names.dart';
 import 'package:traveltales/core/ui/components/button.dart';
 import 'package:traveltales/core/ui/components/functions/dateTime/app_formatters.dart';
+import 'package:traveltales/core/ui/components/shimmerView.dart';
 import 'package:traveltales/core/ui/localization/sharedRes.dart';
 import 'package:traveltales/core/ui/resources/theme/dimens.dart';
 import 'package:traveltales/api/bookingAPI.dart';
 import '../../core/ui/components/actionDialogBox.dart';
+import '../../core/ui/components/viewAllRow.dart';
 import '../../core/ui/resources/theme/appColors.dart';
 
 class EventsScreen extends StatefulWidget {
@@ -83,6 +85,80 @@ class _EventsScreenState extends State<EventsScreen> {
     );
   }
 
+  DateTime _dateOnly(DateTime date) {
+    return DateTime(date.year, date.month, date.day);
+  }
+
+  Widget _emptySection(String text) {
+    return Container(
+      width: double.infinity,
+      padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 18.h),
+      decoration: BoxDecoration(
+        color: AppColors.getContainerBoxColor(context),
+        borderRadius: BorderRadius.circular(16.r),
+        border: Border.all(
+          color: Theme.of(context).dividerColor.withOpacity(0.08),
+        ),
+      ),
+      child: Text(
+        text,
+        style: TextStyle(
+          fontSize: 13.sp,
+          color: AppColors.getSmallTextColor(context),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildLoadingShimmer() {
+    Widget card() {
+      return Container(
+        width: double.infinity,
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(14.r),
+        ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            ShimmerView(width: double.infinity, height: 180.h, radius: 14),
+            Padding(
+              padding: EdgeInsets.all(12.w),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  ShimmerView(width: 70.w, height: 24.h, radius: 999),
+                  SizedBox(height: 14.h),
+                  ShimmerView(width: 160.w, height: 16.h, radius: 8),
+                  SizedBox(height: 14.h),
+                  ShimmerView(width: double.infinity, height: 84.h, radius: 18),
+                  SizedBox(height: 16.h),
+                  ShimmerView(width: double.infinity, height: 18.h, radius: 8),
+                ],
+              ),
+            ),
+          ],
+        ),
+      );
+    }
+
+    return ListView(
+      padding: EdgeInsets.symmetric(
+        horizontal: compactDimens.small3,
+        vertical: 12.h,
+      ),
+      children: [
+        card(),
+        SizedBox(height: 16.h),
+        card(),
+        SizedBox(height: 8.h),
+        ShimmerView(width: 120.w, height: 18.h, radius: 8),
+        SizedBox(height: 8.h),
+        card(),
+      ],
+    );
+  }
+
 
   @override
   Widget build(BuildContext context) {
@@ -114,7 +190,7 @@ class _EventsScreenState extends State<EventsScreen> {
         ]),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
-            return const Center(child: CircularProgressIndicator());
+            return _buildLoadingShimmer();
           }
 
           if (snapshot.hasError) {
@@ -148,17 +224,25 @@ class _EventsScreenState extends State<EventsScreen> {
           final myBookings = snapshot.data![1] as List<Booking>;
 
           final bookedEventIds = myBookings
-              .where((booking) =>
-          booking.status == "pending" ||
-              booking.status == "completed")
               .map((booking) => booking.eventId)
               .toSet();
 
           final events = allEvents
               .where((event) => !bookedEventIds.contains(event.eventId))
               .toList();
+          final today = _dateOnly(DateTime.now());
+          final availableEvents =
+              events
+                  .where((event) => !_dateOnly(event.toDate).isBefore(today))
+                  .toList();
+          final expiredEvents =
+              events
+                  .where((event) => _dateOnly(event.toDate).isBefore(today))
+                  .toList();
+          availableEvents.sort((a, b) => a.fromDate.compareTo(b.fromDate));
+          expiredEvents.sort((a, b) => b.toDate.compareTo(a.toDate));
 
-          if (events.isEmpty) {
+          if (availableEvents.isEmpty && expiredEvents.isEmpty) {
             return Center(
               child: Text(
                 "No events found",
@@ -173,57 +257,89 @@ class _EventsScreenState extends State<EventsScreen> {
           return RefreshIndicator(
             onRefresh: _reloadEvents,
             backgroundColor: Colors.white,
-            child: ListView.separated(
+            child: ListView(
               padding: EdgeInsets.symmetric(
                 horizontal: compactDimens.small3,
                 vertical: 12.h,
               ),
-              itemCount: events.length,
-              separatorBuilder: (_, __) => SizedBox(height: 16.h),
-              itemBuilder: (context, index) {
-                final event = events[index];
-                final destination = event.destination;
-
-                print("currentCompanyId: $currentCompanyId");
-                print("event.companyUserId: ${event.companyUserId}");
-
-                final List<String> frontImages = destination.extraInfo.backdropPath;
-
-                final String imageUrl = frontImages.isNotEmpty
-                    ? "$API_URL${frontImages.first}"
-                    : "";
-
-                return eventCard(
-                  imageUrl: imageUrl,
-                  title: destination.placeName,
-                  difficulty: destination.extraInfo.difficultyLevel,
-                  elevation: destination.extraInfo.elevation.join(", "),
-                  duration: destination.extraInfo.duration,
-                  location: destination.location,
-                  description: event.eventDescription,
-                  addedText: AppFormatters.addedText(event.createdAt),
-                  difficultyColor: AppColors.difficultyColor(
-                    destination.extraInfo.difficultyLevel,
+              physics: const AlwaysScrollableScrollPhysics(),
+              children: [
+                if (availableEvents.isNotEmpty) ...[
+                  ...availableEvents.map((event) => Padding(
+                    padding: EdgeInsets.only(bottom: 16.h),
+                    child: _buildEventCard(event),
+                  )),
+                ] else ...[
+                  _emptySection("No active events available right now."),
+                ],
+                if (expiredEvents.isNotEmpty) ...[
+                  SizedBox(height: availableEvents.isNotEmpty ? 8.h : 0),
+                  const ViewAllRow(
+                    firstText: "Expired Events",
+                    onPressed: null,
+                    isViewAll: false,
                   ),
-                  difficultyBgColor: AppColors.difficultyBgColor(
-                    destination.extraInfo.difficultyLevel,
+                  SizedBox(height: 8.h),
+                  ...expiredEvents.map((event) => Padding(
+                    padding: EdgeInsets.only(bottom: 16.h),
+                    child: _buildEventCard(event, isExpired: true),
+                  )),
+                ] else ...[
+                  SizedBox(height: 12.h),
+                  const ViewAllRow(
+                    firstText: "Expired Events",
+                    onPressed: null,
+                    isViewAll: false,
                   ),
-                  isMyEvent: currentCompanyId == event.companyUserId.toString(),
-                  onDeleteTap: () => _deleteEvent(event.eventId),
-                  onShareTap: () {},
-                  onViewDetailsTap: () {
-                    Navigator.pushNamed(
-                      context,
-                      RouteName.eventDetailScreen,
-                      arguments: event,
-                    );
-                  },
-                );
-              },
+                  SizedBox(height: 8.h),
+                  _emptySection("No expired events to show."),
+                ],
+              ],
             ),
           );
         },
       ),
+    );
+  }
+
+  Widget _buildEventCard(Event event, {bool isExpired = false}) {
+    final destination = event.destination;
+
+    print("currentCompanyId: $currentCompanyId");
+    print("event.companyUserId: ${event.companyUserId}");
+
+    final List<String> frontImages = destination.extraInfo.backdropPath;
+
+    final String imageUrl = frontImages.isNotEmpty
+        ? "$API_URL${frontImages.first}"
+        : "";
+
+    return eventCard(
+      imageUrl: imageUrl,
+      title: destination.placeName,
+      difficulty: destination.extraInfo.difficultyLevel,
+      elevation: destination.extraInfo.elevation.join(", "),
+      duration: destination.extraInfo.duration,
+      location: destination.location,
+      description: event.eventDescription,
+      addedText: AppFormatters.addedText(event.createdAt),
+      difficultyColor: AppColors.difficultyColor(
+        destination.extraInfo.difficultyLevel,
+      ),
+      difficultyBgColor: AppColors.difficultyBgColor(
+        destination.extraInfo.difficultyLevel,
+      ),
+      isExpired: isExpired,
+      isMyEvent: currentCompanyId == event.companyUserId.toString(),
+      onDeleteTap: () => _deleteEvent(event.eventId),
+      onShareTap: () {},
+      onViewDetailsTap: () {
+        Navigator.pushNamed(
+          context,
+          RouteName.eventDetailScreen,
+          arguments: event,
+        );
+      },
     );
   }
 
@@ -238,6 +354,7 @@ class _EventsScreenState extends State<EventsScreen> {
     required String addedText,
     required Color difficultyColor,
     required Color difficultyBgColor,
+    required bool isExpired,
     required bool isMyEvent,
     VoidCallback? onShareTap,
     VoidCallback? onViewDetailsTap,
@@ -274,19 +391,45 @@ class _EventsScreenState extends State<EventsScreen> {
                   width: double.infinity,
                   child: imageUrl.isNotEmpty
                       ? Image.network(
-                    imageUrl,
-                    fit: BoxFit.cover,
-                  )
+                          imageUrl,
+                          fit: BoxFit.cover,
+                          color: isExpired ? Colors.black.withOpacity(0.18) : null,
+                          colorBlendMode:
+                              isExpired ? BlendMode.darken : null,
+                        )
                       : Container(
-                    color: Colors.grey.shade300,
-                    child: const Icon(Icons.image, size: 42),
-                  ),
+                          color: Colors.grey.shade300,
+                          child: const Icon(Icons.image, size: 42),
+                        ),
                 ),
                 Positioned.fill(
                   child: Container(
-                    color: Colors.black.withOpacity(0.18),
+                    color: Colors.black.withOpacity(isExpired ? 0.3 : 0.18),
                   ),
                 ),
+                if (isExpired)
+                  Positioned(
+                    top: 14,
+                    right: 14,
+                    child: Container(
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 10,
+                        vertical: 6,
+                      ),
+                      decoration: BoxDecoration(
+                        color: Colors.red.withOpacity(0.9),
+                        borderRadius: BorderRadius.circular(999),
+                      ),
+                      child: const Text(
+                        "Expired",
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 12,
+                          fontWeight: FontWeight.w700,
+                        ),
+                      ),
+                    ),
+                  ),
                 Positioned(
                   left: 18,
                   bottom: 18,
@@ -413,7 +556,12 @@ class _EventsScreenState extends State<EventsScreen> {
                     Expanded(
                       child: Text(
                         addedText,
-                        style: const TextStyle(fontSize: 13),
+                        style: TextStyle(
+                          fontSize: 13,
+                          color: isExpired
+                              ? AppColors.getSmallTextColor(context)
+                              : null,
+                        ),
                         maxLines: 1,
                         overflow: TextOverflow.ellipsis,
                       ),
@@ -454,7 +602,9 @@ class _EventsScreenState extends State<EventsScreen> {
                     ),
                     const SizedBox(width: 12),
                     AppButton(
-                      text: SharedRes.strings(context).viewDetails,
+                      text: isExpired
+                          ? "View Recap"
+                          : SharedRes.strings(context).viewDetails,
                       onPressed: onViewDetailsTap,
                     ),
                   ],

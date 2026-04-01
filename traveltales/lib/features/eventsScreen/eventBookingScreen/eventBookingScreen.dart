@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:traveltales/api/api.dart';
 import 'package:traveltales/api/bookingAPI.dart';
+import 'package:traveltales/core/route_config/route_names.dart';
 import 'package:traveltales/core/ui/components/button.dart';
 import 'package:traveltales/core/ui/localization/sharedRes.dart';
 import 'package:traveltales/core/ui/resources/theme/appColors.dart';
@@ -9,7 +10,6 @@ import 'package:traveltales/features/bookedEventsDetail/esewa_webview_screen.dar
 
 import '../../../core/model/booking_model.dart';
 import '../../../core/model/event_model.dart';
-
 
 class EventBookingScreen extends StatefulWidget {
   final Event event;
@@ -24,54 +24,79 @@ class _EventBookingScreenState extends State<EventBookingScreen> {
   bool isEsewaSelected = false;
   final BookingApi _bookingService = BookingApi();
   bool isLoading = false;
+  String loadingText = "Processing...";
   Event get event => widget.event;
 
   Future<void> _handleEsewaPayment() async {
     if (!isEsewaSelected) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text("Please select eSewa")),
-      );
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(const SnackBar(content: Text("Please select eSewa")));
       return;
     }
 
     try {
-      setState(() => isLoading = true);
+      setState(() {
+        isLoading = true;
+        loadingText = "Creating booking...";
+      });
 
       final booking = await _bookingService.createBooking(
         eventId: event.eventId,
         totalPeople: 1,
       );
 
+      setState(() => loadingText = "Preparing payment...");
       final paymentData = await _bookingService.initiateEsewaPayment(
         booking.bookingId,
       );
       debugPrint("paymentUrl: ${paymentData.paymentUrl}");
       debugPrint("formData: ${paymentData.formData}");
 
-      setState(() => isLoading = false);
+      setState(() {
+        isLoading = false;
+        loadingText = "Processing...";
+      });
 
-      final result = await Navigator.push(
+      final result = await Navigator.push<Map<String, dynamic>>(
         context,
         MaterialPageRoute(
           builder: (_) => EsewaWebViewScreen(
             paymentUrl: paymentData.paymentUrl,
             formData: paymentData.formData,
-            successUrlPrefix: '$API_URL/bookings/esewa/success',
-            failureUrlPrefix: '$API_URL/bookings/esewa/failure',
+            successUrlPrefix:
+                (paymentData.formData['success_url'] ??
+                        '$API_URL/bookings/esewa/success')
+                    .toString(),
+            failureUrlPrefix:
+                (paymentData.formData['failure_url'] ??
+                        '$API_URL/bookings/esewa/failure')
+                    .toString(),
           ),
         ),
       );
 
       if (!mounted) return;
 
-      if (result == true) {
-        setState(() => isLoading = true);
+      if (result?['success'] == true) {
+        setState(() {
+          isLoading = true;
+          loadingText = "Confirming payment...";
+        });
+
+        await _bookingService.confirmEsewaSuccess(
+          (result?['url'] ?? '').toString(),
+        );
 
         Booking? updatedBooking;
 
         for (int i = 0; i < 6; i++) {
+          if (!mounted) return;
+          setState(() => loadingText = "Verifying booking status...");
           await Future.delayed(const Duration(seconds: 2));
-          updatedBooking = await _bookingService.getBookingById(booking.bookingId);
+          updatedBooking = await _bookingService.getBookingById(
+            booking.bookingId,
+          );
 
           if (updatedBooking.status.toLowerCase() == "completed") {
             break;
@@ -79,18 +104,29 @@ class _EventBookingScreenState extends State<EventBookingScreen> {
         }
 
         if (!mounted) return;
-        setState(() => isLoading = false);
+        setState(() {
+          isLoading = false;
+          loadingText = "Processing...";
+        });
 
         if (updatedBooking != null &&
             updatedBooking.status.toLowerCase() == "completed") {
-          ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(content: Text("Payment successful")),
+          ScaffoldMessenger.of(
+            context,
+          ).showSnackBar(const SnackBar(content: Text("Payment successful")));
+          Navigator.pushNamedAndRemoveUntil(
+            context,
+            RouteName.dashBoardScreen,
+            (route) => false,
+            arguments: 1,
           );
         } else if (updatedBooking != null &&
             updatedBooking.status.toLowerCase() == "pending") {
           ScaffoldMessenger.of(context).showSnackBar(
             const SnackBar(
-              content: Text("Payment received, but verification is still pending"),
+              content: Text(
+                "Payment received, but verification is still pending",
+              ),
             ),
           );
         } else {
@@ -105,10 +141,16 @@ class _EventBookingScreenState extends State<EventBookingScreen> {
       }
     } catch (e) {
       if (!mounted) return;
-      setState(() => isLoading = false);
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text("Error: $e")),
-      );
+      setState(() {
+        isLoading = false;
+        loadingText = "Processing...";
+      });
+      final message = e.toString().contains("Missing eSewa success payload")
+          ? "Payment finished, but the success data was missing."
+          : "Something went wrong while confirming your payment.";
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text(message)));
     }
   }
 
@@ -195,7 +237,7 @@ class _EventBookingScreenState extends State<EventBookingScreen> {
               height: 54.h,
               child: AppButton(
                 onPressed: isLoading ? null : _handleEsewaPayment,
-                text: isLoading ? "Processing..." : SharedRes.strings(context).bookNow,
+                text: isLoading ? loadingText : SharedRes.strings(context).bookNow,
               ),
             ),
           ],
@@ -286,24 +328,17 @@ class _EventBookingScreenState extends State<EventBookingScreen> {
             SizedBox(height: 22.h),
 
             Text(
-              "Everything included in the Package:",
+              "Essential Material for this trip:",
               style: TextStyle(fontSize: 16.sp, fontWeight: FontWeight.w600),
             ),
-            SizedBox(height: 6.h,),
+            SizedBox(height: 6.h),
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: (event.whatToBring.isNotEmpty)
                   ? event.whatToBring
-                  .map(
-                    (item) => checklistItem(context, item),
-              )
-                  .toList()
-                  : [
-                checklistItem(
-                  context,
-                  "No checklist available",
-                ),
-              ],
+                        .map((item) => checklistItem(context, item))
+                        .toList()
+                  : [checklistItem(context, "No checklist available")],
             ),
           ],
         ),

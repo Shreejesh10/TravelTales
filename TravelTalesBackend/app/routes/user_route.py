@@ -73,6 +73,19 @@ def login(user: UserLogin, db: Session = Depends(get_db)):
         has_completed_preference= authenticated_user.has_completed_preference
     )
 
+@router.get("/", response_model=list[UserResponse])
+def get_all_users(
+    db: Session = Depends(get_db),
+    current_user: User = Depends(get_current_user)
+):
+    if current_user.roles != "admin":
+        raise HTTPException(
+            status_code=status.HTTP_403_FORBIDDEN,
+            detail="Only admin can access the list of users."
+        )
+    users = db.query(User).all()
+
+    return users
 
 @router.get("/me/user_information", response_model=UserResponse)
 def get_user_information_route(

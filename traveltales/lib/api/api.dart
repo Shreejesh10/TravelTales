@@ -15,7 +15,7 @@ import 'package:traveltales/core/model/user_info.dart';
 final storage = FlutterSecureStorage();
 // const String API_URL = 'http://10.0.2.2:8000';
 final String API_URL = 'http://192.168.1.67:8000';
-// final String API_URL = 'http://100.64.226.32:8000';
+// final String API_URL = 'http://172.20.10.4:8000';
 // final String API_URL = 'http://100.74.129.4:8000';
 
 
@@ -31,7 +31,29 @@ Future<Map<String, String>> getHeaders() async {
     "Authorization": "Bearer $accessToken",
   };
 }
+Future<List<UserInfo>> getAllUsers() async {
+  final url = Uri.parse('$API_URL/users/');
+  final headers = await getHeaders();
 
+  try {
+    final response = await http.get(url, headers: headers);
+
+    if (response.statusCode == 200) {
+      final List data = jsonDecode(response.body);
+
+      return data.map((u) => UserInfo.fromJson(u)).toList();
+    } else {
+      final error = jsonDecode(response.body);
+
+      throw Exception(
+        error["detail"] ?? "Failed to fetch users",
+      );
+    }
+  } catch (e) {
+    log("GET ALL USERS ERROR: $e");
+    rethrow;
+  }
+}
 
 Future<String?> getUserId() async {
   final accessToken = await storage.read(key: 'access_token');

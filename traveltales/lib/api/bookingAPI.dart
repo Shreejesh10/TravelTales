@@ -7,12 +7,34 @@ import 'package:traveltales/core/model/esewa_payment_response.dart';
 
 class BookingApi {
 
+  Future<List<Booking>> getAllBookings() async {
+    final url = Uri.parse('$API_URL/bookings/');
+    final headers = await getHeaders();
+
+    try {
+      final response = await http.get(url, headers: headers);
+
+      log("GET ALL BOOKINGS STATUS: ${response.statusCode}");
+      log("GET ALL BOOKINGS RESPONSE: ${response.body}");
+
+      if (response.statusCode == 200) {
+        final List data = jsonDecode(response.body);
+        return data.map((b) => Booking.fromJson(b)).toList();
+      } else {
+        final error = jsonDecode(response.body);
+        throw Exception(error["detail"] ?? "Failed to fetch bookings");
+      }
+    } catch (e) {
+      log("GET ALL BOOKINGS ERROR: $e");
+      rethrow;
+    }
+  }
 
   Future<Booking> createBooking({
     required int eventId,
     required int totalPeople,
   }) async {
-    final url = Uri.parse('$API_URL/bookings/');
+    final url = Uri.parse('$API_URL/bookings/create');
     final headers = await getHeaders();
 
     final response = await http.post(
@@ -67,6 +89,29 @@ class BookingApi {
 
     log("Initiate eSewa failed: ${response.statusCode} ${response.body}");
     throw Exception("Failed to initiate eSewa payment");
+  }
+
+  Future<void> confirmEsewaSuccess(String redirectUrl) async {
+    final redirectUri = Uri.tryParse(redirectUrl);
+    final data = redirectUri?.queryParameters['data'];
+
+    if (data == null || data.isEmpty) {
+      throw Exception("Missing eSewa success payload");
+    }
+
+    final url = Uri.parse('$API_URL/bookings/esewa/success').replace(
+      queryParameters: {'data': data},
+    );
+
+    final response = await http.get(url);
+
+    if (response.statusCode == 200) {
+      log("eSewa success confirmed: ${response.body}");
+      return;
+    }
+
+    log("eSewa success confirmation failed: ${response.statusCode} ${response.body}");
+    throw Exception("Failed to confirm eSewa payment");
   }
 
   Future<Booking> getBookingById(int bookingId) async {

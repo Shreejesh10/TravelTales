@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:webview_flutter/webview_flutter.dart';
+import 'dart:developer';
 
 class EsewaWebViewScreen extends StatefulWidget {
   final String paymentUrl;
@@ -45,13 +46,43 @@ class _EsewaWebViewScreenState extends State<EsewaWebViewScreen> {
   void _handleFinalResult(String url) {
     if (hasReturned) return;
 
-    if (url.startsWith(widget.successUrlPrefix)) {
+    log('eSewa redirect: $url');
+
+    if (_matchesRedirect(url, widget.successUrlPrefix)) {
       hasReturned = true;
-      Navigator.pop(context, true);
-    } else if (url.startsWith(widget.failureUrlPrefix)) {
+      Navigator.pop(context, {
+        'success': true,
+        'url': url,
+      });
+    } else if (_matchesRedirect(url, widget.failureUrlPrefix)) {
       hasReturned = true;
-      Navigator.pop(context, false);
+      Navigator.pop(context, {
+        'success': false,
+        'url': url,
+      });
     }
+  }
+
+  bool _matchesRedirect(String currentUrl, String expectedPrefix) {
+    if (currentUrl.startsWith(expectedPrefix)) {
+      return true;
+    }
+
+    final currentUri = Uri.tryParse(currentUrl);
+    final expectedUri = Uri.tryParse(expectedPrefix);
+
+    if (currentUri == null || expectedUri == null) {
+      return false;
+    }
+
+    final currentPath = currentUri.path.endsWith('/')
+        ? currentUri.path.substring(0, currentUri.path.length - 1)
+        : currentUri.path;
+    final expectedPath = expectedUri.path.endsWith('/')
+        ? expectedUri.path.substring(0, expectedUri.path.length - 1)
+        : expectedUri.path;
+
+    return currentUri.host == expectedUri.host && currentPath == expectedPath;
   }
 
   @override
@@ -62,16 +93,24 @@ class _EsewaWebViewScreenState extends State<EsewaWebViewScreen> {
       ..setJavaScriptMode(JavaScriptMode.unrestricted)
       ..setNavigationDelegate(
         NavigationDelegate(
-          onPageStarted: (_) {
+          onPageStarted: (url) {
             if (!mounted) return;
             setState(() => isLoading = true);
+            _handleFinalResult(url);
           },
           onPageFinished: (url) {
             if (!mounted) return;
             setState(() => isLoading = false);
             _handleFinalResult(url);
           },
+          onUrlChange: (change) {
+            final url = change.url;
+            if (url != null) {
+              _handleFinalResult(url);
+            }
+          },
           onNavigationRequest: (request) {
+            _handleFinalResult(request.url);
             return NavigationDecision.navigate;
           },
         ),

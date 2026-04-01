@@ -11,6 +11,7 @@ import 'package:traveltales/core/route_config/route_names.dart';
 import 'package:traveltales/core/ui/components/destinationCard.dart';
 import 'package:traveltales/core/ui/components/preference.dart';
 import 'package:traveltales/core/ui/components/searchField.dart';
+import 'package:traveltales/core/ui/components/shimmerView.dart';
 import 'package:traveltales/core/ui/components/viewAllRow.dart';
 import 'package:traveltales/core/ui/localization/sharedRes.dart';
 import 'package:traveltales/core/ui/resources/theme/dimens.dart';
@@ -120,12 +121,101 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
+  Widget _buildInitialLoadingShimmer() {
+    return ListView(
+      padding: EdgeInsets.symmetric(horizontal: compactDimens.small3),
+      children: [
+        SizedBox(height: 12.h),
+        ShimmerView(width: 220.w, height: 34.h, radius: 14),
+        SizedBox(height: 10.h),
+        Row(
+          children: [
+            ShimmerView(width: 160.w, height: 34.h, radius: 14),
+            SizedBox(width: compactDimens.small1),
+            ShimmerView(
+              width: compactDimens.homeScreenImageSize,
+              height: compactDimens.medium2,
+              radius: 16,
+            ),
+          ],
+        ),
+        SizedBox(height: 16.h),
+        ShimmerView(width: double.infinity, height: 48.h, radius: 24),
+        SizedBox(height: 16.h),
+        SizedBox(
+          height: 36.h,
+          child: ListView.separated(
+            scrollDirection: Axis.horizontal,
+            itemCount: 5,
+            separatorBuilder: (_, __) => SizedBox(width: 10.w),
+            itemBuilder: (_, __) =>
+                ShimmerView(width: 84.w, height: 36.h, radius: 999),
+          ),
+        ),
+        SizedBox(height: 16.h),
+        ShimmerView(width: double.infinity, height: 2.h, radius: 2),
+        SizedBox(height: 16.h),
+        _buildSectionShimmer(),
+        SizedBox(height: 16.h),
+        _buildSectionShimmer(),
+      ],
+    );
+  }
+
+  Widget _buildSectionShimmer() {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            ShimmerView(width: 150.w, height: 18.h, radius: 8),
+            ShimmerView(width: 54.w, height: 16.h, radius: 8),
+          ],
+        ),
+        SizedBox(height: 12.h),
+        SizedBox(
+          height: 220.h,
+          child: ListView.separated(
+            scrollDirection: Axis.horizontal,
+            itemCount: 3,
+            separatorBuilder: (_, __) => SizedBox(width: 12.w),
+            itemBuilder: (_, __) {
+              return Container(
+                width: 170.w,
+                padding: EdgeInsets.all(10.w),
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(18.r),
+                ),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    ShimmerView(
+                      width: double.infinity,
+                      height: 140.h,
+                      radius: 16,
+                    ),
+                    SizedBox(height: 12.h),
+                    ShimmerView(width: 110.w, height: 14.h, radius: 8),
+                    SizedBox(height: 8.h),
+                    ShimmerView(width: 80.w, height: 12.h, radius: 8),
+                  ],
+                ),
+              );
+            },
+          ),
+        ),
+      ],
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     final homeProvider = context.watch<HomeProvider>();
 
     if (homeProvider.isLoading && !homeProvider.hasLoaded) {
-      return const Center(child: CircularProgressIndicator());
+      return _buildInitialLoadingShimmer();
     } //for initial API Loading
     return PopScope(
       canPop: false,
@@ -149,7 +239,9 @@ class _HomeScreenState extends State<HomeScreen> {
           ),
           actions: [
             IconButton(
-              onPressed: () {},
+              onPressed: () {
+                Navigator.pushNamed(context, RouteName.notificationScreen);
+              },
               icon: Icon(
                 Icons.notifications_none,
                 size: compactDimens.medium1,

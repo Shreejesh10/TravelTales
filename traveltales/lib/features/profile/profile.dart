@@ -18,6 +18,7 @@ import 'package:traveltales/core/route_config/route_names.dart';
 import 'package:traveltales/core/ui/components/actionDialogBox.dart';
 import 'package:traveltales/core/ui/components/functions/dateTime/app_formatters.dart';
 import 'package:traveltales/core/ui/components/languageDialog.dart';
+import 'package:traveltales/core/ui/components/shimmerView.dart';
 import 'package:traveltales/core/ui/components/textField/passwordTextField.dart';
 import 'package:traveltales/core/ui/components/themeDialog.dart';
 import 'package:traveltales/core/ui/components/viewAllRow.dart';
@@ -217,9 +218,141 @@ class _ProfileScreenState extends State<ProfileScreen> {
     return File(result.path);
   }
 
+  Widget _buildProfileLoadingShimmer() {
+    Widget statCard() {
+      return Expanded(
+        child: Container(
+          padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 12.h),
+          decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.circular(14.r),
+          ),
+          child: Column(
+            children: [
+              ShimmerView(width: 20.w, height: 20.w, radius: 8),
+              SizedBox(height: 8.h),
+              ShimmerView(width: 36.w, height: 20.h, radius: 8),
+              SizedBox(height: 6.h),
+              ShimmerView(width: 70.w, height: 10.h, radius: 6),
+            ],
+          ),
+        ),
+      );
+    }
+
+    Widget settingsTile() {
+      return Container(
+        padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 14.h),
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(14.r),
+        ),
+        child: Row(
+          children: [
+            ShimmerView(width: 20.w, height: 20.w, radius: 8),
+            SizedBox(width: 16.w),
+            Expanded(
+              child: ShimmerView(
+                width: double.infinity,
+                height: 14.h,
+                radius: 8,
+              ),
+            ),
+            SizedBox(width: 10.w),
+            ShimmerView(width: 14.w, height: 14.w, radius: 7),
+          ],
+        ),
+      );
+    }
+
+    return ListView(
+      padding: EdgeInsets.symmetric(horizontal: compactDimens.small3),
+      children: [
+        SizedBox(height: 16.h),
+        Column(
+          children: [
+            ShimmerView(width: 84.w, height: 84.w, radius: 42),
+            SizedBox(height: 10.h),
+            ShimmerView(width: 140.w, height: 20.h, radius: 10),
+            SizedBox(height: 8.h),
+            ShimmerView(width: 180.w, height: 12.h, radius: 8),
+          ],
+        ),
+        SizedBox(height: 18.h),
+        Row(
+          children: [
+            statCard(),
+            SizedBox(width: 10.w),
+            statCard(),
+            SizedBox(width: 10.w),
+            statCard(),
+          ],
+        ),
+        SizedBox(height: 18.h),
+        ShimmerView(width: 150.w, height: 18.h, radius: 8),
+        SizedBox(height: 8.h),
+        _buildRecentBookingsLoadingShimmer(),
+        SizedBox(height: 18.h),
+        ShimmerView(width: 80.w, height: 18.h, radius: 8),
+        SizedBox(height: 8.h),
+        settingsTile(),
+        SizedBox(height: 8.h),
+        settingsTile(),
+        SizedBox(height: 8.h),
+        settingsTile(),
+      ],
+    );
+  }
+
+  Widget _buildRecentBookingsLoadingShimmer() {
+    Widget recentCard() {
+      return Container(
+        padding: EdgeInsets.all(12.w),
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(14.r),
+        ),
+        child: Row(
+          children: [
+            ShimmerView(width: 54.w, height: 54.w, radius: 12),
+            SizedBox(width: 12.w),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  ShimmerView(width: 120.w, height: 14.h, radius: 8),
+                  SizedBox(height: 8.h),
+                  ShimmerView(width: 150.w, height: 12.h, radius: 8),
+                  SizedBox(height: 8.h),
+                  ShimmerView(width: 100.w, height: 12.h, radius: 8),
+                ],
+              ),
+            ),
+            SizedBox(width: 12.w),
+            ShimmerView(width: 58.w, height: 24.h, radius: 999),
+          ],
+        ),
+      );
+    }
+
+    return Column(
+      children: [
+        recentCard(),
+        SizedBox(height: 8.h),
+        recentCard(),
+        SizedBox(height: 8.h),
+        recentCard(),
+      ],
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     final cs = Theme.of(context).colorScheme;
+
+    if (isLoading && me == null) {
+      return _buildProfileLoadingShimmer();
+    }
 
     final userName = me?.userName?.trim().isNotEmpty == true
         ? me!.userName
@@ -354,7 +487,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   ]),
                   builder: (context, snapshot) {
                     if (snapshot.connectionState == ConnectionState.waiting) {
-                      return const Center(child: CircularProgressIndicator());
+                      return _buildRecentBookingsLoadingShimmer();
                     }
 
                     if (!snapshot.hasData) {

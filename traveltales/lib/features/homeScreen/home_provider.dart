@@ -28,6 +28,7 @@ class HomeProvider extends ChangeNotifier {
     try {
       _recommended = await getRecommendedDestinations();
       _all = await getAllDestinations();
+      _all.shuffle();
       _genres = await fetchAllGenres();
 
       _hasLoaded = true;
@@ -46,6 +47,7 @@ class HomeProvider extends ChangeNotifier {
     try {
       _recommended = await getRecommendedDestinations();
       _all = await getAllDestinations();
+      _all.shuffle();
     } catch (e) {
       debugPrint("Refresh error: $e");
     }

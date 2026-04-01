@@ -1,340 +1,501 @@
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
+import 'package:shimmer/shimmer.dart';
+import 'package:traveltales/api/api.dart';
+import 'package:traveltales/api/bookingAPI.dart';
+import 'package:traveltales/api/destinationAPI.dart';
 import 'package:traveltales/core/ui/resources/theme/appColors.dart';
 
-class AnalyticsScreen extends StatelessWidget {
+import 'package:traveltales/core/model/event_model.dart';
+import 'package:traveltales/core/model/booking_model.dart';
+import 'package:traveltales/core/model/destination_model.dart';
+import 'package:traveltales/core/model/user_info.dart';
+
+class AnalyticsScreen extends StatefulWidget {
   const AnalyticsScreen({super.key});
 
   @override
+  State<AnalyticsScreen> createState() => _AnalyticsScreenState();
+}
+
+class _AnalyticsScreenState extends State<AnalyticsScreen> {
+  bool _isLoading = true;
+  String? _error;
+
+  int ongoingEvents = 0;
+  int totalBookedEvents = 0;
+  int totalDestinations = 0;
+
+  List<_TopCompanyData> topCompanies = [];
+  List<_TopEventData> topBookedEvents = [];
+
+  @override
+  void initState() {
+    super.initState();
+    _loadAnalytics();
+  }
+
+  Future<void> _loadAnalytics() async {
+    try {
+      setState(() {
+        _isLoading = true;
+        _error = null;
+      });
+
+      final List<Event> events = await getAllEvents();
+      final List<Destination> destinations = await getAllDestinations();
+      final List<UserInfo> users = await getAllUsers();
+      final bookingApi = BookingApi();
+      final List<Booking> bookings = await bookingApi.getAllBookings();
+
+      final now = DateTime.now();
+
+      final int ongoingCount = events.where((event) {
+        return !event.fromDate.isAfter(now) && !event.toDate.isBefore(now);
+      }).length;
+
+      final int bookedCount = bookings.length;
+      final int destinationCount = destinations.length;
+
+      final Map<int, int> bookingCountByEventId = {};
+
+      for (final booking in bookings) {
+        bookingCountByEventId[booking.eventId] =
+            (bookingCountByEventId[booking.eventId] ?? 0) + 1;
+      }
+
+      final List<_TopEventData> topEvents =
+      bookingCountByEventId.entries.map((entry) {
+        final int eventId = entry.key;
+        final int bookingCount = entry.value;
+
+        final Event? matchedEvent = _findEventById(events, eventId);
+
+        return _TopEventData(
+          eventId: eventId,
+          title: matchedEvent?.title ?? 'Unknown Event',
+          totalBookings: bookingCount,
+        );
+      }).toList();
+
+      topEvents.sort((a, b) => b.totalBookings.compareTo(a.totalBookings));
+
+      final Map<String, int> companyEventCount = {};
+
+      for (final event in events) {
+        final String ownerKey = event.companyUserId.toString();
+        companyEventCount[ownerKey] =
+            (companyEventCount[ownerKey] ?? 0) + 1;
+      }
+
+      final List<_TopCompanyData> companies =
+      companyEventCount.entries.map((entry) {
+        final String companyId = entry.key;
+        final int eventCount = entry.value;
+
+        final UserInfo? matchedUser = _findUserById(users, companyId);
+
+        return _TopCompanyData(
+          id: companyId,
+          name: matchedUser?.userName ?? 'Unknown User',
+          email: matchedUser?.email ?? '',
+          imageUrl: matchedUser?.profilePictureUrl ?? '',
+          totalEvents: eventCount,
+        );
+      }).toList();
+
+      companies.sort((a, b) => b.totalEvents.compareTo(a.totalEvents));
+
+      if (!mounted) return;
+
+      setState(() {
+        ongoingEvents = ongoingCount;
+        totalBookedEvents = bookedCount;
+        totalDestinations = destinationCount;
+        topBookedEvents = topEvents.take(5).toList();
+        topCompanies = companies.take(5).toList();
+        _isLoading = false;
+      });
+    } catch (e) {
+      if (!mounted) return;
+      setState(() {
+        _error = e.toString();
+        _isLoading = false;
+      });
+    }
+  }
+
+  Event? _findEventById(List<Event> events, int eventId) {
+    try {
+      return events.firstWhere((event) => event.eventId == eventId);
+    } catch (_) {
+      return null;
+    }
+  }
+
+  UserInfo? _findUserById(List<UserInfo> users, String userId) {
+    try {
+      return users.firstWhere((user) => user.id.toString() == userId);
+    } catch (_) {
+      return null;
+    }
+  }
+
+  @override
   Widget build(BuildContext context) {
-    return SingleChildScrollView(
-      child: Container(
-        width: double.infinity,
-        padding: const EdgeInsets.all(16),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Wrap(
-              spacing: 18,
-              runSpacing: 18,
-              children: [
-                _analyticsCard(
-                  context,
-                  title: "Ongoing Events",
-                  value: "126",
-                  percentage: "+36%",
-                ),
-                _analyticsCard(
-                  context,
-                  title: "Total Booked Events",
-                  value: "13",
-                  percentage: "+14%",
-                ),
-                _analyticsCard(
-                  context,
-                  title: "Total Destinations",
-                  value: "1394",
-                  percentage: "-56%",
-                ),
-              ],
-            ),
-
-            const SizedBox(height: 24),
-
-            Row(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Expanded(
-                  flex: 3,
-                  child: Column(
-                    children: [
-                      Container(
-                        padding: const EdgeInsets.all(20),
-                        decoration: BoxDecoration(
-                          color: AppColors.getContainerBoxColor(context),
-                          borderRadius: BorderRadius.circular(12),
-                        ),
-                        ///Line Graph
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Row(
-                              children: [
-                                const Text(
-                                  "Company Report",
-                                  style: TextStyle(
-                                    fontSize: 20,
-                                    fontWeight: FontWeight.w600,
-                                  ),
-                                ),
-                                const Spacer(),
-                                _filterChip("12 Months", isSelected: true),
-                                const SizedBox(width: 8),
-                                _filterChip("6 Months"),
-                                const SizedBox(width: 8),
-                                _filterChip("30 Days"),
-                                const SizedBox(width: 8),
-                                _filterChip("7 Days"),
-                              ],
-                            ),
-                            const SizedBox(height: 24),
-                            SizedBox(
-                              height: 260,
-                              child: LineChart(
-                                LineChartData(
-                                  minX: 0,
-                                  maxX: 11,
-                                  minY: 0,
-                                  maxY: 100,
-                                  gridData: FlGridData(
-                                    show: true,
-                                    drawVerticalLine: false,
-                                    horizontalInterval: 20,
-                                    getDrawingHorizontalLine: (value) {
-                                      return FlLine(
-                                        color: Colors.grey.withOpacity(0.15),
-                                        strokeWidth: 1,
-                                      );
-                                    },
-                                  ),
-                                  titlesData: FlTitlesData(
-                                    topTitles: const AxisTitles(
-                                      sideTitles: SideTitles(showTitles: false),
-                                    ),
-                                    rightTitles: const AxisTitles(
-                                      sideTitles: SideTitles(showTitles: false),
-                                    ),
-                                    leftTitles: const AxisTitles(
-                                      sideTitles: SideTitles(showTitles: false),
-                                    ),
-                                    bottomTitles: AxisTitles(
-                                      sideTitles: SideTitles(
-                                        showTitles: true,
-                                        interval: 1,
-                                        reservedSize: 28,
-                                        getTitlesWidget: (value, meta) {
-                                          const months = [
-                                            "Feb",
-                                            "Mar",
-                                            "Apr",
-                                            "May",
-                                            "Jun",
-                                            "Jul",
-                                            "Aug",
-                                            "Sep",
-                                            "Oct",
-                                            "Nov",
-                                            "Dec",
-                                            "Jan",
-                                          ];
-
-                                          final index = value.toInt();
-                                          if (index < 0 ||
-                                              index >= months.length) {
-                                            return const SizedBox.shrink();
-                                          }
-
-                                          return Padding(
-                                            padding: const EdgeInsets.only(
-                                              top: 8,
-                                            ),
-                                            child: Text(
-                                              months[index],
-                                              style: TextStyle(
-                                                fontSize: 12,
-                                                color:
-                                                AppColors.getSmallTextColor(
-                                                  context,
-                                                ),
-                                              ),
-                                            ),
-                                          );
-                                        },
-                                      ),
-                                    ),
-                                  ),
-                                  borderData: FlBorderData(show: false),
-                                  lineBarsData: [
-                                    LineChartBarData(
-                                      spots: const [
-                                        FlSpot(0, 14),
-                                        FlSpot(1, 18),
-                                        FlSpot(2, 15),
-                                        FlSpot(3, 24),
-                                        FlSpot(4, 22),
-                                        FlSpot(5, 31),
-                                        FlSpot(6, 29),
-                                        FlSpot(7, 27),
-                                        FlSpot(8, 30),
-                                        FlSpot(9, 28),
-                                        FlSpot(10, 36),
-                                        FlSpot(11, 37),
-                                      ],
-                                      isCurved: true,
-                                      color: const Color(0xff11A8FD),
-                                      barWidth: 2,
-                                      dotData: const FlDotData(show: false),
-                                      belowBarData: BarAreaData(
-                                        show: true,
-                                        color: const Color(
-                                          0xff11A8FD,
-                                        ).withOpacity(0.08),
-                                      ),
-                                    ),
-                                    LineChartBarData(
-                                      spots: const [
-                                        FlSpot(0, 12),
-                                        FlSpot(1, 10),
-                                        FlSpot(2, 16),
-                                        FlSpot(3, 15),
-                                        FlSpot(4, 19),
-                                        FlSpot(5, 21),
-                                        FlSpot(6, 18),
-                                        FlSpot(7, 20),
-                                        FlSpot(8, 19),
-                                        FlSpot(9, 23),
-                                        FlSpot(10, 22),
-                                        FlSpot(11, 48),
-                                      ],
-                                      isCurved: true,
-                                      color: const Color(0xff008CFF),
-                                      barWidth: 2,
-                                      dotData: FlDotData(
-                                        show: true,
-                                        checkToShowDot: (spot, barData) {
-                                          return spot.x == 4;
-                                        },
-                                        getDotPainter:
-                                            (spot, percent, barData, index) {
-                                          return FlDotCirclePainter(
-                                            radius: 4,
-                                            color: const Color(0xff1E293B),
-                                            strokeWidth: 2,
-                                            strokeColor: Colors.white,
-                                          );
-                                        },
-                                      ),
-                                      belowBarData: BarAreaData(
-                                        show: true,
-                                        color: const Color(
-                                          0xffF3E7E1,
-                                        ).withOpacity(0.7),
-                                      ),
-                                    ),
-                                  ],
-                                  lineTouchData: LineTouchData(
-                                    touchTooltipData: LineTouchTooltipData(
-                                      getTooltipColor: (_) => Colors.black87,
-                                    ),
-                                  ),
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-
-                      const SizedBox(height: 20),
-
-                      Container(
-                        width: double.infinity,
-                        padding: const EdgeInsets.all(20),
-                        decoration: BoxDecoration(
-                          color: AppColors.getContainerBoxColor(context),
-                          borderRadius: BorderRadius.circular(12),
-                        ),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            const Text(
-                              "Company with Most Events",
-                              style: TextStyle(
-                                fontSize: 18,
-                                fontWeight: FontWeight.w600,
-                              ),
-                            ),
-                            const SizedBox(height: 6),
-                            Text(
-                              "Company with most event posted",
-                              style: TextStyle(
-                                fontSize: 12,
-                                color: AppColors.getSmallTextColor(context),
-                              ),
-                            ),
-                            const SizedBox(height: 20),
-                            _companyRow(
-                              context,
-                              imageUrl:
-                              'assets/images/Annapurna.png',
-                              name: 'Jerry Wilson',
-                              email: 'j.watson@example.com',
-                              value: '234',
-                            ),
-                            _companyRow(
-                              context,
-                              imageUrl:
-                              'assets/images/Annapurna.png',
-                              name: 'Devon Lane',
-                              email: 'dat.roberts@example.com',
-                              value: '159',
-                            ),
-                            _companyRow(
-                              context,
-                              imageUrl:
-                              'assets/images/Annapurna.png',
-                              name: 'Jane Cooper',
-                              email: 'jgraham@example.com',
-                              value: '83',
-                            ),
-                            _companyRow(
-                              context,
-                              imageUrl:
-                              'assets/images/Annapurna.png',
-                              name: 'Dianne Russell',
-                              email: 'curtis.d@example.com',
-                              value: '81',
-                            ),
-                          ],
-                        ),
-                      ),
-                    ],
+    return RefreshIndicator(
+      onRefresh: _loadAnalytics,
+      child: SingleChildScrollView(
+        physics: const AlwaysScrollableScrollPhysics(),
+        child: Container(
+          width: double.infinity,
+          padding: const EdgeInsets.all(16),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              if (_error != null && !_isLoading)
+                Padding(
+                  padding: const EdgeInsets.only(bottom: 12),
+                  child: Text(
+                    'Failed to load some analytics data',
+                    style: TextStyle(
+                      color: Colors.red.shade400,
+                      fontSize: 13,
+                      fontWeight: FontWeight.w500,
+                    ),
                   ),
                 ),
 
-                const SizedBox(width: 16),
+              Wrap(
+                spacing: 18,
+                runSpacing: 18,
+                children: _isLoading
+                    ? [
+                  _analyticsCardShimmer(context),
+                  _analyticsCardShimmer(context),
+                  _analyticsCardShimmer(context),
+                ]
+                    : [
+                  _analyticsCard(
+                    context,
+                    title: "Ongoing Events",
+                    value: ongoingEvents.toString(),
+                  ),
+                  _analyticsCard(
+                    context,
+                    title: "Total Booked Events",
+                    value: totalBookedEvents.toString(),
+                  ),
+                  _analyticsCard(
+                    context,
+                    title: "Total Destinations",
+                    value: totalDestinations.toString(),
+                  ),
+                ],
+              ),
 
+              const SizedBox(height: 24),
 
-                Expanded(
-                  flex: 1,
-                  child: Container(
-                    padding: const EdgeInsets.all(20),
-                    decoration: BoxDecoration(
-                      color: AppColors.getContainerBoxColor(context),
-                      borderRadius: BorderRadius.circular(12),
-                    ),
+              Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Expanded(
+                    flex: 3,
                     child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        const Text(
-                          "Top Booked Events",
-                          style: TextStyle(
-                            fontSize: 18,
-                            fontWeight: FontWeight.w600,
+                        _isLoading
+                            ? _bigChartShimmer(context)
+                            : Container(
+                          padding: const EdgeInsets.all(20),
+                          decoration: BoxDecoration(
+                            color:
+                            AppColors.getContainerBoxColor(context),
+                            borderRadius: BorderRadius.circular(12),
+                          ),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Row(
+                                children: [
+                                  const Text(
+                                    "Company Report",
+                                    style: TextStyle(
+                                      fontSize: 20,
+                                      fontWeight: FontWeight.w600,
+                                    ),
+                                  ),
+                                  const Spacer(),
+                                  _filterChip("12 Months",
+                                      isSelected: true),
+                                  const SizedBox(width: 8),
+                                  _filterChip("6 Months"),
+                                  const SizedBox(width: 8),
+                                  _filterChip("30 Days"),
+                                  const SizedBox(width: 8),
+                                  _filterChip("7 Days"),
+                                ],
+                              ),
+                              const SizedBox(height: 24),
+                              SizedBox(
+                                height: 260,
+                                child: LineChart(
+                                  LineChartData(
+                                    minX: 0,
+                                    maxX: 11,
+                                    minY: 0,
+                                    maxY: 100,
+                                    gridData: FlGridData(
+                                      show: true,
+                                      drawVerticalLine: false,
+                                      horizontalInterval: 20,
+                                      getDrawingHorizontalLine: (value) {
+                                        return FlLine(
+                                          color: Colors.grey
+                                              .withOpacity(0.15),
+                                          strokeWidth: 1,
+                                        );
+                                      },
+                                    ),
+                                    titlesData: FlTitlesData(
+                                      topTitles: const AxisTitles(
+                                        sideTitles: SideTitles(
+                                            showTitles: false),
+                                      ),
+                                      rightTitles: const AxisTitles(
+                                        sideTitles: SideTitles(
+                                            showTitles: false),
+                                      ),
+                                      leftTitles: const AxisTitles(
+                                        sideTitles: SideTitles(
+                                            showTitles: false),
+                                      ),
+                                      bottomTitles: AxisTitles(
+                                        sideTitles: SideTitles(
+                                          showTitles: true,
+                                          interval: 1,
+                                          reservedSize: 28,
+                                          getTitlesWidget:
+                                              (value, meta) {
+                                            const months = [
+                                              "Feb",
+                                              "Mar",
+                                              "Apr",
+                                              "May",
+                                              "Jun",
+                                              "Jul",
+                                              "Aug",
+                                              "Sep",
+                                              "Oct",
+                                              "Nov",
+                                              "Dec",
+                                              "Jan",
+                                            ];
+
+                                            final index = value.toInt();
+                                            if (index < 0 ||
+                                                index >=
+                                                    months.length) {
+                                              return const SizedBox
+                                                  .shrink();
+                                            }
+
+                                            return Padding(
+                                              padding:
+                                              const EdgeInsets.only(
+                                                  top: 8),
+                                              child: Text(
+                                                months[index],
+                                                style: TextStyle(
+                                                  fontSize: 12,
+                                                  color: AppColors
+                                                      .getSmallTextColor(
+                                                      context),
+                                                ),
+                                              ),
+                                            );
+                                          },
+                                        ),
+                                      ),
+                                    ),
+                                    borderData:
+                                    FlBorderData(show: false),
+                                    lineBarsData: [
+                                      LineChartBarData(
+                                        spots: const [
+                                          FlSpot(0, 14),
+                                          FlSpot(1, 18),
+                                          FlSpot(2, 15),
+                                          FlSpot(3, 24),
+                                          FlSpot(4, 22),
+                                          FlSpot(5, 31),
+                                          FlSpot(6, 29),
+                                          FlSpot(7, 27),
+                                          FlSpot(8, 30),
+                                          FlSpot(9, 28),
+                                          FlSpot(10, 36),
+                                          FlSpot(11, 37),
+                                        ],
+                                        isCurved: true,
+                                        color: const Color(0xff11A8FD),
+                                        barWidth: 2,
+                                        dotData: const FlDotData(
+                                            show: false),
+                                        belowBarData: BarAreaData(
+                                          show: true,
+                                          color: const Color(0xff11A8FD)
+                                              .withOpacity(0.08),
+                                        ),
+                                      ),
+                                      LineChartBarData(
+                                        spots: const [
+                                          FlSpot(0, 12),
+                                          FlSpot(1, 10),
+                                          FlSpot(2, 16),
+                                          FlSpot(3, 15),
+                                          FlSpot(4, 19),
+                                          FlSpot(5, 21),
+                                          FlSpot(6, 18),
+                                          FlSpot(7, 20),
+                                          FlSpot(8, 19),
+                                          FlSpot(9, 23),
+                                          FlSpot(10, 22),
+                                          FlSpot(11, 48),
+                                        ],
+                                        isCurved: true,
+                                        color: const Color(0xff008CFF),
+                                        barWidth: 2,
+                                        dotData: FlDotData(
+                                          show: true,
+                                          checkToShowDot:
+                                              (spot, barData) {
+                                            return spot.x == 4;
+                                          },
+                                          getDotPainter: (spot, percent,
+                                              barData, index) {
+                                            return FlDotCirclePainter(
+                                              radius: 4,
+                                              color:
+                                              const Color(0xff1E293B),
+                                              strokeWidth: 2,
+                                              strokeColor: Colors.white,
+                                            );
+                                          },
+                                        ),
+                                        belowBarData: BarAreaData(
+                                          show: true,
+                                          color: const Color(0xffF3E7E1)
+                                              .withOpacity(0.7),
+                                        ),
+                                      ),
+                                    ],
+                                    lineTouchData: LineTouchData(
+                                      touchTooltipData:
+                                      LineTouchTooltipData(
+                                        getTooltipColor: (_) =>
+                                        Colors.black87,
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ],
                           ),
                         ),
-                        const SizedBox(height: 24),
-                        _eventRow("Tilicho Lake Trek", "382"),
-                        _eventRow("Hiking to Jamacho", "974"),
-                        _eventRow("Bandipur Sunrise", "211"),
-                        _eventRow("Aspire", "893"),
-                        _eventRow("Aspire", "893"),
+
+                        const SizedBox(height: 20),
+
+                        _isLoading
+                            ? _companyCardShimmer(context)
+                            : Container(
+                          width: double.infinity,
+                          padding: const EdgeInsets.all(20),
+                          decoration: BoxDecoration(
+                            color:
+                            AppColors.getContainerBoxColor(context),
+                            borderRadius: BorderRadius.circular(12),
+                          ),
+                          child: Column(
+                            crossAxisAlignment:
+                            CrossAxisAlignment.start,
+                            children: [
+                              const Text(
+                                "Company with Most Events",
+                                style: TextStyle(
+                                  fontSize: 18,
+                                  fontWeight: FontWeight.w600,
+                                ),
+                              ),
+                              const SizedBox(height: 6),
+                              Text(
+                                "Company with most event posted",
+                                style: TextStyle(
+                                  fontSize: 12,
+                                  color: AppColors.getSmallTextColor(
+                                      context),
+                                ),
+                              ),
+                              const SizedBox(height: 20),
+                              if (topCompanies.isEmpty)
+                                const Text("No company data found")
+                              else
+                                ...topCompanies.map(
+                                      (company) => _companyRow(
+                                    context,
+                                    imageUrl: company.imageUrl,
+                                    name: company.name,
+                                    email: company.email,
+                                    value:
+                                    company.totalEvents.toString(),
+                                  ),
+                                ),
+                            ],
+                          ),
+                        ),
                       ],
                     ),
                   ),
-                ),
-              ],
-            ),
-          ],
+
+                  const SizedBox(width: 16),
+
+                  Expanded(
+                    flex: 1,
+                    child: _isLoading
+                        ? _topEventsCardShimmer(context)
+                        : Container(
+                      padding: const EdgeInsets.all(20),
+                      decoration: BoxDecoration(
+                        color: AppColors.getContainerBoxColor(context),
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                      child: Column(
+                        crossAxisAlignment:
+                        CrossAxisAlignment.start,
+                        children: [
+                          const Text(
+                            "Top Booked Events",
+                            style: TextStyle(
+                              fontSize: 18,
+                              fontWeight: FontWeight.w600,
+                            ),
+                          ),
+                          const SizedBox(height: 24),
+                          if (topBookedEvents.isEmpty)
+                            const Text("No booking data found")
+                          else
+                            ...topBookedEvents.map(
+                                  (event) => _eventRow(
+                                event.title,
+                                event.totalBookings.toString(),
+                              ),
+                            ),
+                        ],
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ],
+          ),
         ),
       ),
     );
@@ -344,7 +505,6 @@ class AnalyticsScreen extends StatelessWidget {
       BuildContext context, {
         required String title,
         required String value,
-        required String percentage,
       }) {
     return Container(
       width: 300,
@@ -364,26 +524,170 @@ class AnalyticsScreen extends StatelessWidget {
             ),
           ),
           const SizedBox(height: 10),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Text(
-                value,
-                style: const TextStyle(
-                  fontSize: 22,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-              Text(
-                percentage,
-                style: TextStyle(
-                  color: percentage.contains("+") ? Colors.green : Colors.red,
-                  fontWeight: FontWeight.w600,
-                ),
-              ),
-            ],
+          Text(
+            value,
+            style: const TextStyle(
+              fontSize: 22,
+              fontWeight: FontWeight.bold,
+            ),
           ),
         ],
+      ),
+    );
+  }
+
+  Widget _analyticsCardShimmer(BuildContext context) {
+    return Container(
+      width: 300,
+      padding: const EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        color: AppColors.getContainerBoxColor(context),
+        borderRadius: BorderRadius.circular(12),
+      ),
+      child: Shimmer.fromColors(
+        baseColor: Colors.grey.shade300,
+        highlightColor: Colors.grey.shade100,
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            _shimmerBox(width: 110, height: 14),
+            const SizedBox(height: 14),
+            _shimmerBox(width: 60, height: 24),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _bigChartShimmer(BuildContext context) {
+    return Container(
+      width: double.infinity,
+      padding: const EdgeInsets.all(20),
+      decoration: BoxDecoration(
+        color: AppColors.getContainerBoxColor(context),
+        borderRadius: BorderRadius.circular(12),
+      ),
+      child: Shimmer.fromColors(
+        baseColor: Colors.grey.shade300,
+        highlightColor: Colors.grey.shade100,
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Row(
+              children: [
+                _shimmerBox(width: 150, height: 22),
+                const Spacer(),
+                _shimmerBox(width: 70, height: 28),
+                const SizedBox(width: 8),
+                _shimmerBox(width: 70, height: 28),
+                const SizedBox(width: 8),
+                _shimmerBox(width: 70, height: 28),
+                const SizedBox(width: 8),
+                _shimmerBox(width: 70, height: 28),
+              ],
+            ),
+            const SizedBox(height: 24),
+            _shimmerBox(width: double.infinity, height: 260, radius: 10),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _companyCardShimmer(BuildContext context) {
+    return Container(
+      width: double.infinity,
+      padding: const EdgeInsets.all(20),
+      decoration: BoxDecoration(
+        color: AppColors.getContainerBoxColor(context),
+        borderRadius: BorderRadius.circular(12),
+      ),
+      child: Shimmer.fromColors(
+        baseColor: Colors.grey.shade300,
+        highlightColor: Colors.grey.shade100,
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            _shimmerBox(width: 190, height: 20),
+            const SizedBox(height: 8),
+            _shimmerBox(width: 170, height: 12),
+            const SizedBox(height: 20),
+            ...List.generate(
+              4,
+                  (index) => Padding(
+                padding: const EdgeInsets.only(bottom: 18),
+                child: Row(
+                  children: [
+                    const CircleAvatar(radius: 18, backgroundColor: Colors.white),
+                    const SizedBox(width: 12),
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          _shimmerBox(width: 120, height: 14),
+                          const SizedBox(height: 6),
+                          _shimmerBox(width: 150, height: 12),
+                        ],
+                      ),
+                    ),
+                    _shimmerBox(width: 28, height: 14),
+                  ],
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _topEventsCardShimmer(BuildContext context) {
+    return Container(
+      padding: const EdgeInsets.all(20),
+      decoration: BoxDecoration(
+        color: AppColors.getContainerBoxColor(context),
+        borderRadius: BorderRadius.circular(12),
+      ),
+      child: Shimmer.fromColors(
+        baseColor: Colors.grey.shade300,
+        highlightColor: Colors.grey.shade100,
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            _shimmerBox(width: 140, height: 20),
+            const SizedBox(height: 24),
+            ...List.generate(
+              5,
+                  (index) => Padding(
+                padding: const EdgeInsets.only(bottom: 28),
+                child: Row(
+                  children: [
+                    Expanded(
+                      child: _shimmerBox(width: double.infinity, height: 14),
+                    ),
+                    const SizedBox(width: 12),
+                    _shimmerBox(width: 30, height: 14),
+                  ],
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _shimmerBox({
+    required double width,
+    required double height,
+    double radius = 6,
+  }) {
+    return Container(
+      width: width,
+      height: height,
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(radius),
       ),
     );
   }
@@ -442,13 +746,20 @@ class AnalyticsScreen extends StatelessWidget {
         required String email,
         required String value,
       }) {
+    final bool hasValidImage =
+        imageUrl.isNotEmpty && imageUrl.startsWith('http');
+
     return Padding(
       padding: const EdgeInsets.only(bottom: 18),
       child: Row(
         children: [
           CircleAvatar(
             radius: 18,
-            backgroundImage: NetworkImage(imageUrl),
+            backgroundColor: Colors.grey.shade200,
+            backgroundImage: hasValidImage ? NetworkImage(imageUrl) : null,
+            child: !hasValidImage
+                ? const Icon(Icons.person, size: 18)
+                : null,
           ),
           const SizedBox(width: 12),
           Expanded(
@@ -484,4 +795,32 @@ class AnalyticsScreen extends StatelessWidget {
       ),
     );
   }
+}
+
+class _TopCompanyData {
+  final String id;
+  final String name;
+  final String email;
+  final String imageUrl;
+  final int totalEvents;
+
+  _TopCompanyData({
+    required this.id,
+    required this.name,
+    required this.email,
+    required this.imageUrl,
+    required this.totalEvents,
+  });
+}
+
+class _TopEventData {
+  final int eventId;
+  final String title;
+  final int totalBookings;
+
+  _TopEventData({
+    required this.eventId,
+    required this.title,
+    required this.totalBookings,
+  });
 }

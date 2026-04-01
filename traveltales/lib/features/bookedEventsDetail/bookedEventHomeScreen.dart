@@ -5,6 +5,7 @@ import 'package:traveltales/api/bookingAPI.dart';
 import 'package:traveltales/core/model/booking_model.dart';
 import 'package:traveltales/core/model/event_model.dart';
 import 'package:traveltales/core/route_config/route_names.dart';
+import 'package:traveltales/core/ui/components/shimmerView.dart';
 import 'package:traveltales/core/ui/components/viewAllRow.dart';
 import 'package:traveltales/core/ui/localization/sharedRes.dart';
 import 'package:traveltales/core/ui/resources/theme/appColors.dart';
@@ -19,15 +20,143 @@ class BookedEventHomeScreen extends StatefulWidget {
 
 class _BookedEventHomeScreenState extends State<BookedEventHomeScreen> {
   final BookingApi _bookingService = BookingApi();
+
   late Future<List<Booking>> _bookingsFuture;
   late Future<List<Event>> _eventsFuture;
-
 
   @override
   void initState() {
     super.initState();
+    _loadData();
+  }
+
+
+  void _loadData() {
     _bookingsFuture = _bookingService.getMyBookings();
     _eventsFuture = getAllEvents();
+  }
+
+  Future<void> _refreshData() async {
+    setState(() {
+      _loadData();
+    });
+  }
+
+  DateTime _dateOnly(DateTime date) {
+    return DateTime(date.year, date.month, date.day);
+  }
+
+  String _formatEventDate(DateTime date) {
+    const months = [
+      'January',
+      'February',
+      'March',
+      'April',
+      'May',
+      'June',
+      'July',
+      'August',
+      'September',
+      'October',
+      'November',
+      'December',
+    ];
+
+    final day = date.day;
+    final suffix =
+        (day >= 11 && day <= 13)
+            ? 'th'
+            : switch (day % 10) {
+              1 => 'st',
+              2 => 'nd',
+              3 => 'rd',
+              _ => 'th',
+            };
+
+    return '$day$suffix ${months[date.month - 1]}';
+  }
+
+  Widget _emptySection(String text) {
+    return Container(
+      width: double.infinity,
+      padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 18.h),
+      decoration: BoxDecoration(
+        color: AppColors.getContainerBoxColor(context),
+        borderRadius: BorderRadius.circular(16.r),
+        border: Border.all(
+          color: Theme.of(context).dividerColor.withOpacity(0.08),
+        ),
+      ),
+      child: Text(
+        text,
+        style: TextStyle(
+          fontSize: 13.sp,
+          color: AppColors.getSmallTextColor(context),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildLoadingShimmer() {
+    Widget card() {
+      return Container(
+        padding: EdgeInsets.all(12.w),
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(14.r),
+        ),
+        child: Row(
+          children: [
+            ShimmerView(width: 54.w, height: 54.w, radius: 12),
+            SizedBox(width: 12.w),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  ShimmerView(width: 120.w, height: 14.h, radius: 8),
+                  SizedBox(height: 8.h),
+                  ShimmerView(width: 140.w, height: 12.h, radius: 8),
+                  SizedBox(height: 8.h),
+                  ShimmerView(width: 110.w, height: 12.h, radius: 8),
+                ],
+              ),
+            ),
+            SizedBox(width: 12.w),
+            ShimmerView(width: 54.w, height: 24.h, radius: 999),
+          ],
+        ),
+      );
+    }
+
+    return ListView(
+      padding: EdgeInsets.symmetric(horizontal: compactDimens.small3),
+      children: [
+        SizedBox(height: 12.h),
+        ShimmerView(width: 190.w, height: 34.h, radius: 14),
+        SizedBox(height: 10.h),
+        Row(
+          children: [
+            ShimmerView(width: 140.w, height: 34.h, radius: 14),
+            SizedBox(width: compactDimens.small1),
+            ShimmerView(
+              width: compactDimens.homeScreenImageSize,
+              height: 34.h,
+              radius: 16,
+            ),
+          ],
+        ),
+        SizedBox(height: 16.h),
+        ShimmerView(width: 120.w, height: 18.h, radius: 8),
+        SizedBox(height: 8.h),
+        card(),
+        SizedBox(height: 8.h),
+        card(),
+        SizedBox(height: 16.h),
+        ShimmerView(width: 120.w, height: 18.h, radius: 8),
+        SizedBox(height: 8.h),
+        card(),
+      ],
+    );
   }
 
   @override
@@ -56,14 +185,16 @@ class _BookedEventHomeScreenState extends State<BookedEventHomeScreen> {
           ),
         ],
       ),
+
       body: FutureBuilder<List<dynamic>>(
         future: Future.wait([
           _bookingsFuture,
           _eventsFuture,
         ]),
         builder: (context, snapshot) {
+
           if (snapshot.connectionState == ConnectionState.waiting) {
-            return const Center(child: CircularProgressIndicator());
+            return _buildLoadingShimmer();
           }
 
           if (snapshot.hasError) {
@@ -76,123 +207,166 @@ class _BookedEventHomeScreenState extends State<BookedEventHomeScreen> {
           final Map<int, Event> eventMap = {
             for (final event in events) event.eventId: event,
           };
+          final today = _dateOnly(DateTime.now());
 
-          final upcoming = bookings
-              .where((b) => b.status != "completed")
-              .toList();
+          final upcoming = bookings.where((booking) {
+            final event = eventMap[booking.eventId];
+            if (event == null) return false;
 
-          final completed = bookings
-              .where((b) => b.status == "completed")
-              .toList();
+            return !_dateOnly(event.toDate).isBefore(today);
+          }).toList();
 
-          return ListView(
-            padding: EdgeInsets.symmetric(horizontal: compactDimens.small3),
-            children: [
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text("This Journey is", style: _headingStyle()),
-                  Row(
-                    children: [
-                      Text("Yours Now!", style: _headingStyle()),
-                      SizedBox(width: compactDimens.small1),
-                      ClipRRect(
-                        borderRadius: BorderRadius.circular(16.r),
-                        child: Image.asset(
-                          'assets/images/CreatingEventImage.jpg',
-                          height: 34.h,
-                          width: compactDimens.homeScreenImageSize,
-                          fit: BoxFit.fitWidth,
+          final completed = bookings.where((booking) {
+            final event = eventMap[booking.eventId];
+            if (event == null) return false;
+
+            return _dateOnly(event.toDate).isBefore(today);
+          }).toList();
+          upcoming.sort((a, b) {
+            final eventA = eventMap[a.eventId]!;
+            final eventB = eventMap[b.eventId]!;
+            return eventA.fromDate.compareTo(eventB.fromDate);
+          });
+          completed.sort((a, b) {
+            final eventA = eventMap[a.eventId]!;
+            final eventB = eventMap[b.eventId]!;
+            return eventB.toDate.compareTo(eventA.toDate);
+          });
+
+          return RefreshIndicator(
+            backgroundColor: Colors.white,
+            onRefresh: _refreshData,
+            child: ListView(
+              physics: const AlwaysScrollableScrollPhysics(),
+              padding:
+              EdgeInsets.symmetric(horizontal: compactDimens.small3),
+              children: [
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+
+                    Text("This Journey is", style: _headingStyle()),
+                    Row(
+                      children: [
+                        Text("Yours Now!", style: _headingStyle()),
+                        SizedBox(width: compactDimens.small1),
+                        ClipRRect(
+                          borderRadius: BorderRadius.circular(16.r),
+                          child: Image.asset(
+                            'assets/images/CreatingEventImage.jpg',
+                            height: 34.h,
+                            width: compactDimens.homeScreenImageSize,
+                            fit: BoxFit.fitWidth,
+                          ),
                         ),
-                      ),
-                    ],
-                  ),
+                      ],
+                    ),
 
-                  SizedBox(height: 12.h),
-                  ViewAllRow(
-                    firstText: "Upcoming Events",
-                    onPressed: () {},
-                    isViewAll: false,
-                  ),
-                  SizedBox(height: 8.h),
+                    SizedBox(height: 12.h),
 
-                  ...upcoming.map((booking) {
-                    final event = eventMap[booking.eventId];
-                    if (event == null) return const SizedBox.shrink();
+                    ViewAllRow(
+                      firstText: "Upcoming Events",
+                      onPressed: () {},
+                      isViewAll: false,
+                    ),
 
-                    final destination = event.destination;
+                    SizedBox(height: 8.h),
 
-                    final List<String> frontImages = destination.extraInfo.backdropPath;
+                    if (upcoming.isEmpty)
+                      _emptySection("No upcoming events booked yet.")
+                    else
+                      ...upcoming.map((booking) {
+                        final event = eventMap[booking.eventId];
+                        if (event == null) return const SizedBox.shrink();
 
-                    final String imageUrl = frontImages.isNotEmpty
-                        ? "$API_URL${frontImages.first}"
-                        : "";
-                    return Padding(
-                      padding: EdgeInsets.only(bottom: 10.h),
-                      child: _bookedEventCard(
-                        context,
-                        imageAsset: imageUrl,
-                        title: destination.placeName,
-                        statusText: "Coming on ${event.fromDate}",
-                        organizerText: "Booked for ${booking.totalPeople} people",
-                        priceText: "Rs ${booking.totalPrice}",
-                        onTap: () {
-                          Navigator.pushNamed(
+                        final destination = event.destination;
+
+                        final List<String> frontImages =
+                            destination.extraInfo.backdropPath;
+
+                        final String imageUrl = frontImages.isNotEmpty
+                            ? "$API_URL${frontImages.first}"
+                            : "";
+
+                        return Padding(
+                          padding: EdgeInsets.only(bottom: 10.h),
+                          child: _bookedEventCard(
                             context,
-                            RouteName.eventDetailScreen,
-                            arguments: event,
-                          );
-                        },
-                      ),
-                    );
-                  }),
+                            imageAsset: imageUrl,
+                            title: destination.placeName,
+                            statusText:
+                                "Coming on ${_formatEventDate(event.fromDate)}",
+                            organizerText:
+                                "Booked for ${booking.totalPeople} people",
+                            priceText: "Rs ${booking.totalPrice}",
+                            onTap: () {
+                              Navigator.pushNamed(
+                                context,
+                                RouteName.eventDetailScreen,
+                                arguments: event,
+                              );
+                            },
+                          ),
+                        );
+                      }),
 
-                  SizedBox(height: 12.h),
-                  ViewAllRow(
-                    firstText: "Completed Events",
-                    onPressed: () {},
-                    isViewAll: false,
-                  ),
-                  SizedBox(height: 8.h),
+                    SizedBox(height: 12.h),
 
-                  ...completed.map((booking) {
-                    final event = eventMap[booking.eventId];
-                    if (event == null) return const SizedBox.shrink();
+                    ViewAllRow(
+                      firstText: "Completed Events",
+                      onPressed: () {},
+                      isViewAll: false,
+                    ),
 
-                    final destination = event.destination;
-                    final List<String> frontImages = destination.extraInfo.backdropPath;
+                    SizedBox(height: 8.h),
 
-                    final String imageUrl = frontImages.isNotEmpty
-                        ? "$API_URL${frontImages.first}"
-                        : "";
+                    if (completed.isEmpty)
+                      _emptySection("No completed events yet.")
+                    else
+                      ...completed.map((booking) {
+                        final event = eventMap[booking.eventId];
+                        if (event == null) return const SizedBox.shrink();
 
-                    return Padding(
-                      padding: EdgeInsets.only(bottom: 10.h),
-                      child: _bookedEventCard(
-                        context,
-                        imageAsset: imageUrl,
-                        title: destination.placeName,
-                        statusText: "Completed",
-                        organizerText: "Booked for ${booking.totalPeople} people",
-                        priceText: "Rs ${booking.totalPrice}",
-                        onTap: () {
-                          Navigator.pushNamed(
+                        final destination = event.destination;
+
+                        final List<String> frontImages =
+                            destination.extraInfo.backdropPath;
+
+                        final String imageUrl = frontImages.isNotEmpty
+                            ? "$API_URL${frontImages.first}"
+                            : "";
+
+                        return Padding(
+                          padding: EdgeInsets.only(bottom: 10.h),
+                          child: _bookedEventCard(
                             context,
-                            RouteName.eventDetailScreen,
-                            arguments: event,
-                          );
-                        },
-                      ),
-                    );
-                  }),
-                ],
-              ),
-            ],
+                            imageAsset: imageUrl,
+                            title: destination.placeName,
+                            statusText:
+                                "Completed on ${_formatEventDate(event.toDate)}",
+                            organizerText:
+                                "Booked for ${booking.totalPeople} people",
+                            priceText: "Rs ${booking.totalPrice}",
+                            onTap: () {
+                              Navigator.pushNamed(
+                                context,
+                                RouteName.eventDetailScreen,
+                                arguments: event,
+                              );
+                            },
+                          ),
+                        );
+                      }),
+                  ],
+                ),
+              ],
+            ),
           );
         },
       ),
     );
   }
+
   Widget _bookedEventCard(
       BuildContext context, {
         required String imageAsset,
@@ -225,6 +399,7 @@ class _BookedEventHomeScreenState extends State<BookedEventHomeScreen> {
               ),
             ),
             SizedBox(width: 12.w),
+
             Expanded(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -238,16 +413,25 @@ class _BookedEventHomeScreenState extends State<BookedEventHomeScreen> {
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
                   ),
+
                   SizedBox(height: 4.h),
-                  _infoRow(Icons.check_circle_outline, statusText, Colors.green),
+
+                  _infoRow(
+                      Icons.check_circle_outline, statusText, Colors.green),
+
                   SizedBox(height: 4.h),
-                  _infoRow(Icons.verified_outlined, organizerText, Colors.green),
+
+                  _infoRow(Icons.verified_outlined, organizerText,
+                      Colors.green),
                 ],
               ),
             ),
+
             SizedBox(width: 10.w),
+
             Container(
-              padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 6.h),
+              padding: EdgeInsets.symmetric(
+                  horizontal: 10.w, vertical: 6.h),
               decoration: BoxDecoration(
                 color: Colors.green.withOpacity(0.12),
                 borderRadius: BorderRadius.circular(99.r),
@@ -286,6 +470,7 @@ class _BookedEventHomeScreenState extends State<BookedEventHomeScreen> {
       ],
     );
   }
+
   TextStyle _headingStyle() {
     return TextStyle(fontSize: 42.sp, height: 1.2);
   }

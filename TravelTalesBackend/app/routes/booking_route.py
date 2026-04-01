@@ -14,12 +14,25 @@ from app.services.booking_service import (
     initiate_esewa_payment,
     handle_esewa_callback,
 )
-from app.model.models import User
+from app.model.models import User, Booking
 
 router = APIRouter(prefix="/bookings", tags=["Bookings"])
 
+@router.get("/", response_model=List[BookingResponse])
+def get_all_bookings(
+    db: Session = Depends(get_db),
+    current_user: User = Depends(get_current_user)
+):
+    if current_user.roles != "admin":
+        raise HTTPException(
+            status_code=403,
+            detail="Only admin can access all bookings."
+        )
 
-@router.post("/", response_model=BookingResponse)
+    bookings = db.query(Booking).all()
+    return bookings
+
+@router.post("/create", response_model=BookingResponse)
 def book_event(
     booking_data: BookingCreate,
     db: Session = Depends(get_db),

@@ -19,10 +19,16 @@ class SearchScreen extends StatefulWidget {
 
 class _SearchScreenState extends State<SearchScreen> {
   final TextEditingController _searchController = TextEditingController();
+  static const List<String> _difficultyOptions = [
+    "Easy",
+    "Medium",
+    "Hard",
+  ];
 
   List<Destination> _searchResults = [];
   bool _isLoading = false;
   bool _hasSearched = false;
+  String? _selectedDifficulty;
 
   void _hideKeyboard() {
     FocusScope.of(context).unfocus();
@@ -65,6 +71,153 @@ class _SearchScreenState extends State<SearchScreen> {
     }
   }
 
+  List<Destination> get _filteredResults {
+    return _searchResults.where((destination) {
+      final difficulty = destination.extraInfo.difficultyLevel.trim();
+
+      final matchesDifficulty =
+          _selectedDifficulty == null ||
+          difficulty.toLowerCase() == _selectedDifficulty!.toLowerCase();
+
+      return matchesDifficulty;
+    }).toList();
+  }
+
+  Future<void> _openFilterSheet() async {
+    String? tempDifficulty = _selectedDifficulty;
+
+    await showModalBottomSheet<void>(
+      context: context,
+      isScrollControlled: true,
+      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(24.r)),
+      ),
+      builder: (context) {
+        return StatefulBuilder(
+          builder: (context, setModalState) {
+            return SafeArea(
+              top: false,
+              child: Padding(
+                padding: EdgeInsets.fromLTRB(20.w, 20.h, 20.w, 24.h),
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Center(
+                      child: Container(
+                        height: 4.h,
+                        width: 42.w,
+                        decoration: BoxDecoration(
+                          color: Colors.grey.shade400,
+                          borderRadius: BorderRadius.circular(999.r),
+                        ),
+                      ),
+                    ),
+                    SizedBox(height: 18.h),
+                    Text(
+                      "Filter Destinations",
+                      style: TextStyle(
+                        fontSize: 18.sp,
+                        fontWeight: FontWeight.w700,
+                      ),
+                    ),
+                    SizedBox(height: 18.h),
+                    Text(
+                      "Difficulty",
+                      style: TextStyle(
+                        fontSize: 14.sp,
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
+                    SizedBox(height: 10.h),
+                    Wrap(
+                      spacing: 8.w,
+                      runSpacing: 8.h,
+                      children: _difficultyOptions.map((option) {
+                        return ChoiceChip(
+                          label: Text(option),
+                          backgroundColor: AppColors.getContainerBoxColor(context),
+                          selected: tempDifficulty == option,
+                          onSelected: (_) {
+                            setModalState(() {
+                              tempDifficulty =
+                                  tempDifficulty == option ? null : option;
+                            });
+                          },
+                        );
+                      }).toList(),
+                    ),
+                    SizedBox(height: 22.h),
+                    Row(
+                      children: [
+                        Expanded(
+                          child: OutlinedButton(
+                            onPressed: () {
+                              setModalState(() {
+                                tempDifficulty = null;
+                              });
+                            },
+                            child: const Text("Clear"),
+                          ),
+                        ),
+                        SizedBox(width: 12.w),
+                        Expanded(
+                          child: ElevatedButton(
+                            onPressed: () {
+                              setState(() {
+                                _selectedDifficulty = tempDifficulty;
+                              });
+                              Navigator.pop(context);
+                            },
+                            child: const Text("Apply"),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
+              ),
+            );
+          },
+        );
+      },
+    );
+  }
+
+  Widget _activeFilterChip({
+    required String label,
+    required VoidCallback onRemoved,
+  }) {
+    return Container(
+      padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 8.h),
+      decoration: BoxDecoration(
+        color: AppColors.getContainerBoxColor(context),
+        borderRadius: BorderRadius.circular(999.r),
+        border: Border.all(
+          color: Theme.of(context).dividerColor.withOpacity(0.12),
+        ),
+      ),
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Text(
+            label,
+            style: TextStyle(
+              fontSize: 12.sp,
+              fontWeight: FontWeight.w600,
+            ),
+          ),
+          SizedBox(width: 6.w),
+          GestureDetector(
+            onTap: onRemoved,
+            child: const Icon(Icons.close, size: 16),
+          ),
+        ],
+      ),
+    );
+  }
+
   @override
   void dispose() {
     _searchController.dispose();
@@ -97,12 +250,35 @@ class _SearchScreenState extends State<SearchScreen> {
                         onChanged: (text) {
                           _searchDestinations(text);
                         },
-                        onFilterTap: () {},
+                        onFilterTap: _openFilterSheet,
                       ),
                     ),
                   ],
                 ),
                 SizedBox(height: 16.h),
+                if (_selectedDifficulty != null)
+                  Padding(
+                    padding: EdgeInsets.only(left: 16.w, bottom: 12.h),
+                    child: SingleChildScrollView(
+                      scrollDirection: Axis.horizontal,
+                      child: Row(
+                        children: [
+                          if (_selectedDifficulty != null)
+                            Padding(
+                              padding: EdgeInsets.only(right: 8.w),
+                              child: _activeFilterChip(
+                                label: "Difficulty: $_selectedDifficulty",
+                                onRemoved: () {
+                                  setState(() {
+                                    _selectedDifficulty = null;
+                                  });
+                                },
+                              ),
+                            ),
+                        ],
+                      ),
+                    ),
+                  ),
 
                 Expanded(
                   child: Padding(
@@ -119,6 +295,8 @@ class _SearchScreenState extends State<SearchScreen> {
   }
 
   Widget _buildBody() {
+    final filteredResults = _filteredResults;
+
     if (_isLoading) {
       return const Center(
         child: CircularProgressIndicator(),
@@ -149,11 +327,23 @@ class _SearchScreenState extends State<SearchScreen> {
       );
     }
 
+    if (filteredResults.isEmpty) {
+      return Center(
+        child: Text(
+          "No destinations match these filters",
+          style: TextStyle(
+            fontSize: 14.sp,
+            color: Colors.grey,
+          ),
+        ),
+      );
+    }
+
     return ListView.separated(
-      itemCount: _searchResults.length,
+      itemCount: filteredResults.length,
       separatorBuilder: (_, __) => SizedBox(height: 12.h),
       itemBuilder: (context, index) {
-        final destination = _searchResults[index];
+        final destination = filteredResults[index];
 
         final imagePath =
         destination.extraInfo?.frontImagePath.isNotEmpty == true

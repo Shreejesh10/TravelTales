@@ -25,5 +25,6 @@ class RouteName{
   static const String totalFriendScreen = "/total_friend_screen";
   static const String acceptFriendScreen = "/accept_friend_screen";
   static const String bookmarkScreen = "/bookmark_screen";
+  static const String notificationScreen = "/notification_screen";
 
 }

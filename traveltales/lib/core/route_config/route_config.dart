@@ -8,7 +8,7 @@ import 'package:traveltales/features/addFriend/viewFriendScreen.dart';
 import 'package:traveltales/features/adminScreen/adminDashboard/adminDashboard.dart';
 import 'package:traveltales/features/adminScreen/createDestinationPage/adminDestinationDetailScreen.dart';
 import 'package:traveltales/features/auth/login/loginScreen.dart';
-import 'package:traveltales/features/bookedEventsDetail/bookedEventScreen.dart';
+import 'package:traveltales/features/bookedEventsDetail/bookedEventHomeScreen.dart';
 import 'package:traveltales/features/bookmark/bookmarkScreen.dart';
 import 'package:traveltales/features/companyDashboard/companyDashboardScreen.dart';
 import 'package:traveltales/features/dashboard/dashboardScreen.dart';
@@ -17,6 +17,7 @@ import 'package:traveltales/features/eventsScreen/eventBookingScreen/eventBookin
 import 'package:traveltales/features/eventsScreen/eventCreatingScreen/eventCreatingScreen.dart';
 import 'package:traveltales/features/eventsScreen/eventDetailScreen.dart';
 import 'package:traveltales/features/homeScreen/homeScreen.dart';
+import 'package:traveltales/features/notification/notificationScreen.dart';
 import 'package:traveltales/features/onboardingScreen/onboardingScreen.dart';
 import 'package:traveltales/features/searchScreen/searchScreen.dart';
 import 'package:traveltales/features/settings/settingsScreen.dart';
@@ -60,7 +61,7 @@ class RouteConfig {
       case RouteName.searchScreen:
         return MaterialPageRoute(builder: (_) => SearchScreen());
       case RouteName.bookedEventScreen:
-        return MaterialPageRoute(builder: (_) => BookedEventsScreen());
+        return MaterialPageRoute(builder: (_) => const BookedEventHomeScreen());
       case RouteName.companyDashboardScreen:
         return MaterialPageRoute(builder: (_) => CompanyDashboardScreen());
       case RouteName.eventCreatingScreen:
@@ -91,7 +92,8 @@ class RouteConfig {
         return MaterialPageRoute(builder: (_) => AcceptFriendScreen());
       case RouteName.bookmarkScreen:
         return MaterialPageRoute(builder: (_) => BookmarkScreen());
-
+      case RouteName.notificationScreen:
+        return MaterialPageRoute(builder: (_) => NotificationScreen());
 
       default:
         return _errorRoute();
