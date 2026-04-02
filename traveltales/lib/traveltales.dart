@@ -3,6 +3,7 @@ import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:provider/provider.dart';
+import 'package:traveltales/api/notification/notificationService.dart';
 import 'package:traveltales/core/route_config/route_config.dart';
 import 'package:traveltales/core/route_config/route_names.dart';
 import 'package:traveltales/features/auth/login/authProvider.dart';
@@ -37,6 +38,9 @@ class _TravelTalesState extends State<TravelTales> {
     super.initState();
     _loadSavedLocale();
     _loadThemeMode();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      NotificationService.instance.flushPendingNavigation();
+    });
   }
 
   Future<void> _loadThemeMode() async {
@@ -85,6 +89,7 @@ class _TravelTalesState extends State<TravelTales> {
           return MaterialApp(
             debugShowCheckedModeBanner: false,
             title: 'Travel Tales',
+            navigatorKey: NotificationService.navigatorKey,
 
             locale: _locale,
 

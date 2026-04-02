@@ -41,6 +41,10 @@ class ChangePassword(BaseModel):
     current_password: str
     new_password: str
 
+
+class FCMTokenRequest(BaseModel):
+    token: str = Field(..., min_length=1)
+
 #Company
 class CompanyBase(BaseModel):
     company_name: str

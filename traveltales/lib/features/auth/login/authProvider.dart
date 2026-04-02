@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:traveltales/api/api.dart';
+import 'package:traveltales/api/notification/notificationService.dart';
 import 'package:traveltales/core/model/user_info.dart';
 
 class AuthProvider extends ChangeNotifier {
@@ -48,6 +49,7 @@ class AuthProvider extends ChangeNotifier {
       } catch (_) {
         _userInfo = null;
       }
+      await NotificationService.instance.onUserAuthenticated();
 
       _isLoading = false;
       notifyListeners();
@@ -76,6 +78,7 @@ class AuthProvider extends ChangeNotifier {
         _role = storedRole;
         _userId = storedUserId;
         _hasCompletedPreference = storedPreference == "true";
+        await NotificationService.instance.onUserAuthenticated();
       } else {
         _clearLocalState();
       }
@@ -103,6 +106,7 @@ class AuthProvider extends ChangeNotifier {
     notifyListeners();
 
     try {
+      await NotificationService.instance.onUserLoggedOut();
       await logoutAndClearAuth();
       await _storage.delete(key: 'user_id');
       await _storage.delete(key: 'roles');

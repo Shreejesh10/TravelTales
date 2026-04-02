@@ -5,6 +5,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
 from pathlib import Path
 from app.utils.db_utils import Base
+from app.services.scheduler_service import start_scheduler, stop_scheduler
 
 app = FastAPI()
 
@@ -40,6 +41,16 @@ app.include_router(event_route.router)
 app.include_router(booking_route.router)
 app.include_router(friend_route.router)
 app.include_router(bookmark_route.router)
+
+
+@app.on_event("startup")
+def on_startup():
+    start_scheduler()
+
+
+@app.on_event("shutdown")
+def on_shutdown():
+    stop_scheduler()
 
 
 @app.get("/")

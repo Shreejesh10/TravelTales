@@ -2,6 +2,7 @@ from sqlalchemy.orm import Session, joinedload
 from app.schemas.schemas import TravelEventCreate, TravelEventUpdate
 from app.model.models import TravelEvent, Destination
 from typing import List, Optional
+from app.services.notification_service import notify_new_event
 
 
 def create_event(db: Session, company_user_id: int, event_data: TravelEventCreate) -> TravelEvent:
@@ -28,6 +29,7 @@ def create_event(db: Session, company_user_id: int, event_data: TravelEventCreat
     db.add(db_event)
     db.commit()
     db.refresh(db_event)
+    notify_new_event(db, db_event)
     return db_event
 
 

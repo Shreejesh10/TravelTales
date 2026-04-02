@@ -7,14 +7,16 @@ import uuid
 from app.utils.db_utils import get_db
 from app.model import *
 from sqlalchemy.orm import Query, Session
-from app.schemas.schemas import ChangePassword, LoginResponse, UserCreate, UserLogin, UserResponse, UserUpdate
+from app.schemas.schemas import ChangePassword, FCMTokenRequest, LoginResponse, UserCreate, UserLogin, UserResponse, UserUpdate
 from app.services.services import create_user, authenticate_user, fetch_user_information, search_users_by_name
 from app.utils.jwt_util import create_access_token, create_refresh_token
 from pathlib import Path
 from fastapi import Query
+import logging
 
 
 _SHOW_NAME = "users"
+logger = logging.getLogger(__name__)
 router = APIRouter(
     prefix=f'/{_SHOW_NAME}',
     tags=[_SHOW_NAME],
@@ -231,3 +233,29 @@ def change_password(
     return {
         "message": "Password changed successfully"
     }
+
+
+@router.post("/fcm-token")
+def save_fcm_token(
+    data: FCMTokenRequest,
+    db: Session = Depends(get_db),
+    current_user: User = Depends(get_current_user)
+):
+    current_user.fcm_token = data.token
+    db.add(current_user)
+    db.commit()
+    db.refresh(current_user)
+    logger.info("Saved FCM token for user_id=%s", current_user.id)
+
+    return {"message": "Token saved successfully"}
+
+
+@router.delete("/fcm-token", status_code=status.HTTP_204_NO_CONTENT)
+def delete_fcm_token(
+    db: Session = Depends(get_db),
+    current_user: User = Depends(get_current_user)
+):
+    current_user.fcm_token = None
+    db.add(current_user)
+    db.commit()
+    logger.info("Deleted FCM token for user_id=%s", current_user.id)

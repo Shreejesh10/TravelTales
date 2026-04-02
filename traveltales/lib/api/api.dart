@@ -449,6 +449,44 @@ Future<void> logoutAndClearAuth() async {
   await storage.delete(key: 'profile_picture_url');
 }
 
+Future<void> saveFcmToken(String token) async {
+  final url = Uri.parse('$API_URL/users/fcm-token');
+  final headers = await getHeaders();
+
+  final response = await http.post(
+    url,
+    headers: headers,
+    body: jsonEncode({
+      "token": token,
+    }),
+  );
+
+  if (response.statusCode == 200 || response.statusCode == 201) {
+    return;
+  }
+
+  throw Exception(
+    "Failed to save FCM token: ${response.statusCode} ${response.body}",
+  );
+}
+
+Future<void> removeFcmToken() async {
+  final url = Uri.parse('$API_URL/users/fcm-token');
+  final headers = await getHeaders();
+
+  final response = await http.delete(url, headers: headers);
+
+  if (response.statusCode == 200 ||
+      response.statusCode == 204 ||
+      response.statusCode == 404) {
+    return;
+  }
+
+  throw Exception(
+    "Failed to remove FCM token: ${response.statusCode} ${response.body}",
+  );
+}
+
 
 
 

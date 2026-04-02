@@ -5,8 +5,8 @@ from pathlib import Path
 def load_env():
     current_dir = Path(__file__).resolve()
     for parent in current_dir.parents:
-        env_path = parent.parent /".env"
+        env_path = parent / ".env"
         if env_path.exists():
             load_dotenv(env_path)
             return
-        raise FileNotFoundError(".env file not found in any parent directories")
+    raise FileNotFoundError(".env file not found in any parent directories")

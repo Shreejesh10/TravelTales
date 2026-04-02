@@ -5,6 +5,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:provider/provider.dart';
 import 'package:traveltales/api/api.dart';
+import 'package:traveltales/api/notification/notificationService.dart';
 import 'package:traveltales/core/model/destination_model.dart';
 import 'package:traveltales/core/model/genre_model.dart';
 import 'package:traveltales/core/route_config/route_names.dart';
@@ -210,6 +211,46 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
+  Widget _buildNotificationButton() {
+    return ValueListenableBuilder<int>(
+      valueListenable: NotificationService.instance.unreadCountNotifier,
+      builder: (context, unreadCount, _) {
+        return IconButton(
+          onPressed: () {
+            Navigator.pushNamed(context, RouteName.notificationScreen);
+          },
+          icon: Stack(
+            clipBehavior: Clip.none,
+            children: [
+              Icon(
+                Icons.notifications_none,
+                size: compactDimens.medium1,
+              ),
+              if (unreadCount > 0)
+                Positioned(
+                  right: -1,
+                  top: -1,
+                  child: Container(
+                    width: 10.w,
+                    height: 10.w,
+                    decoration: BoxDecoration(
+                      color: Colors.red,
+                      shape: BoxShape.circle,
+                      border: Border.all(
+                        color: Theme.of(context).appBarTheme.backgroundColor ??
+                            Theme.of(context).scaffoldBackgroundColor,
+                        width: 1.5,
+                      ),
+                    ),
+                  ),
+                ),
+            ],
+          ),
+        );
+      },
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     final homeProvider = context.watch<HomeProvider>();
@@ -238,15 +279,7 @@ class _HomeScreenState extends State<HomeScreen> {
             ),
           ),
           actions: [
-            IconButton(
-              onPressed: () {
-                Navigator.pushNamed(context, RouteName.notificationScreen);
-              },
-              icon: Icon(
-                Icons.notifications_none,
-                size: compactDimens.medium1,
-              ),
-            ),
+            _buildNotificationButton(),
           ],
         ),
         body: RefreshIndicator(

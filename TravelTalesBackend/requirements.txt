@@ -11,3 +11,5 @@ python-jose
 pydantic[email]
 passlib
 bcrypt==4.0.1
+firebase-admin
+APScheduler

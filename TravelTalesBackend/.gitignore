@@ -3,3 +3,4 @@ venv/
 .env
 media/
 **/__pycache__/
+firebase_key.json
