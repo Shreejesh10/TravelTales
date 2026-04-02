@@ -6,6 +6,7 @@ import 'package:traveltales/api/api.dart';
 import 'package:traveltales/core/model/user_info.dart';
 import 'package:traveltales/core/route_config/route_names.dart';
 import 'package:traveltales/core/ui/components/actionDialogBox.dart';
+import 'package:traveltales/core/ui/components/app_flushbar.dart';
 import 'package:traveltales/core/ui/components/textField/commonTextField.dart';
 import 'package:traveltales/core/ui/components/textField/emailTextField.dart';
 import 'package:traveltales/core/ui/components/textField/passwordTextField.dart';
@@ -87,16 +88,14 @@ class _SettingsScreenState extends State<SettingsScreen> {
 
       await logout();
 
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text("Profile updated successfully")),
-      );
+      AppFlushbar.success(context, "Profile updated successfully");
     } catch (e) {
       if (!mounted) return;
 
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text(e.toString().replaceFirst("Exception: ", "")),
-        ),
+      AppFlushbar.errorFrom(
+        context,
+        e,
+        fallbackMessage: "Failed to update profile.",
       );
     } finally {
       if (mounted) {
@@ -112,23 +111,17 @@ class _SettingsScreenState extends State<SettingsScreen> {
     final confirm = _confirmPasswordController.text.trim();
 
     if (current.isEmpty || newPass.isEmpty || confirm.isEmpty) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text("All fields are required")),
-      );
+      AppFlushbar.info(context, "All fields are required");
       return;
     }
 
     if (newPass.length < 6) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text("Password must be at least 6 characters")),
-      );
+      AppFlushbar.info(context, "Password must be at least 6 characters");
       return;
     }
 
     if (newPass != confirm) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text("Passwords do not match")),
-      );
+      AppFlushbar.info(context, "Passwords do not match");
       return;
     }
 
@@ -146,9 +139,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
 
       Navigator.pop(context);
 
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text("Password changed successfully")),
-      );
+      AppFlushbar.success(context, "Password changed successfully");
 
 
       await logout(); //logout after password Change
@@ -156,10 +147,10 @@ class _SettingsScreenState extends State<SettingsScreen> {
     } catch (e) {
       if (!mounted) return;
 
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text(e.toString().replaceFirst("Exception: ", "")),
-        ),
+      AppFlushbar.errorFrom(
+        context,
+        e,
+        fallbackMessage: "Failed to change password.",
       );
     } finally {
       if (mounted) {
@@ -199,9 +190,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                   final name = _nameController.text.trim();
 
                   if (name.isEmpty) {
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      const SnackBar(content: Text("Name cannot be empty")),
-                    );
+                    AppFlushbar.info(context, "Name cannot be empty");
                     return;
                   }
 
@@ -231,9 +220,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                   final email = _emailController.text.trim();
 
                   if (email.isEmpty || !email.contains("@")) {
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      const SnackBar(content: Text("Enter a valid email")),
-                    );
+                    AppFlushbar.info(context, "Enter a valid email");
                     return;
                   }
 

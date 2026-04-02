@@ -4,6 +4,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:traveltales/core/model/genre_model.dart';
 import 'package:traveltales/core/route_config/route_names.dart';
+import 'package:traveltales/core/ui/components/app_flushbar.dart';
 import 'package:traveltales/core/ui/localization/sharedRes.dart';
 
 import '../../api/api.dart';
@@ -57,10 +58,9 @@ class _PreferenceScreenState extends State<PreferenceScreen> {
 
   Future<void> _onNext() async {
     if (_selectedIds.isEmpty) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text("Please select at least one category to continue"),
-        ),
+      AppFlushbar.info(
+        context,
+        "Please select at least one category to continue",
       );
       return;
     }
@@ -71,11 +71,21 @@ class _PreferenceScreenState extends State<PreferenceScreen> {
       await saveUserPreferencesByIds(_selectedIds.toList());
 
       if (!mounted) return;
-      Navigator.pushNamed(context, RouteName.dashBoardScreen);
+      Navigator.pushNamed(
+        context,
+        RouteName.dashBoardScreen,
+        arguments: {
+          'index': 0,
+          'refreshHome': true,
+          'successMessage': 'Preference updated',
+        },
+      );
     } catch (e) {
       if (!mounted) return;
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text("Failed to save: $e")),
+      AppFlushbar.errorFrom(
+        context,
+        e,
+        fallbackMessage: "Failed to save preferences.",
       );
     } finally {
       if (mounted) {

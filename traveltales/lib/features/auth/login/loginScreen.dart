@@ -5,6 +5,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:provider/provider.dart';
 import 'package:traveltales/api/api.dart';
 import 'package:traveltales/core/route_config/route_names.dart';
+import 'package:traveltales/core/ui/components/app_flushbar.dart';
 import 'package:traveltales/core/ui/components/textField/emailTextField.dart';
 import 'package:traveltales/core/ui/components/textField/passwordTextField.dart';
 import 'package:traveltales/core/ui/localization/sharedRes.dart';
@@ -49,12 +50,10 @@ class LoginScreenState extends State<LoginScreen> {
     if (!mounted) return;
 
     if (!success) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text(
-            authProvider.errorMessage ?? "Check your email and password and try again",
-          ),
-        ),
+      AppFlushbar.error(
+        context,
+        authProvider.errorMessage ?? '',
+        fallbackMessage: "Check your email and password and try again",
       );
       return;
     }

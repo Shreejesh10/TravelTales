@@ -1,5 +1,6 @@
 import 'package:curved_navigation_bar/curved_navigation_bar.dart';
 import 'package:flutter/material.dart';
+import 'package:traveltales/core/ui/components/app_flushbar.dart';
 import 'package:traveltales/features/eventsScreen/eventCreatingScreen/eventCreatingScreen.dart';
 import 'package:traveltales/features/eventsScreen/eventsScreen.dart';
 import 'package:traveltales/features/homeScreen/homeScreen.dart';
@@ -14,6 +15,8 @@ class CompanyDashboardScreen extends StatefulWidget {
 
 class _CompanyDashboardScreenState extends State<CompanyDashboardScreen> {
   int _currentIndex = 0;
+  bool _isInitialized = false;
+  String? _pendingSuccessMessage;
 
   final List<Widget> _pages = const [
     HomeScreen(),
@@ -28,6 +31,38 @@ class _CompanyDashboardScreenState extends State<CompanyDashboardScreen> {
     setState(() {
       _currentIndex = index;
     });
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+
+    if (_isInitialized) return;
+
+    final args = ModalRoute.of(context)?.settings.arguments;
+    if (args is int) {
+      _currentIndex = args;
+    } else if (args is Map) {
+      final index = args['index'];
+      final successMessage = args['successMessage'];
+
+      if (index is int) {
+        _currentIndex = index;
+      }
+      if (successMessage is String && successMessage.trim().isNotEmpty) {
+        _pendingSuccessMessage = successMessage;
+      }
+    }
+
+    if (_pendingSuccessMessage != null) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        if (!mounted || _pendingSuccessMessage == null) return;
+        AppFlushbar.success(context, _pendingSuccessMessage!);
+        _pendingSuccessMessage = null;
+      });
+    }
+
+    _isInitialized = true;
   }
 
   @override

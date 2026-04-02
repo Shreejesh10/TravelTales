@@ -5,7 +5,9 @@ import 'package:traveltales/api/bookmarkAPI.dart';
 import 'package:traveltales/api/destinationAPI.dart';
 import 'package:traveltales/core/model/destination_model.dart';
 import 'package:traveltales/core/route_config/route_names.dart';
+import 'package:traveltales/core/ui/components/app_flushbar.dart';
 import 'package:traveltales/core/ui/components/destinationCard.dart';
+import 'package:traveltales/core/ui/components/shimmerView.dart';
 import 'package:traveltales/core/ui/components/viewAllRow.dart';
 import 'package:traveltales/core/ui/localization/sharedRes.dart';
 import 'package:traveltales/core/ui/resources/theme/appColors.dart';
@@ -23,6 +25,8 @@ class _DestinationDetailScreenState extends State<DestinationDetailScreen> {
   late Future<List<Destination>> recommendedFuture;
   bool _isLoaded = false;
   bool isDescriptionExpanded = false;
+  bool isSafetyTipsExpanded = false;
+  bool isHighlightsExpanded = false;
   bool isBookmarked = false;
   bool isBookmarkLoading = false;
   int? currentDestinationId;
@@ -66,12 +70,18 @@ class _DestinationDetailScreenState extends State<DestinationDetailScreen> {
       if (isBookmarked) {
         await removeBookmark(destinationId);
         isBookmarked = false;
+        AppFlushbar.error(context, "Bookmark removed");
       } else {
         await addBookmark(destinationId);
         isBookmarked = true;
+        AppFlushbar.success(context, "Bookmark added");
       }
     } catch (e) {
-      print("Bookmark error: $e");
+      AppFlushbar.errorFrom(
+        context,
+        e,
+        fallbackMessage: "Couldn't update bookmark. Please try again.",
+      );
     }
 
     setState(() => isBookmarkLoading = false);
@@ -131,7 +141,7 @@ class _DestinationDetailScreenState extends State<DestinationDetailScreen> {
         future: destinationFuture,
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
-            return const Center(child: CircularProgressIndicator());
+            return _buildLoadingShimmer();
           }
 
           if (snapshot.hasError || snapshot.data == null) {
@@ -154,6 +164,117 @@ class _DestinationDetailScreenState extends State<DestinationDetailScreen> {
     );
   }
 
+  Widget _buildLoadingShimmer() {
+    final screenHeight = 1.sh;
+
+    Widget recommendationCard() {
+      return Container(
+        width: 170.w,
+        padding: EdgeInsets.all(10.w),
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(18.r),
+        ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            ShimmerView(width: double.infinity, height: 140.h, radius: 16),
+            SizedBox(height: 12.h),
+            ShimmerView(width: 110.w, height: 14.h, radius: 8),
+            SizedBox(height: 8.h),
+            ShimmerView(width: 80.w, height: 12.h, radius: 8),
+          ],
+        ),
+      );
+    }
+
+    return Stack(
+      children: [
+        ShimmerView(
+          width: double.infinity,
+          height: screenHeight * 0.3,
+          radius: 0,
+        ),
+        Padding(
+          padding: EdgeInsets.only(top: screenHeight * 0.25),
+          child: Container(
+            width: double.infinity,
+            padding: EdgeInsets.all(12.w),
+            decoration: BoxDecoration(
+              color: AppColors.getDetailBackgroundColor(context),
+              borderRadius: BorderRadius.vertical(top: Radius.circular(25.r)),
+            ),
+            child: ListView(
+              children: [
+                Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    ShimmerView(width: 135.w, height: 170.h, radius: 12),
+                    SizedBox(width: 12.w),
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          ShimmerView(width: 140.w, height: 18.h, radius: 8),
+                          SizedBox(height: 10.h),
+                          ShimmerView(width: 110.w, height: 12.h, radius: 8),
+                          SizedBox(height: 12.h),
+                          Row(
+                            children: [
+                              Expanded(
+                                child: ShimmerView(
+                                  width: double.infinity,
+                                  height: 82.h,
+                                  radius: 14,
+                                ),
+                              ),
+                              SizedBox(width: 8.w),
+                              Expanded(
+                                child: ShimmerView(
+                                  width: double.infinity,
+                                  height: 82.h,
+                                  radius: 14,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
+                SizedBox(height: 12.h),
+                ShimmerView(width: 130.w, height: 18.h, radius: 8),
+                SizedBox(height: 8.h),
+                ShimmerView(width: double.infinity, height: 70.h, radius: 12),
+                SizedBox(height: 10.h),
+                ShimmerView(width: double.infinity, height: 56.h, radius: 12),
+                SizedBox(height: 10.h),
+                ShimmerView(width: double.infinity, height: 18.h, radius: 8),
+                SizedBox(height: 8.h),
+                ShimmerView(width: double.infinity, height: 18.h, radius: 8),
+                SizedBox(height: 8.h),
+                ShimmerView(width: double.infinity, height: 18.h, radius: 8),
+                SizedBox(height: 16.h),
+                ShimmerView(width: 150.w, height: 18.h, radius: 8),
+                SizedBox(height: 12.h),
+                SizedBox(
+                  height: 220.h,
+                  child: ListView.separated(
+                    scrollDirection: Axis.horizontal,
+                    itemCount: 3,
+                    separatorBuilder: (_, __) => SizedBox(width: 12.w),
+                    itemBuilder: (_, __) => recommendationCard(),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+
   Widget _buildPage(
     Destination destination,
     String backdrop,
@@ -173,7 +294,7 @@ class _DestinationDetailScreenState extends State<DestinationDetailScreen> {
           padding: EdgeInsets.only(top: screenHeight * 0.25),
           child: Container(
             width: double.infinity,
-            padding: EdgeInsets.all(12.w),
+            padding: EdgeInsets.fromLTRB(12.w, 18.h, 12.w, 18.h),
             decoration: BoxDecoration(
               color: AppColors.getDetailBackgroundColor(context),
               borderRadius: BorderRadius.vertical(top: Radius.circular(25.r)),
@@ -199,27 +320,27 @@ class _DestinationDetailScreenState extends State<DestinationDetailScreen> {
                             child: frontImage.isNotEmpty
                                 ? Image.network(
                                     "$API_URL$frontImage",
-                                    height: 170.h,
-                                    width: 135.w,
+                                    height: 182.h,
+                                    width: 138.w,
                                     fit: BoxFit.cover,
                                     errorBuilder: (_, __, ___) {
                                       return Image.asset(
                                         'assets/images/Annapurna.png',
-                                        height: 170.h,
-                                        width: 135.w,
+                                        height: 182.h,
+                                        width: 138.w,
                                         fit: BoxFit.cover,
                                       );
                                     },
                                   )
                                 : Image.asset(
                                     'assets/images/Annapurna.png',
-                                    height: 170.h,
-                                    width: 135.w,
+                                    height: 182.h,
+                                    width: 138.w,
                                     fit: BoxFit.cover,
                                   ),
                           ),
 
-                          const SizedBox(width: 12),
+                          SizedBox(width: 14.w),
                           Expanded(
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
@@ -227,13 +348,15 @@ class _DestinationDetailScreenState extends State<DestinationDetailScreen> {
                                 Text(
                                   destination.placeName,
                                   style: TextStyle(
-                                    fontSize: 18.sp,
+                                    fontSize: 20.sp,
                                     fontWeight: FontWeight.bold,
+                                    height: 1.25,
                                   ),
                                 ),
 
-                                4.h.verticalSpace,
+                                8.h.verticalSpace,
                                 Row(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
                                     Icon(
                                       Icons.location_on,
@@ -241,21 +364,25 @@ class _DestinationDetailScreenState extends State<DestinationDetailScreen> {
                                       color: AppColors.getIconColors(context),
                                     ),
                                     4.w.horizontalSpace,
-                                    Text(
-                                      destination.location,
-                                      style: TextStyle(
-                                        fontSize: 12.sp,
-                                        fontWeight: FontWeight.w500,
-                                        color: AppColors.getSmallTextColor(
-                                          context,
+                                    Expanded(
+                                      child: Text(
+                                        destination.location,
+                                        style: TextStyle(
+                                          fontSize: 12.sp,
+                                          fontWeight: FontWeight.w500,
+                                          color: AppColors.getSmallTextColor(
+                                            context,
+                                          ),
+                                          height: 1.35,
                                         ),
+                                        maxLines: 2,
+                                        overflow: TextOverflow.ellipsis,
                                       ),
                                     ),
                                   ],
                                 ),
 
-                                8.h.verticalSpace,
-                                SizedBox(height: 4.h),
+                                SizedBox(height: 16.h),
                                 Row(
                                   children: [
                                     Expanded(
@@ -294,13 +421,13 @@ class _DestinationDetailScreenState extends State<DestinationDetailScreen> {
                           ),
                         ],
                       ),
-                      SizedBox(height: 12.h),
+                      SizedBox(height: 18.h),
                       ViewAllRow(
                         firstText: SharedRes.strings(context).aboutThePlace,
                         onPressed: () {},
                         isViewAll: false,
                       ),
-                      SizedBox(height: 4.h),
+                      SizedBox(height: 8.h),
                       Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
@@ -311,12 +438,12 @@ class _DestinationDetailScreenState extends State<DestinationDetailScreen> {
                                 ? TextOverflow.visible
                                 : TextOverflow.ellipsis,
                             style: TextStyle(
-                              fontSize: 13.sp,
+                              fontSize: 13.5.sp,
                               color: Colors.grey,
-                              height: 1.4,
+                              height: 1.45,
                             ),
                           ),
-                          SizedBox(height: 4.h),
+                          SizedBox(height: 8.h),
                           GestureDetector(
                             onTap: () {
                               setState(() {
@@ -334,12 +461,12 @@ class _DestinationDetailScreenState extends State<DestinationDetailScreen> {
                           ),
                         ],
                       ),
-                      SizedBox(height: 8.h),
+                      SizedBox(height: 14.h),
                       _bestSeasonCard(
                         seasonText: destination.extraInfo.bestTimeToVisit,
                       ),
 
-                      SizedBox(height: 10.h),
+                      SizedBox(height: 16.h),
                       _infoRow(
                         mainText: SharedRes.strings(context).attraction,
                         contentText: destination.extraInfo.attractions.join(
@@ -354,16 +481,44 @@ class _DestinationDetailScreenState extends State<DestinationDetailScreen> {
                         mainText: SharedRes.strings(context).accommodation,
                         contentText: destination.extraInfo.accommodation,
                       ),
-                      _infoRow(
-                        mainText: SharedRes.strings(context).safetyTips,
-                        contentText: destination.extraInfo.safetyTips.join(
-                          ", ",
+                      SizedBox(height: 4.h),
+                      _contentBox(
+                        context,
+                        heading: SharedRes.strings(context).safetyTips,
+                        icon: Icons.health_and_safety_outlined,
+                        isExpanded: isSafetyTipsExpanded,
+                        onTap: () {
+                          setState(() {
+                            isSafetyTipsExpanded = !isSafetyTipsExpanded;
+                          });
+                        },
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: destination.extraInfo.safetyTips.isNotEmpty
+                              ? destination.extraInfo.safetyTips
+                                  .map((tip) => _bulletItem(tip))
+                                  .toList()
+                              : [_bulletItem("No safety tips available")],
                         ),
                       ),
-                      _infoRow(
-                        mainText: SharedRes.strings(context).highlights,
-                        contentText: destination.extraInfo.highlights.join(
-                          ", ",
+                      SizedBox(height: 10.h),
+                      _contentBox(
+                        context,
+                        heading: SharedRes.strings(context).highlights,
+                        icon: Icons.auto_awesome_outlined,
+                        isExpanded: isHighlightsExpanded,
+                        onTap: () {
+                          setState(() {
+                            isHighlightsExpanded = !isHighlightsExpanded;
+                          });
+                        },
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: destination.extraInfo.highlights.isNotEmpty
+                              ? destination.extraInfo.highlights
+                                  .map((highlight) => _bulletItem(highlight))
+                                  .toList()
+                              : [_bulletItem("No highlights available")],
                         ),
                       ),
 
@@ -380,6 +535,7 @@ class _DestinationDetailScreenState extends State<DestinationDetailScreen> {
                         },
                       ),
 
+                      SizedBox(height: 8.h),
                       SizedBox(
                         height: 220.h,
                         child: FutureBuilder(
@@ -387,8 +543,40 @@ class _DestinationDetailScreenState extends State<DestinationDetailScreen> {
                           builder: (context, snapshot) {
                             if (snapshot.connectionState ==
                                 ConnectionState.waiting) {
-                              return const Center(
-                                child: CircularProgressIndicator(),
+                              return ListView.separated(
+                                scrollDirection: Axis.horizontal,
+                                itemCount: 3,
+                                separatorBuilder: (_, __) => SizedBox(width: 12.w),
+                                itemBuilder: (_, __) => Container(
+                                  width: 170.w,
+                                  padding: EdgeInsets.all(10.w),
+                                  decoration: BoxDecoration(
+                                    color: Colors.white,
+                                    borderRadius: BorderRadius.circular(18.r),
+                                  ),
+                                  child: Column(
+                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    children: [
+                                      ShimmerView(
+                                        width: double.infinity,
+                                        height: 140.h,
+                                        radius: 16,
+                                      ),
+                                      SizedBox(height: 12.h),
+                                      ShimmerView(
+                                        width: 110.w,
+                                        height: 14.h,
+                                        radius: 8,
+                                      ),
+                                      SizedBox(height: 8.h),
+                                      ShimmerView(
+                                        width: 80.w,
+                                        height: 12.h,
+                                        radius: 8,
+                                      ),
+                                    ],
+                                  ),
+                                ),
                               );
                             }
 
@@ -452,24 +640,62 @@ class _DestinationDetailScreenState extends State<DestinationDetailScreen> {
 
   Widget _infoRow({required String mainText, required String contentText}) {
     return Padding(
-      padding: EdgeInsets.only(bottom: 4.h),
-      child: Row(
+      padding: EdgeInsets.only(bottom: 10.h),
+      child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
             mainText,
-            style: TextStyle(fontSize: 13.sp, fontWeight: FontWeight.w600),
+            style: TextStyle(
+              fontSize: 13.sp,
+              fontWeight: FontWeight.w700,
+            ),
           ),
-          6.w.horizontalSpace,
+          SizedBox(height: 4.h),
+          Text(
+            contentText,
+            maxLines: 3,
+            overflow: TextOverflow.ellipsis,
+            style: TextStyle(
+              fontSize: 12.5.sp,
+              color: AppColors.getSmallTextColor(context),
+              height: 1.3,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _bulletItem(String text) {
+    return Padding(
+      padding: EdgeInsets.only(bottom: 10.h),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Container(
+            margin: EdgeInsets.only(top: 2.h),
+            height: 18.h,
+            width: 18.h,
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(6.r),
+              border: Border.all(color: const Color(0xFF22C55E)),
+              color: const Color(0xFFECFDF5),
+            ),
+            child: const Icon(
+              Icons.check,
+              size: 12,
+              color: Color(0xFF22C55E),
+            ),
+          ),
+          SizedBox(width: 10.w),
           Expanded(
             child: Text(
-              contentText,
-              maxLines: 2,
-              overflow: TextOverflow.ellipsis,
+              text,
               style: TextStyle(
-                fontSize: 12.sp,
+                fontSize: 13.sp,
+                height: 1.35,
                 color: AppColors.getSmallTextColor(context),
-                height: 1.25,
               ),
             ),
           ),
@@ -478,12 +704,99 @@ class _DestinationDetailScreenState extends State<DestinationDetailScreen> {
     );
   }
 
-  Widget _bestSeasonCard({required String seasonText}) {
+  Widget _contentBox(
+    BuildContext context, {
+    required String heading,
+    required bool isExpanded,
+    required VoidCallback onTap,
+    required Widget child,
+    required IconData icon,
+  }) {
     return Container(
-      padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 12.h),
+      width: double.infinity,
+      padding: EdgeInsets.all(16.w),
       decoration: BoxDecoration(
         color: AppColors.getContainerBoxColor(context),
-        borderRadius: BorderRadius.circular(12.r),
+        borderRadius: BorderRadius.circular(14.r),
+        border: Border.all(
+          color: Theme.of(context).dividerColor.withOpacity(0.08),
+        ),
+        boxShadow: [
+          BoxShadow(
+            blurRadius: 10,
+            offset: const Offset(0, 4),
+            color: Colors.black.withOpacity(0.05),
+          ),
+        ],
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          InkWell(
+            borderRadius: BorderRadius.circular(12.r),
+            onTap: onTap,
+            child: Padding(
+              padding: EdgeInsets.symmetric(vertical: 2.h),
+              child: Row(
+                children: [
+                  Icon(
+                    icon,
+                    size: 20,
+                    color: AppColors.getIconColors(context),
+                  ),
+                  SizedBox(width: 8.w),
+                  Expanded(
+                    child: Text(
+                      heading,
+                      style: TextStyle(
+                        fontSize: 16.sp,
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
+                  ),
+                  AnimatedRotation(
+                    turns: isExpanded ? 0 : -0.5,
+                    duration: const Duration(milliseconds: 200),
+                    child: Icon(
+                      Icons.keyboard_arrow_up,
+                      color: AppColors.getIconColors(context),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+          AnimatedCrossFade(
+            duration: const Duration(milliseconds: 250),
+            crossFadeState:
+                isExpanded ? CrossFadeState.showFirst : CrossFadeState.showSecond,
+            firstChild: Padding(
+              padding: EdgeInsets.only(top: 16.h),
+              child: child,
+            ),
+            secondChild: const SizedBox.shrink(),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _bestSeasonCard({required String seasonText}) {
+    return Container(
+      padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 14.h),
+      decoration: BoxDecoration(
+        color: AppColors.getContainerBoxColor(context),
+        borderRadius: BorderRadius.circular(14.r),
+        border: Border.all(
+          color: Theme.of(context).dividerColor.withOpacity(0.08),
+        ),
+        boxShadow: [
+          BoxShadow(
+            blurRadius: 10,
+            offset: const Offset(0, 4),
+            color: Colors.black.withOpacity(0.05),
+          ),
+        ],
       ),
       child: Row(
         children: [
@@ -495,7 +808,7 @@ class _DestinationDetailScreenState extends State<DestinationDetailScreen> {
             ),
             child: Icon(
               Icons.calendar_month,
-              size: 24.sp,
+              size: 22.sp,
               color: AppColors.getIconColors(context),
             ),
           ),
@@ -511,8 +824,9 @@ class _DestinationDetailScreenState extends State<DestinationDetailScreen> {
                 seasonText,
                 style: TextStyle(
                   fontSize: 13.sp,
-                  fontWeight: FontWeight.bold,
+                  fontWeight: FontWeight.w600,
                   color: Colors.grey,
+                  height: 1.35,
                 ),
               ),
             ],
@@ -533,7 +847,7 @@ class _DestinationDetailScreenState extends State<DestinationDetailScreen> {
       onTap: onTap,
       borderRadius: BorderRadius.circular(14.r),
       child: Container(
-        padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 12.h),
+        padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 14.h),
         decoration: BoxDecoration(
           boxShadow: [
             BoxShadow(
@@ -549,7 +863,7 @@ class _DestinationDetailScreenState extends State<DestinationDetailScreen> {
           mainAxisSize: MainAxisSize.min,
           children: [
             Icon(icon, size: 20.sp, color: iconColor),
-            SizedBox(height: 8.h),
+            SizedBox(height: 10.h),
             Text(
               value,
               overflow: TextOverflow.ellipsis,

@@ -4,6 +4,7 @@ import 'package:traveltales/api/api.dart';
 import 'package:traveltales/core/model/pending_company_model.dart';
 import 'package:traveltales/core/route_config/route_names.dart';
 import 'package:traveltales/core/ui/components/actionDialogBox.dart';
+import 'package:traveltales/core/ui/components/app_flushbar.dart';
 import 'package:traveltales/core/ui/components/textField/commonTextField.dart';
 import 'package:traveltales/core/ui/resources/theme/appColors.dart';
 
@@ -50,11 +51,7 @@ class _UserManagementScreenState extends State<UserManagementScreen> {
 
       Navigator.pushNamed(context, RouteName.adminDashboardScreen);
 
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text("Company approved successfully"),
-        ),
-      );
+      AppFlushbar.success(context, "Company approved successfully");
 
       await _reloadPendingCompanies();
     } catch (e) {
@@ -62,10 +59,10 @@ class _UserManagementScreenState extends State<UserManagementScreen> {
 
       Navigator.pushNamed(context, RouteName.adminDashboardScreen);
 
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text("Failed to approve company: $e"),
-        ),
+      AppFlushbar.errorFrom(
+        context,
+        e,
+        fallbackMessage: "Couldn't approve the company. Please try again.",
       );
     }
   }
@@ -74,11 +71,7 @@ class _UserManagementScreenState extends State<UserManagementScreen> {
     final reason = _rejectTextEditingController.text.trim();
 
     if (reason.isEmpty) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text("Please enter rejection reason"),
-        ),
-      );
+      AppFlushbar.info(context, "Please enter rejection reason");
       return;
     }
 
@@ -90,11 +83,7 @@ class _UserManagementScreenState extends State<UserManagementScreen> {
       Navigator.pushNamed(context, RouteName.adminDashboardScreen);
       _rejectTextEditingController.clear();
 
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text("Company rejected successfully"),
-        ),
-      );
+      AppFlushbar.success(context, "Company rejected successfully");
 
       await _reloadPendingCompanies();
     } catch (e) {
@@ -102,10 +91,10 @@ class _UserManagementScreenState extends State<UserManagementScreen> {
 
       Navigator.of(context).pop();
 
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text("Failed to reject company: $e"),
-        ),
+      AppFlushbar.errorFrom(
+        context,
+        e,
+        fallbackMessage: "Couldn't reject the company. Please try again.",
       );
     }
   }

@@ -14,6 +14,22 @@ class AppColors {
   static const secondaryColor = Color(0xFF0A2A4A);
   static const richTextColor = Color(0xFF0A2A4A);
   static const darkRichTextColor = Color(0xFFF7FCFF);
+  static const shimmerLightBaseColor = Color(0xFFE0E0E0);
+  static const shimmerDarkBaseColor = Color(0xFF2C4759);
+  static const shimmerLightHighlightColor = Color(0xFFF5F5F5);
+  static const shimmerDarkHighlightColor = Color(0xFF45627A);
+
+  static Color getShimmerBaseColor(BuildContext context) {
+    return Theme.of(context).brightness == Brightness.light
+        ? shimmerLightBaseColor
+        : shimmerDarkBaseColor;
+
+  }
+  static Color getShimmerHighlightColor(BuildContext context) {
+    return Theme.of(context).brightness == Brightness.light
+        ? shimmerLightHighlightColor
+        : shimmerDarkHighlightColor;
+  }
 
   static Color getRichTextColor(BuildContext context) {
     return Theme.of(context).brightness == Brightness.light

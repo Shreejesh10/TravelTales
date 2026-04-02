@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:traveltales/api/api.dart';
 import 'package:traveltales/core/route_config/route_names.dart';
+import 'package:traveltales/core/ui/components/app_flushbar.dart';
 import 'package:traveltales/core/ui/components/button.dart';
 import 'package:traveltales/core/ui/components/textField/emailTextField.dart';
 import 'package:traveltales/core/ui/components/textField/passwordTextField.dart';
@@ -50,14 +51,11 @@ class _SignUpScreenState extends State<SignUpScreen> {
 
       if (!mounted) return;
 
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text(
-            isCompany
-                ? "Your Account is undergoing review, wait till admin verify your account"
-                : "User account created successfully",
-          ),
-        ),
+      AppFlushbar.success(
+        context,
+        isCompany
+            ? "Your account is under review. Please wait for admin approval."
+            : "User account created successfully",
       );
 
       Navigator.pushReplacementNamed(
@@ -67,8 +65,10 @@ class _SignUpScreenState extends State<SignUpScreen> {
     } catch (e) {
       if (!mounted) return;
 
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text("SignUp failed: $e")),
+      AppFlushbar.errorFrom(
+        context,
+        e,
+        fallbackMessage: "Signup failed. Please try again.",
       );
     }
   }

@@ -4,6 +4,7 @@ import 'package:traveltales/api/api.dart';
 import 'package:traveltales/core/model/booking_model.dart';
 import 'package:traveltales/core/model/event_model.dart';
 import 'package:traveltales/core/route_config/route_names.dart';
+import 'package:traveltales/core/ui/components/app_flushbar.dart';
 import 'package:traveltales/core/ui/components/button.dart';
 import 'package:traveltales/core/ui/components/functions/dateTime/app_formatters.dart';
 import 'package:traveltales/core/ui/components/shimmerView.dart';
@@ -68,16 +69,16 @@ class _EventsScreenState extends State<EventsScreen> {
           _reloadEvents();
 
           if (mounted) {
-            ScaffoldMessenger.of(context).showSnackBar(
-              const SnackBar(content: Text("Event deleted successfully")),
-            );
+            AppFlushbar.success(context, "Event deleted successfully");
           }
         } catch (e) {
           print("Delete failed: $e");
 
           if (mounted) {
-            ScaffoldMessenger.of(context).showSnackBar(
-              const SnackBar(content: Text("Failed to delete event")),
+            AppFlushbar.error(
+              context,
+              "Failed to delete event",
+              fallbackMessage: "Couldn't delete the event. Please try again.",
             );
           }
         }

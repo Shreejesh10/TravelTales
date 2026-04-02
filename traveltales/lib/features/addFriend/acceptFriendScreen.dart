@@ -5,6 +5,7 @@ import 'package:traveltales/api/friendsApi.dart';
 import 'package:traveltales/core/model/friend_request_model.dart';
 import 'package:traveltales/core/model/user_info.dart';
 import 'package:traveltales/core/ui/components/actionDialogBox.dart';
+import 'package:traveltales/core/ui/components/app_flushbar.dart';
 import 'package:traveltales/core/ui/resources/theme/appColors.dart';
 
 class AcceptFriendScreen extends StatefulWidget {
@@ -82,18 +83,14 @@ class _AcceptFriendScreenState extends State<AcceptFriendScreen> {
         _requests.removeWhere((request) => request.id == requestId);
       });
 
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text("Friend request accepted"),
-        ),
-      );
+      AppFlushbar.success(context, "Friend request accepted");
     } catch (e) {
       if (!mounted) return;
 
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text(e.toString().replaceFirst("Exception: ", "")),
-        ),
+      AppFlushbar.errorFrom(
+        context,
+        e,
+        fallbackMessage: "Failed to accept friend request.",
       );
     } finally {
       if (!mounted) return;

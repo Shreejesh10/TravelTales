@@ -25,6 +25,7 @@ class _AnalyticsScreenState extends State<AnalyticsScreen> {
   int ongoingEvents = 0;
   int totalBookedEvents = 0;
   int totalDestinations = 0;
+  int totalEvents = 0;
 
   List<_TopCompanyData> topCompanies = [];
   List<_TopEventData> topBookedEvents = [];
@@ -49,13 +50,20 @@ class _AnalyticsScreenState extends State<AnalyticsScreen> {
       final List<Booking> bookings = await bookingApi.getAllBookings();
 
       final now = DateTime.now();
+      final today = DateTime(now.year, now.month, now.day);
 
       final int ongoingCount = events.where((event) {
-        return !event.fromDate.isAfter(now) && !event.toDate.isBefore(now);
+        final eventEnd = DateTime(
+          event.toDate.year,
+          event.toDate.month,
+          event.toDate.day,
+        );
+        return !eventEnd.isBefore(today);
       }).length;
 
       final int bookedCount = bookings.length;
       final int destinationCount = destinations.length;
+      final int totalEventCount = events.length;
 
       final Map<int, int> bookingCountByEventId = {};
 
@@ -70,10 +78,20 @@ class _AnalyticsScreenState extends State<AnalyticsScreen> {
         final int bookingCount = entry.value;
 
         final Event? matchedEvent = _findEventById(events, eventId);
+        final destination = matchedEvent?.destination;
+        final imagePath = destination != null &&
+                destination.extraInfo.backdropPath.isNotEmpty
+            ? destination.extraInfo.backdropPath.first
+            : '';
 
         return _TopEventData(
           eventId: eventId,
           title: matchedEvent?.title ?? 'Unknown Event',
+          destinationName: destination?.placeName ?? 'Unknown Destination',
+          imageUrl: imagePath.isNotEmpty
+              ? (imagePath.startsWith('http') ? imagePath : '$API_URL$imagePath')
+              : '',
+          difficultyText: destination?.extraInfo.difficultyLevel ?? 'Normal',
           totalBookings: bookingCount,
         );
       }).toList();
@@ -112,6 +130,7 @@ class _AnalyticsScreenState extends State<AnalyticsScreen> {
         ongoingEvents = ongoingCount;
         totalBookedEvents = bookedCount;
         totalDestinations = destinationCount;
+        totalEvents = totalEventCount;
         topBookedEvents = topEvents.take(5).toList();
         topCompanies = companies.take(5).toList();
         _isLoading = false;
@@ -174,6 +193,7 @@ class _AnalyticsScreenState extends State<AnalyticsScreen> {
                   _analyticsCardShimmer(context),
                   _analyticsCardShimmer(context),
                   _analyticsCardShimmer(context),
+                  _analyticsCardShimmer(context),
                 ]
                     : [
                   _analyticsCard(
@@ -190,6 +210,11 @@ class _AnalyticsScreenState extends State<AnalyticsScreen> {
                     context,
                     title: "Total Destinations",
                     value: totalDestinations.toString(),
+                  ),
+                  _analyticsCard(
+                    context,
+                    title: "Total Events",
+                    value: totalEvents.toString(),
                   ),
                 ],
               ),
@@ -483,9 +508,16 @@ class _AnalyticsScreenState extends State<AnalyticsScreen> {
                             const Text("No booking data found")
                           else
                             ...topBookedEvents.map(
-                                  (event) => _eventRow(
-                                event.title,
-                                event.totalBookings.toString(),
+                                  (event) => Padding(
+                                padding: const EdgeInsets.only(bottom: 12),
+                                child: _bookedEventsCard(
+                                  context,
+                                  imageAsset: event.imageUrl,
+                                  title: event.destinationName,
+                                  organizerText:
+                                      "Booked ${event.totalBookings} times",
+                                  difficultyText: event.difficultyText,
+                                ),
                               ),
                             ),
                         ],
@@ -713,25 +745,100 @@ class _AnalyticsScreenState extends State<AnalyticsScreen> {
     );
   }
 
-  Widget _eventRow(String title, String value) {
-    return Padding(
-      padding: const EdgeInsets.only(bottom: 28),
+  Widget _bookedEventsCard(
+    BuildContext context, {
+    required String imageAsset,
+    required String title,
+    required String organizerText,
+    required String difficultyText,
+  }) {
+    return Container(
+      padding: const EdgeInsets.all(12),
+      decoration: BoxDecoration(
+        color: Theme.of(context).brightness == Brightness.light
+            ? AppColors.containerBoxColor
+            : AppColors.darkContainerBoxColor,
+        borderRadius: BorderRadius.circular(14),
+      ),
       child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          Expanded(
-            child: Text(
-              title,
-              style: const TextStyle(fontSize: 14),
-              overflow: TextOverflow.ellipsis,
-            ),
+          ClipRRect(
+            borderRadius: BorderRadius.circular(12),
+            child: imageAsset.isNotEmpty
+                ? Image.network(
+                    imageAsset,
+                    height: 54,
+                    width: 54,
+                    fit: BoxFit.cover,
+                    errorBuilder: (_, __, ___) {
+                      return Image.asset(
+                        "assets/images/Annapurna.png",
+                        height: 54,
+                        width: 54,
+                        fit: BoxFit.cover,
+                      );
+                    },
+                  )
+                : Image.asset(
+                    "assets/images/Annapurna.png",
+                    height: 54,
+                    width: 54,
+                    fit: BoxFit.cover,
+                  ),
           ),
           const SizedBox(width: 12),
-          Text(
-            value,
-            style: const TextStyle(
-              fontSize: 14,
-              fontWeight: FontWeight.w500,
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  title,
+                  style: const TextStyle(
+                    fontSize: 14,
+                    fontWeight: FontWeight.w700,
+                  ),
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                ),
+                const SizedBox(height: 4),
+                Row(
+                  children: [
+                    const Icon(
+                      Icons.verified_outlined,
+                      size: 14,
+                      color: Colors.green,
+                    ),
+                    const SizedBox(width: 6),
+                    Expanded(
+                      child: Text(
+                        organizerText,
+                        style: const TextStyle(
+                          fontSize: 11,
+                          color: Colors.grey,
+                        ),
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                    ),
+                  ],
+                ),
+              ],
+            ),
+          ),
+          const SizedBox(width: 10),
+          Container(
+            padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
+            decoration: BoxDecoration(
+              color: AppColors.difficultyBgColor(difficultyText),
+              borderRadius: BorderRadius.circular(99),
+            ),
+            child: Text(
+              difficultyText,
+              style: TextStyle(
+                fontSize: 11,
+                fontWeight: FontWeight.w700,
+                color: AppColors.difficultyColor(difficultyText),
+              ),
             ),
           ),
         ],
@@ -746,8 +853,12 @@ class _AnalyticsScreenState extends State<AnalyticsScreen> {
         required String email,
         required String value,
       }) {
-    final bool hasValidImage =
-        imageUrl.isNotEmpty && imageUrl.startsWith('http');
+    final String resolvedImageUrl = imageUrl.isEmpty
+        ? ''
+        : imageUrl.startsWith('http')
+            ? imageUrl
+            : '$API_URL$imageUrl';
+    final bool hasValidImage = resolvedImageUrl.isNotEmpty;
 
     return Padding(
       padding: const EdgeInsets.only(bottom: 18),
@@ -756,7 +867,7 @@ class _AnalyticsScreenState extends State<AnalyticsScreen> {
           CircleAvatar(
             radius: 18,
             backgroundColor: Colors.grey.shade200,
-            backgroundImage: hasValidImage ? NetworkImage(imageUrl) : null,
+            backgroundImage: hasValidImage ? NetworkImage(resolvedImageUrl) : null,
             child: !hasValidImage
                 ? const Icon(Icons.person, size: 18)
                 : null,
@@ -816,11 +927,17 @@ class _TopCompanyData {
 class _TopEventData {
   final int eventId;
   final String title;
+  final String destinationName;
+  final String imageUrl;
+  final String difficultyText;
   final int totalBookings;
 
   _TopEventData({
     required this.eventId,
     required this.title,
+    required this.destinationName,
+    required this.imageUrl,
+    required this.difficultyText,
     required this.totalBookings,
   });
 }

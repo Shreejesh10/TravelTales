@@ -8,6 +8,7 @@ import 'package:traveltales/core/model/event_model.dart';
 import 'package:traveltales/core/route_config/route_names.dart';
 import 'package:traveltales/core/ui/components/button.dart';
 import 'package:traveltales/core/ui/components/functions/dateTime/app_formatters.dart';
+import 'package:traveltales/core/ui/components/shimmerView.dart';
 import 'package:traveltales/core/ui/components/viewAllRow.dart';
 import 'package:traveltales/core/ui/localization/sharedRes.dart';
 import 'package:traveltales/core/ui/resources/theme/appColors.dart';
@@ -35,6 +36,7 @@ class _EventDetailScreenState extends State<EventDetailScreen> {
   bool isDescriptionExpanded = false;
   bool isEventDateExpanded = false;
   bool isChecklistExpanded = false;
+  String? _userRole;
 
   Event get event => widget.event;
 
@@ -43,6 +45,15 @@ class _EventDetailScreenState extends State<EventDetailScreen> {
   void initState() {
     super.initState();
     _bookingsFuture = _bookingService.getMyBookings();
+    _loadUserRole();
+  }
+
+  Future<void> _loadUserRole() async {
+    final role = await storage.read(key: 'roles');
+    if (!mounted) return;
+    setState(() {
+      _userRole = role;
+    });
   }
 
   @override
@@ -396,12 +407,20 @@ class _EventDetailScreenState extends State<EventDetailScreen> {
       bottomNavigationBar: FutureBuilder<List<Booking>>(
         future: _bookingsFuture,
         builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return Padding(
+              padding: EdgeInsets.fromLTRB(16.w, 0, 16.w, 18.h),
+              child: _priceBottomBarShimmer(),
+            );
+          }
+
           if (!snapshot.hasData) return const SizedBox.shrink();
 
           final today = _dateOnly(DateTime.now());
           final isExpired = _dateOnly(event.toDate).isBefore(today);
+          final isCompanyUser = _userRole == 'company';
 
-          if (isExpired) {
+          if (isExpired || isCompanyUser) {
             return const SizedBox.shrink();
           }
 
@@ -483,6 +502,46 @@ class _EventDetailScreenState extends State<EventDetailScreen> {
                 text: SharedRes.strings(context).bookNow,
               ),
             ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _priceBottomBarShimmer() {
+    return SafeArea(
+      top: false,
+      child: Container(
+        padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 14.h),
+        decoration: BoxDecoration(
+          color: AppColors.getContainerBoxColor(context),
+          borderRadius: BorderRadius.circular(24.r),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withOpacity(0.12),
+              blurRadius: 20,
+              offset: const Offset(0, 8),
+            ),
+          ],
+          border: Border.all(
+            color: Theme.of(context).dividerColor.withOpacity(0.08),
+          ),
+        ),
+        child: Row(
+          children: [
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  ShimmerView(width: 80.w, height: 13.h, radius: 6),
+                  SizedBox(height: 6.h),
+                  ShimmerView(width: 90.w, height: 24.h, radius: 8),
+                ],
+              ),
+            ),
+            SizedBox(width: 14.w),
+            ShimmerView(width: 160.w, height: 54.h, radius: 16),
           ],
         ),
       ),

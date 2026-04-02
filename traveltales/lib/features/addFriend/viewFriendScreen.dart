@@ -5,6 +5,7 @@ import 'package:traveltales/api/friendsApi.dart';
 import 'package:traveltales/core/model/friend_request_model.dart';
 import 'package:traveltales/core/model/user_info.dart';
 import 'package:traveltales/core/ui/components/actionDialogBox.dart';
+import 'package:traveltales/core/ui/components/app_flushbar.dart';
 import 'package:traveltales/core/ui/resources/theme/appColors.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
@@ -87,13 +88,15 @@ class _ViewAllFriendScreenState extends State<ViewAllFriendScreen> {
         : friend.userId;
   }
 
-  Future<void> _removeFriend(int friendUserId) async {
+  Future<void> _removeFriend(FriendModel friend) async {
+    final friendUserId = _getOtherUserId(friend);
+
     setState(() {
       _removingFriendIds.add(friendUserId);
     });
 
     try {
-      await FriendApi.removeFriend(friendUserId: friendUserId);
+      await FriendApi.removeFriend(friendshipId: friend.id);
 
       if (!mounted) return;
 
@@ -104,18 +107,14 @@ class _ViewAllFriendScreenState extends State<ViewAllFriendScreen> {
         _friendUsers.remove(friendUserId);
       });
 
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text("Friend removed successfully"),
-        ),
-      );
+      AppFlushbar.success(context, "Friend removed successfully");
     } catch (e) {
       if (!mounted) return;
 
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text(e.toString().replaceFirst("Exception: ", "")),
-        ),
+      AppFlushbar.errorFrom(
+        context,
+        e,
+        fallbackMessage: "Failed to remove friend.",
       );
     } finally {
       if (!mounted) return;
@@ -126,13 +125,13 @@ class _ViewAllFriendScreenState extends State<ViewAllFriendScreen> {
     }
   }
 
-  void _showRemoveDialog(int friendUserId, String name) {
+  void _showRemoveDialog(FriendModel friend, String name) {
     showAppActionDialog(
       context: context,
       title: 'Remove Friend',
       onConfirm: () {
         Navigator.pop(context);
-        _removeFriend(friendUserId);
+        _removeFriend(friend);
       },
       contentWidget: [
         Text(
@@ -247,7 +246,7 @@ class _ViewAllFriendScreenState extends State<ViewAllFriendScreen> {
           imageUrl: imageUrl,
           isRemoving: isRemoving,
           onRemove: () {
-            _showRemoveDialog(otherUserId, name);
+            _showRemoveDialog(friend, name);
           },
         );
       },

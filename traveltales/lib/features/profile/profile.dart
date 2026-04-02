@@ -16,6 +16,7 @@ import 'package:traveltales/core/model/friend_request_model.dart';
 import 'package:traveltales/core/model/user_info.dart';
 import 'package:traveltales/core/route_config/route_names.dart';
 import 'package:traveltales/core/ui/components/actionDialogBox.dart';
+import 'package:traveltales/core/ui/components/app_flushbar.dart';
 import 'package:traveltales/core/ui/components/functions/dateTime/app_formatters.dart';
 import 'package:traveltales/core/ui/components/languageDialog.dart';
 import 'package:traveltales/core/ui/components/shimmerView.dart';
@@ -179,13 +180,13 @@ class _ProfileScreenState extends State<ProfileScreen> {
         profilePhotoUrl = uploadedUrl;
       });
 
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text("Profile picture updated!")),
-      );
+      AppFlushbar.success(context, "Profile picture updated!");
     } catch (e) {
       if (!mounted) return;
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text("Could not update photo: $e")),
+      AppFlushbar.errorFrom(
+        context,
+        e,
+        fallbackMessage: "Could not update profile photo.",
       );
       log("Could not update photo: $e");
     } finally {
@@ -216,6 +217,36 @@ class _ProfileScreenState extends State<ProfileScreen> {
     }
 
     return File(result.path);
+  }
+
+  String _formatEventDate(DateTime date) {
+    const months = [
+      'January',
+      'February',
+      'March',
+      'April',
+      'May',
+      'June',
+      'July',
+      'August',
+      'September',
+      'October',
+      'November',
+      'December',
+    ];
+
+    final day = date.day;
+    final suffix =
+        (day >= 11 && day <= 13)
+            ? 'th'
+            : switch (day % 10) {
+              1 => 'st',
+              2 => 'nd',
+              3 => 'rd',
+              _ => 'th',
+            };
+
+    return '$day$suffix ${months[date.month - 1]}';
   }
 
   Widget _buildProfileLoadingShimmer() {
@@ -530,8 +561,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
                             context,
                             imageAsset: imageUrl,
                             title: destination.placeName,
-                            statusText:
-                            "${booking.status == "pending" ? "Pending" : "Completed"} ${event.toDate.toString().split('T').first}",
+                            statusText: booking.status == "pending"
+                                ? "Coming on ${_formatEventDate(event.fromDate)}"
+                                : "Completed on ${_formatEventDate(event.toDate)}",
                             organizerText:
                             "Booked for ${booking.totalPeople} people",
                             difficultyText:

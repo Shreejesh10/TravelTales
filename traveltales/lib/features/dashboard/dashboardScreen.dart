@@ -1,8 +1,11 @@
 import 'package:curved_navigation_bar/curved_navigation_bar.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:traveltales/core/ui/components/app_flushbar.dart';
 import 'package:traveltales/features/bookedEventsDetail/bookedEventHomeScreen.dart';
 import 'package:traveltales/features/eventsScreen/eventsScreen.dart';
 import 'package:traveltales/features/homeScreen/homeScreen.dart';
+import 'package:traveltales/features/homeScreen/home_provider.dart';
 import 'package:traveltales/features/profile/profile.dart';
 
 class DashboardScreen extends StatefulWidget {
@@ -15,6 +18,8 @@ class DashboardScreen extends StatefulWidget {
 class _DashboardScreenState extends State<DashboardScreen> {
   int _currentIndex = 0;
   bool _isInitialized = false;
+  String? _pendingSuccessMessage;
+  bool _shouldRefreshHome = false;
 
   final List<Widget> _pages = const [
     HomeScreen(),
@@ -28,10 +33,41 @@ class _DashboardScreenState extends State<DashboardScreen> {
     super.didChangeDependencies();
 
     if (!_isInitialized) {
-      final index = ModalRoute.of(context)?.settings.arguments as int?;
-      if (index != null) {
-        _currentIndex = index;
+      final args = ModalRoute.of(context)?.settings.arguments;
+      if (args is int) {
+        _currentIndex = args;
+      } else if (args is Map) {
+        final index = args['index'];
+        final successMessage = args['successMessage'];
+        final refreshHome = args['refreshHome'];
+
+        if (index is int) {
+          _currentIndex = index;
+        }
+        if (successMessage is String && successMessage.trim().isNotEmpty) {
+          _pendingSuccessMessage = successMessage;
+        }
+        if (refreshHome == true) {
+          _shouldRefreshHome = true;
+        }
       }
+
+      if (_shouldRefreshHome) {
+        WidgetsBinding.instance.addPostFrameCallback((_) {
+          if (!mounted) return;
+          context.read<HomeProvider>().refresh();
+          _shouldRefreshHome = false;
+        });
+      }
+
+      if (_pendingSuccessMessage != null) {
+        WidgetsBinding.instance.addPostFrameCallback((_) {
+          if (!mounted || _pendingSuccessMessage == null) return;
+          AppFlushbar.success(context, _pendingSuccessMessage!);
+          _pendingSuccessMessage = null;
+        });
+      }
+
       _isInitialized = true;
     }
   }

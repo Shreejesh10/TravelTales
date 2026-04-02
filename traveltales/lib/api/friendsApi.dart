@@ -116,12 +116,12 @@ class FriendApi {
 
   // Remove friend
   static Future<Map<String, dynamic>> removeFriend({
-    required int friendUserId,
+    required int friendshipId,
   }) async {
     final headers = await getHeaders();
 
     final response = await http.delete(
-      Uri.parse("$basePath/$friendUserId"),
+      Uri.parse("$basePath/$friendshipId"),
       headers: headers,
     );
 

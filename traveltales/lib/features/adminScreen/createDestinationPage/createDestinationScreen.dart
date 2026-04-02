@@ -6,8 +6,10 @@ import 'package:traveltales/api/destinationAPI.dart';
 import 'package:traveltales/core/model/destination_model.dart';
 import 'package:traveltales/core/route_config/route_names.dart';
 import 'package:traveltales/core/ui/components/actionDialogBox.dart';
+import 'package:traveltales/core/ui/components/app_flushbar.dart';
 import 'package:traveltales/core/ui/components/button.dart';
 import 'package:traveltales/core/ui/components/searchField.dart';
+import 'package:traveltales/core/ui/components/shimmerView.dart';
 import 'package:traveltales/core/ui/resources/theme/appColors.dart';
 import 'package:traveltales/features/adminScreen/createDestinationPage/createOrEditDialogBox.dart';
 import 'package:traveltales/features/adminScreen/createDestinationPage/destinationFormController.dart';
@@ -128,11 +130,58 @@ class _CreateDestinationScreenState extends State<CreateDestinationScreen> {
 
   Widget _buildBody() {
     if (_isLoadingDestinations || _isSearching) {
-      return const Center(
-        child: Padding(
-          padding: EdgeInsets.all(40),
-          child: CircularProgressIndicator(),
-        ),
+      return LayoutBuilder(
+        builder: (context, constraints) {
+          int crossAxisCount = (constraints.maxWidth / 220).floor();
+          crossAxisCount = crossAxisCount.clamp(1, 5);
+
+          return GridView.builder(
+            shrinkWrap: true,
+            physics: const NeverScrollableScrollPhysics(),
+            itemCount: crossAxisCount * 2,
+            gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+              crossAxisCount: crossAxisCount,
+              crossAxisSpacing: 16,
+              mainAxisSpacing: 16,
+              childAspectRatio: 0.78,
+            ),
+            itemBuilder: (context, index) {
+              return Container(
+                decoration: BoxDecoration(
+                  color: AppColors.getContainerBoxColor(context),
+                  borderRadius: BorderRadius.circular(10),
+                ),
+                child: Padding(
+                  padding: const EdgeInsets.all(12),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      ShimmerView(
+                        width: double.infinity,
+                        height: 150,
+                        radius: 10,
+                      ),
+                      const SizedBox(height: 12),
+                      ShimmerView(width: 120, height: 16, radius: 8),
+                      const SizedBox(height: 10),
+                      ShimmerView(width: 100, height: 13, radius: 8),
+                      const SizedBox(height: 8),
+                      ShimmerView(width: 90, height: 13, radius: 8),
+                      const Spacer(),
+                      Row(
+                        children: [
+                          ShimmerView(width: 35, height: 35, radius: 18),
+                          const SizedBox(width: 10),
+                          ShimmerView(width: 35, height: 35, radius: 18),
+                        ],
+                      ),
+                    ],
+                  ),
+                ),
+              );
+            },
+          );
+        },
       );
     }
 
@@ -366,20 +415,22 @@ Widget _destinationCard({
                           onConfirm: () async {
 
                             try {
-                               onDelete();
+                              onDelete();
 
                               if (!context.mounted) return;
 
-                              ScaffoldMessenger.of(context).showSnackBar(
-                                const SnackBar(
-                                  content: Text("Destination deleted successfully"),
-                                ),
+                              AppFlushbar.success(
+                                context,
+                                "Destination deleted successfully",
                               );
                             } catch (e) {
                               if (!context.mounted) return;
 
-                              ScaffoldMessenger.of(context).showSnackBar(
-                                SnackBar(content: Text("Failed: $e")),
+                              AppFlushbar.errorFrom(
+                                context,
+                                e,
+                                fallbackMessage:
+                                    "Couldn't delete the destination. Please try again.",
                               );
                             }
                           },

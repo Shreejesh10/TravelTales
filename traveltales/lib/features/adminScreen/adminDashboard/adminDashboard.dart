@@ -130,7 +130,8 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen> {
                       const SizedBox(width: 10),
                       const Text(
                         "Admin",
-                        style: TextStyle(fontWeight: FontWeight.w600),
+
+                        style: TextStyle(fontWeight: FontWeight.w600, color: Colors.black),
                       ),
                     ],
                   ),

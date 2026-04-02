@@ -3,6 +3,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:traveltales/api/api.dart';
 import 'package:traveltales/api/bookingAPI.dart';
 import 'package:traveltales/core/route_config/route_names.dart';
+import 'package:traveltales/core/ui/components/app_flushbar.dart';
 import 'package:traveltales/core/ui/components/button.dart';
 import 'package:traveltales/core/ui/localization/sharedRes.dart';
 import 'package:traveltales/core/ui/resources/theme/appColors.dart';
@@ -29,9 +30,7 @@ class _EventBookingScreenState extends State<EventBookingScreen> {
 
   Future<void> _handleEsewaPayment() async {
     if (!isEsewaSelected) {
-      ScaffoldMessenger.of(
-        context,
-      ).showSnackBar(const SnackBar(content: Text("Please select eSewa")));
+      AppFlushbar.info(context, "Please select eSewa");
       return;
     }
 
@@ -111,32 +110,33 @@ class _EventBookingScreenState extends State<EventBookingScreen> {
 
         if (updatedBooking != null &&
             updatedBooking.status.toLowerCase() == "completed") {
-          ScaffoldMessenger.of(
-            context,
-          ).showSnackBar(const SnackBar(content: Text("Payment successful")));
           Navigator.pushNamedAndRemoveUntil(
             context,
             RouteName.dashBoardScreen,
             (route) => false,
-            arguments: 1,
+            arguments: {
+              'index': 1,
+              'successMessage': 'Event booked successfully',
+            },
           );
         } else if (updatedBooking != null &&
             updatedBooking.status.toLowerCase() == "pending") {
-          ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(
-              content: Text(
-                "Payment received, but verification is still pending",
-              ),
-            ),
+          AppFlushbar.info(
+            context,
+            "Payment received, but verification is still pending",
           );
         } else {
-          ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(content: Text("Payment verification failed")),
+          AppFlushbar.error(
+            context,
+            "Payment verification failed",
+            fallbackMessage: "We couldn't verify your payment. Please try again.",
           );
         }
       } else {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text("Payment cancelled or failed")),
+        AppFlushbar.error(
+          context,
+          "Payment cancelled or failed",
+          fallbackMessage: "Payment was cancelled or could not be completed.",
         );
       }
     } catch (e) {
@@ -148,9 +148,11 @@ class _EventBookingScreenState extends State<EventBookingScreen> {
       final message = e.toString().contains("Missing eSewa success payload")
           ? "Payment finished, but the success data was missing."
           : "Something went wrong while confirming your payment.";
-      ScaffoldMessenger.of(
+      AppFlushbar.error(
         context,
-      ).showSnackBar(SnackBar(content: Text(message)));
+        message,
+        fallbackMessage: "Something went wrong while confirming your payment.",
+      );
     }
   }
 

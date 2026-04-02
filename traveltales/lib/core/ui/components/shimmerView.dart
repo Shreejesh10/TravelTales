@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:shimmer/shimmer.dart';
+import 'package:traveltales/core/ui/resources/theme/appColors.dart';
 
 class ShimmerView extends StatelessWidget {
   final double width;
@@ -21,13 +22,13 @@ class ShimmerView extends StatelessWidget {
     return Container(
       margin: margin,
       child: Shimmer.fromColors(
-        baseColor: Colors.grey.shade300,
-        highlightColor: Colors.grey.shade100,
+        baseColor: AppColors.getShimmerBaseColor(context),
+        highlightColor: AppColors.getShimmerHighlightColor(context),
         child: Container(
           width: width,
           height: height,
           decoration: BoxDecoration(
-            color: Colors.white,
+            color: AppColors.getContainerBoxColor(context),
             borderRadius: BorderRadius.circular(radius.r),
           ),
         ),

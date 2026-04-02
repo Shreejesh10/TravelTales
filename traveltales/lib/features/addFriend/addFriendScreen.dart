@@ -7,6 +7,7 @@ import 'package:traveltales/api/api.dart';
 import 'package:traveltales/api/friendsApi.dart';
 import 'package:traveltales/core/model/friend_request_model.dart';
 import 'package:traveltales/core/model/user_info.dart';
+import 'package:traveltales/core/ui/components/app_flushbar.dart';
 import 'package:traveltales/core/ui/components/searchField.dart';
 import 'package:traveltales/core/ui/resources/theme/appColors.dart';
 
@@ -135,18 +136,14 @@ class _AddFriendScreenState extends State<AddFriendScreen> {
         _users = _users.where((user) => user.id != receiverId).toList();
       });
 
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text("Friend request sent"),
-        ),
-      );
+      AppFlushbar.success(context, "Friend request sent");
     } catch (e) {
       if (!mounted) return;
 
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text(e.toString().replaceFirst("Exception: ", "")),
-        ),
+      AppFlushbar.errorFrom(
+        context,
+        e,
+        fallbackMessage: "Failed to send friend request.",
       );
     } finally {
       if (!mounted) return;

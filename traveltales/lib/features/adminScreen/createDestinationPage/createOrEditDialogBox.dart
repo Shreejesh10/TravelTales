@@ -2,9 +2,11 @@ import 'dart:typed_data';
 
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:traveltales/api/api.dart';
 import 'package:traveltales/api/destinationAPI.dart';
 import 'package:traveltales/core/model/destination_model.dart';
 import 'package:traveltales/core/ui/components/actionDialogBox.dart';
+import 'package:traveltales/core/ui/components/app_flushbar.dart';
 import 'package:traveltales/core/ui/components/button.dart';
 import 'package:traveltales/core/ui/components/dropDownMenu.dart';
 import 'package:traveltales/core/ui/components/textField/commonTextField.dart';
@@ -35,6 +37,8 @@ class _CreateOrEditDestinationDialogContentState
   Uint8List? _backdropImageBytes;
   String? _frontImageName;
   String? _backdropImageName;
+  String? _existingFrontImagePath;
+  String? _existingBackdropImagePath;
 
   bool _isSubmitting = false;
 
@@ -75,6 +79,10 @@ class _CreateOrEditDestinationDialogContentState
     if (d == null) return;
 
     final extra = d.extraInfo;
+    _existingFrontImagePath =
+    extra.frontImagePath.isNotEmpty ? extra.frontImagePath.first : null;
+    _existingBackdropImagePath =
+    extra.backdropPath.isNotEmpty ? extra.backdropPath.first : null;
 
     form.placeName.text = d.placeName;
     form.location.text = d.location;
@@ -232,13 +240,18 @@ class _CreateOrEditDestinationDialogContentState
   }
 
   Future<void> _submit() async {
-    if (form.placeName.text.trim().isEmpty ||
-        form.location.text.trim().isEmpty ||
-        form.description.text.trim().isEmpty) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text("Place name, location and description are required."),
-        ),
+    if (form.placeName.text
+        .trim()
+        .isEmpty ||
+        form.location.text
+            .trim()
+            .isEmpty ||
+        form.description.text
+            .trim()
+            .isEmpty) {
+      AppFlushbar.info(
+        context,
+        "Place name, location and description are required.",
       );
       return;
     }
@@ -252,6 +265,7 @@ class _CreateOrEditDestinationDialogContentState
       final int? elevationValue = int.tryParse(
         elevationText.replaceAll(RegExp(r'[^0-9]'), ''),
       );
+      final existingExtra = widget.destination?.extraInfo;
 
       final Map<String, dynamic> body = {
         "place_name": form.placeName.text.trim(),
@@ -269,8 +283,12 @@ class _CreateOrEditDestinationDialogContentState
           "difficulty_level": form.difficulty.text.trim(),
           "duration": form.duration.text.trim(),
           "elevation": elevationValue != null ? [elevationValue] : [],
-          "backdrop_path": [],
-          "front_image_path": [],
+          "backdrop_path": widget.isEdit
+              ? List<String>.from(existingExtra?.backdropPath ?? [])
+              : [],
+          "front_image_path": widget.isEdit
+              ? List<String>.from(existingExtra?.frontImagePath ?? [])
+              : [],
         },
       };
 
@@ -313,20 +331,21 @@ class _CreateOrEditDestinationDialogContentState
 
       Navigator.pop(context, true);
 
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text(
-            widget.isEdit
-                ? "Destination updated successfully"
-                : "Destination added successfully",
-          ),
-        ),
+      AppFlushbar.success(
+        context,
+        widget.isEdit
+            ? "Destination updated successfully"
+            : "Destination added successfully",
       );
     } catch (e) {
       if (!mounted) return;
-      ScaffoldMessenger.of(
+      AppFlushbar.errorFrom(
         context,
-      ).showSnackBar(SnackBar(content: Text("Failed: $e")));
+        e,
+        fallbackMessage: widget.isEdit
+            ? "Couldn't update the destination. Please try again."
+            : "Couldn't add the destination. Please try again.",
+      );
     } finally {
       if (mounted) {
         setState(() {
@@ -362,7 +381,7 @@ class _CreateOrEditDestinationDialogContentState
                   onPressed: () {
                     Navigator.pop(context);
                   },
-                  icon: const Icon(Icons.close,  color: Colors.red,),
+                  icon: const Icon(Icons.close, color: Colors.red,),
 
                 ),
 
@@ -372,7 +391,8 @@ class _CreateOrEditDestinationDialogContentState
                       widget.isEdit
                           ? "Edit Destination Detail"
                           : "Write New Destination Detail",
-                      style: const TextStyle(fontSize: 22, fontWeight: FontWeight.w500),
+                      style: const TextStyle(
+                          fontSize: 22, fontWeight: FontWeight.w500),
                     ),
                   ),
                 ),
@@ -392,6 +412,7 @@ class _CreateOrEditDestinationDialogContentState
                             text: "Upload main image",
                             bytes: _frontImageBytes,
                             fileName: _frontImageName,
+                            existingImagePath: _existingFrontImagePath,
                             onTap: _pickFrontImage,
                           ),
                         ),
@@ -402,6 +423,7 @@ class _CreateOrEditDestinationDialogContentState
                             text: "Upload Back Drop Image",
                             bytes: _backdropImageBytes,
                             fileName: _backdropImageName,
+                            existingImagePath: _existingBackdropImagePath,
                             onTap: _pickBackdropImage,
                           ),
                         ),
@@ -500,7 +522,8 @@ class _CreateOrEditDestinationDialogContentState
                                 title: "Choose your destination genre",
                                 onConfirm: () {
                                   setState(() {
-                                    form.genre.text = _selectedGenres.join(", ");
+                                    form.genre.text =
+                                        _selectedGenres.join(", ");
                                   });
                                 },
                                 contentWidget: [
@@ -669,7 +692,14 @@ class _CreateOrEditDestinationDialogContentState
     required VoidCallback onTap,
     Uint8List? bytes,
     String? fileName,
+    String? existingImagePath,
   }) {
+    final imageUrl = existingImagePath == null || existingImagePath.isEmpty
+        ? null
+        : existingImagePath.startsWith('http')
+        ? existingImagePath
+        : '$API_URL$existingImagePath';
+
     return InkWell(
       onTap: onTap,
       borderRadius: BorderRadius.circular(14),
@@ -680,16 +710,30 @@ class _CreateOrEditDestinationDialogContentState
           borderRadius: BorderRadius.circular(14),
           border: Border.all(color: AppColors.getBorderColor(context)),
         ),
-        child: bytes != null
+        child: bytes != null || imageUrl != null
             ? Stack(
           children: [
             ClipRRect(
               borderRadius: BorderRadius.circular(14),
-              child: Image.memory(
+              child: bytes != null
+                  ? Image.memory(
                 bytes,
                 width: double.infinity,
                 height: double.infinity,
                 fit: BoxFit.cover,
+              )
+                  : Image.network(
+                imageUrl!,
+                width: double.infinity,
+                height: double.infinity,
+                fit: BoxFit.cover,
+                errorBuilder: (_, __, ___) {
+                  return Container(
+                    color: Colors.grey.shade200,
+                    alignment: Alignment.center,
+                    child: const Icon(Icons.image_not_supported),
+                  );
+                },
               ),
             ),
             Positioned(
@@ -706,7 +750,8 @@ class _CreateOrEditDestinationDialogContentState
                   borderRadius: BorderRadius.circular(8),
                 ),
                 child: Text(
-                  fileName ?? "Selected image",
+                  fileName ??
+                      (imageUrl != null ? "Current image" : "Selected image"),
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
                   style: const TextStyle(

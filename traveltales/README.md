@@ -20,3 +20,7 @@ flutter gen-l10n
 
 ### create splash screen
 dart run flutter_native_splash:create
+
+### for notification
+dart pub global activate flutterfire_cli
+flutterfire configure

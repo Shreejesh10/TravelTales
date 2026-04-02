@@ -3,6 +3,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:traveltales/api/api.dart';
 import 'package:traveltales/core/model/destination_model.dart';
 import 'package:traveltales/core/route_config/route_names.dart';
+import 'package:traveltales/core/ui/components/app_flushbar.dart';
 import 'package:traveltales/core/ui/components/button.dart';
 import 'package:traveltales/core/ui/components/functions/dateTime/datePickerFunction.dart';
 import 'package:traveltales/core/ui/components/searchField.dart';
@@ -132,65 +133,47 @@ class _EventCreatingScreenState extends State<EventCreatingScreen> {
 
   Future<void> _handleCreateEvent() async {
     if (_selectedDestination == null) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text("Please select a destination")),
-      );
+      AppFlushbar.info(context, "Please select a destination");
       return;
     }
 
     if (_titleController.text.trim().isEmpty) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text("Please enter event title")),
-      );
+      AppFlushbar.info(context, "Please enter event title");
       return;
     }
 
     if (_descriptionController.text.trim().isEmpty) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text("Please enter event description")),
-      );
+      AppFlushbar.info(context, "Please enter event description");
       return;
     }
 
     if (_meetingPointController.text.trim().isEmpty) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text("Please enter meeting point")),
-      );
+      AppFlushbar.info(context, "Please enter meeting point");
       return;
     }
 
     if (_whatToBringController.text.trim().isEmpty) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text("Please enter what to bring")),
-      );
+      AppFlushbar.info(context, "Please enter what to bring");
       return;
     }
 
     if (_fromDate == null) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text("Please select from date")),
-      );
+      AppFlushbar.info(context, "Please select from date");
       return;
     }
 
     if (_toDate == null) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text("Please select to date")),
-      );
+      AppFlushbar.info(context, "Please select to date");
       return;
     }
 
     if (_priceController.text.trim().isEmpty) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text("Please enter price")),
-      );
+      AppFlushbar.info(context, "Please enter price");
       return;
     }
 
     if (_maxPeopleController.text.trim().isEmpty) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text("Please enter maximum people")),
-      );
+      AppFlushbar.info(context, "Please enter maximum people");
       return;
     }
 
@@ -198,29 +181,21 @@ class _EventCreatingScreenState extends State<EventCreatingScreen> {
     final int? maxPeople = int.tryParse(_maxPeopleController.text.trim());
 
     if (price == null) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text("Price must be a valid number")),
-      );
+      AppFlushbar.info(context, "Price must be a valid number");
       return;
     }
 
     if (maxPeople == null) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text("Maximum people must be a valid number")),
-      );
+      AppFlushbar.info(context, "Maximum people must be a valid number");
       return;
     }
 
     if (_toDate!.isBefore(_fromDate!)) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text("To date cannot be before from date")),
-      );
+      AppFlushbar.info(context, "To date cannot be before from date");
       return;
     }
     if (_meetingTime == null) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text("Please select meeting time")),
-      );
+      AppFlushbar.info(context, "Please select meeting time");
       return;
     }
 
@@ -255,16 +230,21 @@ class _EventCreatingScreenState extends State<EventCreatingScreen> {
 
       if (!mounted) return;
 
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text("Event created successfully")),
+      Navigator.pushNamed(
+        context,
+        RouteName.companyDashboardScreen,
+        arguments: {
+          'index': 2,
+          'successMessage': 'Event created successfully',
+        },
       );
-
-      Navigator.pushNamed(context, RouteName.companyDashboardScreen, arguments: 1);
     } catch (e) {
       if (!mounted) return;
 
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text("Failed to create event: $e")),
+      AppFlushbar.errorFrom(
+        context,
+        e,
+        fallbackMessage: "Couldn't create the event. Please try again.",
       );
     } finally {
       if (mounted) {
