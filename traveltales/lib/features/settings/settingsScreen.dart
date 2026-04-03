@@ -23,9 +23,11 @@ class SettingsScreen extends StatefulWidget {
 class _SettingsScreenState extends State<SettingsScreen> {
   final TextEditingController _nameController = TextEditingController();
   final TextEditingController _emailController = TextEditingController();
-  final TextEditingController _currentPasswordController = TextEditingController();
+  final TextEditingController _currentPasswordController =
+      TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
-  final TextEditingController _confirmPasswordController = TextEditingController();
+  final TextEditingController _confirmPasswordController =
+      TextEditingController();
   String? userError;
   bool isLoading = false;
   UserInfo? me;
@@ -71,16 +73,20 @@ class _SettingsScreenState extends State<SettingsScreen> {
     }
   }
 
-
   Future<void> _updateUser({String? name, String? email}) async {
     setState(() {
       isLoading = true;
     });
 
     try {
+      final currentName = _normalizeName(me?.userName ?? "");
+      final currentEmail = me?.email.trim() ?? "";
+      final resolvedName = _normalizeName(name ?? _nameController.text);
+      final resolvedEmail = (email ?? _emailController.text).trim();
+
       await updateUser(
-        userName: name ?? _nameController.text.trim(),
-        email: email ?? _emailController.text.trim(),
+        userName: resolvedName.isNotEmpty ? resolvedName : currentName,
+        email: resolvedEmail.isNotEmpty ? resolvedEmail : currentEmail,
       );
       await _loadUser();
 
@@ -105,6 +111,11 @@ class _SettingsScreenState extends State<SettingsScreen> {
       }
     }
   }
+
+  String _normalizeName(String value) {
+    return value.replaceAll(RegExp(r'\s+'), ' ').trim();
+  }
+
   Future<void> _changePassword() async {
     final current = _currentPasswordController.text.trim();
     final newPass = _passwordController.text.trim();
@@ -130,10 +141,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
     });
 
     try {
-      await changePassword(
-        currentPassword: current,
-        newPassword: newPass,
-      );
+      await changePassword(currentPassword: current, newPassword: newPass);
 
       if (!mounted) return;
 
@@ -141,9 +149,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
 
       AppFlushbar.success(context, "Password changed successfully");
 
-
       await logout(); //logout after password Change
-
     } catch (e) {
       if (!mounted) return;
 
@@ -167,7 +173,8 @@ class _SettingsScreenState extends State<SettingsScreen> {
     Navigator.pushNamedAndRemoveUntil(
       context,
       AuthRouteName.loginScreen,
-          (route) => false,
+      (route) => false,
+      arguments: {"successMessage": "User logged out successfully"},
     );
   }
 
@@ -187,7 +194,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                 context: context,
                 title: "Change Name",
                 onConfirm: () {
-                  final name = _nameController.text.trim();
+                  final name = _normalizeName(_nameController.text);
 
                   if (name.isEmpty) {
                     AppFlushbar.info(context, "Name cannot be empty");
@@ -202,6 +209,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                     labelText: "Change Name",
                     hintText: "Enter your new name",
                     keyboardType: TextInputType.text,
+                    textCapitalization: TextCapitalization.words,
                   ),
                 ],
               );
@@ -231,7 +239,6 @@ class _SettingsScreenState extends State<SettingsScreen> {
                     controller: _emailController,
                     labelText: "Change Email",
                     hintText: SharedRes.strings(context).enterEmail,
-
                   ),
                 ],
               );
@@ -265,7 +272,6 @@ class _SettingsScreenState extends State<SettingsScreen> {
               );
             },
           ),
-
         ],
       ),
     );

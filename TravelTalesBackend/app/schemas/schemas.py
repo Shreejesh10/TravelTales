@@ -1,3 +1,5 @@
+import re
+
 from pydantic import BaseModel, EmailStr, Field, field_validator
 from datetime import datetime, time
 from typing import Literal, Optional, List, Dict, Any
@@ -8,6 +10,16 @@ class UserCreate(BaseModel):
     password: str 
     user_name: Optional[str] = None
     roles: Literal["company", "customer"] = "customer"
+
+    @field_validator("user_name")
+    @classmethod
+    def normalize_user_name(cls, value: Optional[str]) -> Optional[str]:
+        if value is None:
+            return value
+        normalized = re.sub(r"\s+", " ", value).strip()
+        if not normalized:
+            raise ValueError("User name cannot be empty.")
+        return normalized
     
 
 class UserLogin(BaseModel):
@@ -36,6 +48,16 @@ class UserResponse(BaseModel):
 class UserUpdate(BaseModel):
     user_name: Optional[str] = None
     email: EmailStr
+
+    @field_validator("user_name")
+    @classmethod
+    def normalize_user_name(cls, value: Optional[str]) -> Optional[str]:
+        if value is None:
+            return value
+        normalized = re.sub(r"\s+", " ", value).strip()
+        if not normalized:
+            raise ValueError("User name cannot be empty.")
+        return normalized
 
 class ChangePassword(BaseModel):
     current_password: str
@@ -191,6 +213,7 @@ class TravelEventUpdate(BaseModel):
 class TravelEventResponse(BaseModel):
     event_id: int
     company_user_id: int
+    company_name: Optional[str] = None
     title: str
     event_description: Optional[str] = None
     from_date: datetime
@@ -211,9 +234,29 @@ class TravelEventResponse(BaseModel):
 class BookingBase(BaseModel):
     event_id: int
     total_people: int = Field(..., gt=0)
+    friend_user_ids: List[int] = Field(default_factory=list)
+
+    @field_validator("friend_user_ids")
+    @classmethod
+    def validate_friend_user_ids(cls, value: List[int]) -> List[int]:
+        cleaned_ids = [friend_id for friend_id in value if friend_id > 0]
+        if len(cleaned_ids) != len(value):
+            raise ValueError("Friend ids must be greater than 0.")
+        if len(set(cleaned_ids)) != len(cleaned_ids):
+            raise ValueError("Duplicate friend ids are not allowed.")
+        return cleaned_ids
 
 class BookingCreate(BookingBase):
     pass
+
+
+class BookingInvitedFriendResponse(BaseModel):
+    id: int
+    user_name: Optional[str] = None
+    profile_picture_url: Optional[str] = None
+
+    class Config:
+        from_attributes = True
 
 
 class BookingResponse(BaseModel):
@@ -225,6 +268,7 @@ class BookingResponse(BaseModel):
     total_people: int
     status: str
     booked_at: datetime
+    invited_friends: List[BookingInvitedFriendResponse] = Field(default_factory=list)
 
     class Config:
         from_attributes = True

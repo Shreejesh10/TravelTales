@@ -25,6 +25,27 @@ class LoginScreenState extends State<LoginScreen> {
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
   final _formKey = GlobalKey<FormState>();
+  bool _hasHandledRouteMessage = false;
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+
+    if (_hasHandledRouteMessage) return;
+
+    final args = ModalRoute.of(context)?.settings.arguments;
+    if (args is Map) {
+      final successMessage = args['successMessage'];
+      if (successMessage is String && successMessage.trim().isNotEmpty) {
+        WidgetsBinding.instance.addPostFrameCallback((_) {
+          if (!mounted) return;
+          AppFlushbar.success(context, successMessage);
+        });
+      }
+    }
+
+    _hasHandledRouteMessage = true;
+  }
 
 
   @override

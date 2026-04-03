@@ -24,7 +24,10 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen> {
     Navigator.pushNamedAndRemoveUntil(
       context,
       AuthRouteName.loginScreen,
-          (route) => false,
+      (route) => false,
+      arguments: {
+        "successMessage": "User logged out successfully",
+      },
     );
   }
 

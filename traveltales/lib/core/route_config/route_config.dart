@@ -34,9 +34,15 @@ class RouteConfig {
 
     switch (screenName) {
       case AuthRouteName.loginScreen:
-        return MaterialPageRoute(builder: (_) => const LoginScreen());
+        return MaterialPageRoute(
+          builder: (_) => const LoginScreen(),
+          settings: settings,
+        );
       case AuthRouteName.signupScreen:
-        return MaterialPageRoute(builder: (_) => const SignUpScreen());
+        return MaterialPageRoute(
+          builder: (_) => const SignUpScreen(),
+          settings: settings,
+        );
 
       case RouteName.homeScreen:
         return MaterialPageRoute(builder: (_) => const HomeScreen());
@@ -63,9 +69,15 @@ class RouteConfig {
       case RouteName.bookedEventScreen:
         return MaterialPageRoute(builder: (_) => const BookedEventHomeScreen());
       case RouteName.companyDashboardScreen:
-        return MaterialPageRoute(builder: (_) => CompanyDashboardScreen());
+        return MaterialPageRoute(
+          builder: (_) => CompanyDashboardScreen(),
+          settings: settings,
+        );
       case RouteName.eventCreatingScreen:
-        return MaterialPageRoute(builder: (_) => EventCreatingScreen());
+        return MaterialPageRoute(
+          builder: (_) => EventCreatingScreen(),
+          settings: settings,
+        );
       case RouteName.eventDetailScreen:
         final event = settings.arguments as Event;
         return MaterialPageRoute(

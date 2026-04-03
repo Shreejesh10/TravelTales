@@ -51,16 +51,14 @@ class _SignUpScreenState extends State<SignUpScreen> {
 
       if (!mounted) return;
 
-      AppFlushbar.success(
-        context,
-        isCompany
-            ? "Your account is under review. Please wait for admin approval."
-            : "User account created successfully",
-      );
-
       Navigator.pushReplacementNamed(
         context,
         AuthRouteName.loginScreen,
+        arguments: {
+          'successMessage': isCompany
+              ? 'Your account is under review. Please wait for admin approval.'
+              : 'User signed up successfully',
+        },
       );
     } catch (e) {
       if (!mounted) return;

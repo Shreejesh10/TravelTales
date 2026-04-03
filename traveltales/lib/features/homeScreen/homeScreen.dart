@@ -159,6 +159,8 @@ class _HomeScreenState extends State<HomeScreen> {
         _buildSectionShimmer(),
         SizedBox(height: 16.h),
         _buildSectionShimmer(),
+        SizedBox(height: 16.h),
+        _buildSectionShimmer(),
       ],
     );
   }
@@ -345,7 +347,21 @@ class _HomeScreenState extends State<HomeScreen> {
               ),
               SizedBox(
                 height: 220.h,
-                child: buildDestinationList(homeProvider.all),
+                child: buildDestinationList(homeProvider.bestPlacesToVisit),
+              ),
+              ViewAllRow(
+                firstText: SharedRes.strings(context).quickGateway,
+                onPressed: () {
+                  Navigator.pushNamed(
+                    context,
+                    RouteName.viewAllScreen,
+                    arguments: SharedRes.strings(context).quickGateway,
+                  );
+                },
+              ),
+              SizedBox(
+                height: 220.h,
+                child: buildDestinationList(homeProvider.quickGetaways),
               ),
             ],
           ),

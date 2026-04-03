@@ -1,6 +1,6 @@
 from sqlalchemy.orm import Session, joinedload
 from app.schemas.schemas import TravelEventCreate, TravelEventUpdate
-from app.model.models import TravelEvent, Destination
+from app.model.models import TravelEvent, Destination, User
 from typing import List, Optional
 from app.services.notification_service import notify_new_event
 
@@ -36,7 +36,10 @@ def create_event(db: Session, company_user_id: int, event_data: TravelEventCreat
 def get_company_events(db: Session, company_user_id: int) -> List[TravelEvent]:
     return (
         db.query(TravelEvent)
-        .options(joinedload(TravelEvent.destination))
+        .options(
+            joinedload(TravelEvent.destination),
+            joinedload(TravelEvent.company).joinedload(User.company_profile),
+        )
         .filter(TravelEvent.company_user_id == company_user_id)
         .all()
     )
@@ -75,7 +78,10 @@ def delete_event(db: Session, event_id: int, company_user_id: int) -> bool:
 def get_event_by_id(db: Session, event_id: int) -> Optional[TravelEvent]:
     return (
         db.query(TravelEvent)
-        .options(joinedload(TravelEvent.destination))
+        .options(
+            joinedload(TravelEvent.destination),
+            joinedload(TravelEvent.company).joinedload(User.company_profile),
+        )
         .filter(TravelEvent.event_id == event_id)
         .first()
     )
@@ -83,7 +89,10 @@ def get_event_by_id(db: Session, event_id: int) -> Optional[TravelEvent]:
 def get_all_events(db: Session) -> List[TravelEvent]:
     return (
         db.query(TravelEvent)
-        .options(joinedload(TravelEvent.destination))
+        .options(
+            joinedload(TravelEvent.destination),
+            joinedload(TravelEvent.company).joinedload(User.company_profile),
+        )
         .order_by(TravelEvent.from_date.asc())
         .all()
     )

@@ -15,6 +15,7 @@ from app.services.friend_service import (
     send_friend_request,
     accept_friend_request,
     reject_friend_request,
+    cancel_friend_request,
     remove_friend,
     get_incoming_friend_requests,
     get_outgoing_friend_requests,
@@ -72,6 +73,23 @@ def reject_request(
     current_user: User = Depends(get_current_user)
 ):
     return reject_friend_request(
+        db=db,
+        current_user=current_user,
+        request_id=request_id
+    )
+
+
+@router.delete(
+    "/request/{request_id}",
+    response_model=FriendRequestResponse,
+    status_code=status.HTTP_200_OK
+)
+def cancel_request(
+    request_id: int,
+    db: Session = Depends(get_db),
+    current_user: User = Depends(get_current_user)
+):
+    return cancel_friend_request(
         db=db,
         current_user=current_user,
         request_id=request_id

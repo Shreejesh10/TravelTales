@@ -195,3 +195,50 @@ def send_tomorrow_booking_reminders(db: Session) -> int:
 
     logger.info("Sent %s tomorrow reminder notification(s).", sent_count)
     return sent_count
+
+
+def notify_friend_booking(
+    db: Session,
+    *,
+    booking: Booking,
+    referred_to_user_ids: list[int],
+) -> int:
+    booked_by_user = db.query(User).filter(User.id == booking.user_id).first()
+
+    if not referred_to_user_ids or not booked_by_user:
+        logger.info(
+            "Skipping friend booking notification because related users were not found."
+        )
+        return 0
+
+    referred_users = (
+        db.query(User)
+        .filter(User.id.in_(referred_to_user_ids))
+        .all()
+    )
+    tokens = _clean_tokens(user.fcm_token for user in referred_users)
+    if not tokens:
+        logger.info(
+            "Skipping friend booking notification for booking_id=%s because there are no tokens.",
+            booking.booking_id,
+        )
+        return 0
+
+    sent_count = send_push_notification_to_tokens(
+        tokens=tokens,
+        title="Event Booked For You",
+        body=f"Event has been booked by user {booked_by_user.user_name}.",
+        data={
+            "type": "friend_booking",
+            "booking_id": booking.booking_id,
+            "event_id": booking.event_id,
+            "booked_by_user_id": booking.user_id,
+            "referred_to_user_ids": ",".join(str(user_id) for user_id in referred_to_user_ids),
+        },
+    )
+    logger.info(
+        "Friend booking notification finished for booking_id=%s with %s successful send(s).",
+        booking.booking_id,
+        sent_count,
+    )
+    return sent_count

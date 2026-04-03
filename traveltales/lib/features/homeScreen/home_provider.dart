@@ -10,6 +10,8 @@ class HomeProvider extends ChangeNotifier {
 
   List<Destination> _recommended = [];
   List<Destination> _all = [];
+  List<Destination> _bestPlacesToVisit = [];
+  List<Destination> _quickGetaways = [];
   List<Genre> _genres = [];
 
   bool get isLoading => _isLoading;
@@ -17,6 +19,8 @@ class HomeProvider extends ChangeNotifier {
 
   List<Destination> get recommended => _recommended;
   List<Destination> get all => _all;
+  List<Destination> get bestPlacesToVisit => _bestPlacesToVisit;
+  List<Destination> get quickGetaways => _quickGetaways;
   List<Genre> get genres => _genres;
 
   Future<void> loadHomeData() async {
@@ -29,6 +33,10 @@ class HomeProvider extends ChangeNotifier {
       _recommended = await getRecommendedDestinations();
       _all = await getAllDestinations();
       _all.shuffle();
+      _quickGetaways = _all.where(isQuickGetawayDestination).toList();
+      _bestPlacesToVisit = _all
+          .where((destination) => !isQuickGetawayDestination(destination))
+          .toList();
       _genres = await fetchAllGenres();
 
       _hasLoaded = true;
@@ -48,6 +56,10 @@ class HomeProvider extends ChangeNotifier {
       _recommended = await getRecommendedDestinations();
       _all = await getAllDestinations();
       _all.shuffle();
+      _quickGetaways = _all.where(isQuickGetawayDestination).toList();
+      _bestPlacesToVisit = _all
+          .where((destination) => !isQuickGetawayDestination(destination))
+          .toList();
     } catch (e) {
       debugPrint("Refresh error: $e");
     }
@@ -55,4 +67,21 @@ class HomeProvider extends ChangeNotifier {
     _isLoading = false;
     notifyListeners();
   }
+}
+
+bool isQuickGetawayDestination(Destination destination) {
+  final duration = destination.extraInfo.duration.trim().toLowerCase();
+
+  if (duration.isEmpty) {
+    return false;
+  }
+
+  final firstNumber = RegExp(r'\d+').firstMatch(duration)?.group(0);
+  final days = firstNumber == null ? null : int.tryParse(firstNumber);
+
+  if (days == null) {
+    return false;
+  }
+
+  return days <= 2;
 }

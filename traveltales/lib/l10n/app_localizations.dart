@@ -221,6 +221,12 @@ abstract class AppLocalizations {
   /// **'Best Places to Visit Now'**
   String get bestPlaceToVisit;
 
+  /// No description provided for @quickGateway.
+  ///
+  /// In en, this message translates to:
+  /// **'Quick Gateway (1-3 days)'**
+  String get quickGateway;
+
   /// No description provided for @adventureAwaitsLetsGo.
   ///
   /// In en, this message translates to:

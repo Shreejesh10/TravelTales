@@ -72,6 +72,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get bestPlaceToVisit => 'Best Places to Visit Now';
 
   @override
+  String get quickGateway => 'Quick Gateway (1-3 days)';
+
+  @override
   String get adventureAwaitsLetsGo => 'Adventure Awaits Let\'s Go';
 
   @override

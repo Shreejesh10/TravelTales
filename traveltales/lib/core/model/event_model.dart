@@ -3,6 +3,7 @@ import 'package:traveltales/core/model/destination_model.dart';
 class Event {
   final int eventId;
   final int companyUserId;
+  final String companyName;
   final String title;
   final String eventDescription;
   final DateTime fromDate;
@@ -18,6 +19,7 @@ class Event {
   Event({
     required this.eventId,
     required this.companyUserId,
+    required this.companyName,
     required this.title,
     required this.eventDescription,
     required this.fromDate,
@@ -34,6 +36,7 @@ class Event {
   factory Event.fromJson(Map<String, dynamic> json) => Event(
     eventId: json["event_id"] ?? 0,
     companyUserId: json["company_user_id"] ?? 0,
+    companyName: json["company_name"] ?? "",
     title: json["title"] ?? "",
     eventDescription: json["event_description"] ?? "",
     fromDate: DateTime.parse(json["from_date"]),

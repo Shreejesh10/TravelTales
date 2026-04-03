@@ -90,6 +90,11 @@ class _EventsScreenState extends State<EventsScreen> {
     return DateTime(date.year, date.month, date.day);
   }
 
+  bool _shouldHideEventFromBookings(Booking booking) {
+    final status = booking.status.toLowerCase().trim();
+    return status != "failed";
+  }
+
   Widget _emptySection(String text) {
     return Container(
       width: double.infinity,
@@ -225,6 +230,7 @@ class _EventsScreenState extends State<EventsScreen> {
           final myBookings = snapshot.data![1] as List<Booking>;
 
           final bookedEventIds = myBookings
+              .where(_shouldHideEventFromBookings)
               .map((booking) => booking.eventId)
               .toSet();
 

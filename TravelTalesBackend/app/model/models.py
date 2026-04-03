@@ -3,7 +3,7 @@ import enum
 from app.utils.db_utils import Base
 from sqlalchemy import Column, ForeignKey, Integer,Text,String, Enum ,DateTime, UniqueConstraint, func, Boolean, ARRAY, Time, Float
 from sqlalchemy.dialects.postgresql import JSONB, ENUM as pgEnum
-from sqlalchemy.orm import relationship
+from sqlalchemy.orm import relationship, backref
 
 class UserRole(str, enum.Enum):
     CUSTOMER = "customer"
@@ -48,7 +48,10 @@ class Company(Base):
     address = Column(Text, nullable=True)
     verified_at = Column(DateTime(timezone=True), nullable=True)  # NULL = pending, timestamp = approved
 
-    user = relationship("User", backref="company") #done to navigate between company and user table without writing raw joints
+    user = relationship(
+        "User",
+        backref=backref("company_profile", uselist=False),
+    ) #done to navigate between company and user table without writing raw joints
 
 class Destination(Base):
     __tablename__ = "destination"
@@ -101,6 +104,13 @@ class TravelEvent(Base):
     destination = relationship("Destination")
     bookings = relationship("Booking", back_populates="event", cascade="all, delete-orphan")
 
+    @property
+    def company_name(self):
+        company_relation = getattr(self.company, "company_profile", None)
+        if company_relation is None:
+            return self.company.user_name if self.company is not None else None
+        return company_relation.company_name or self.company.user_name
+
 # Booking
 class Booking(Base):
     __tablename__ = "bookings"
@@ -119,6 +129,14 @@ class Booking(Base):
     user = relationship("User", back_populates="bookings")
     event = relationship("TravelEvent", back_populates="bookings")
     referrals = relationship("Referral", back_populates="booking", cascade="all, delete-orphan")
+
+    @property
+    def invited_friends(self):
+        invited_users = []
+        for referral in self.referrals:
+            if referral.referred_user is not None:
+                invited_users.append(referral.referred_user)
+        return invited_users
 
 
 class Referral(Base):

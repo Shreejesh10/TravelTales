@@ -3,8 +3,9 @@ from sqlalchemy.orm import Session, joinedload
 from sqlalchemy import func
 from typing import List, Optional
 
-from app.model.models import Booking, TravelEvent
+from app.model.models import Booking, Friend, Referral, TravelEvent
 from app.schemas.schemas import (BookingCreate, EsewaInitResponse)
+from app.services.notification_service import notify_friend_booking
 from uuid import uuid4
 import base64
 import hashlib
@@ -78,6 +79,29 @@ def create_booking(db: Session, user_id: int, booking_data: BookingCreate) -> Bo
                 detail=f"Only {available_seats} seat(s) left"
             )
 
+        for friend_user_id in booking_data.friend_user_ids:
+            if friend_user_id == user_id:
+                raise HTTPException(
+                    status_code=status.HTTP_400_BAD_REQUEST,
+                    detail="You cannot invite yourself."
+                )
+
+            friend_low = min(user_id, friend_user_id)
+            friend_high = max(user_id, friend_user_id)
+            friendship = (
+                db.query(Friend)
+                .filter(
+                    Friend.user_id == friend_low,
+                    Friend.friend_user_id == friend_high,
+                )
+                .first()
+            )
+            if not friendship:
+                raise HTTPException(
+                    status_code=status.HTTP_400_BAD_REQUEST,
+                    detail="One or more selected users are not in your friends list."
+                )
+
         total_price = float(event.price or 0) * booking_data.total_people
         transaction_uuid = f"BOOK-{uuid4().hex[:12]}"
 
@@ -92,6 +116,15 @@ def create_booking(db: Session, user_id: int, booking_data: BookingCreate) -> Bo
 
         db.add(new_booking)
         db.flush()
+
+        for friend_user_id in booking_data.friend_user_ids:
+            db.add(
+                Referral(
+                    referred_by=user_id,
+                    referred_to=friend_user_id,
+                    booking_id=new_booking.booking_id,
+                )
+            )
 
         _sync_event_closed_status(db, event)
 
@@ -111,7 +144,8 @@ def get_my_bookings(db: Session, user_id: int) -> List[Booking]:
     return (
         db.query(Booking)
         .options(
-            joinedload(Booking.event).joinedload(TravelEvent.destination)
+            joinedload(Booking.event).joinedload(TravelEvent.destination),
+            joinedload(Booking.referrals).joinedload(Referral.referred_user),
         )
         .filter(Booking.user_id == user_id)
         .order_by(Booking.booked_at.desc())
@@ -123,7 +157,8 @@ def get_booking_by_id(db: Session, booking_id: int, user_id: int) -> Optional[Bo
     return (
         db.query(Booking)
         .options(
-            joinedload(Booking.event).joinedload(TravelEvent.destination)
+            joinedload(Booking.event).joinedload(TravelEvent.destination),
+            joinedload(Booking.referrals).joinedload(Referral.referred_user),
         )
         .filter(
             Booking.booking_id == booking_id,
@@ -217,6 +252,8 @@ def handle_esewa_callback(db: Session, transaction_uuid: str, payment_status: st
     if not booking:
         raise HTTPException(status_code=404, detail="Booking not found for transaction_uuid")
 
+    was_completed = booking.status == "completed"
+
     if payment_status and payment_status.upper() == "COMPLETE":
         booking.status = "completed"
     else:
@@ -224,4 +261,18 @@ def handle_esewa_callback(db: Session, transaction_uuid: str, payment_status: st
 
     db.commit()
     db.refresh(booking)
+
+    if booking.status == "completed" and not was_completed:
+        referrals = (
+            db.query(Referral)
+            .filter(Referral.booking_id == booking.booking_id)
+            .all()
+        )
+        if referrals:
+            notify_friend_booking(
+                db,
+                booking=booking,
+                referred_to_user_ids=[referral.referred_to for referral in referrals],
+            )
+
     return booking

@@ -26,6 +26,7 @@ import 'package:traveltales/core/ui/components/viewAllRow.dart';
 import 'package:traveltales/core/ui/localization/sharedRes.dart';
 import 'package:traveltales/core/ui/resources/theme/appColors.dart';
 import 'package:traveltales/core/ui/resources/theme/dimens.dart';
+import 'package:traveltales/features/profile/company_events_booked.dart';
 
 class ProfileScreen extends StatefulWidget {
   const ProfileScreen({super.key});
@@ -67,6 +68,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
   Future<List<Booking>> _safeGetBookings() async {
     try {
+      if (_isCompanyUser) {
+        return await _bookingService.getAllBookings();
+      }
       return await _bookingService.getMyBookings();
     } catch (e) {
       log("Failed to load bookings: $e");
@@ -96,6 +100,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
         me = user;
         userError = null;
         isLoading = false;
+        _bookingsFuture = _safeGetBookings();
       });
     } catch (e) {
       if (!mounted) return;
@@ -152,7 +157,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
     Navigator.pushNamedAndRemoveUntil(
       context,
       AuthRouteName.loginScreen,
-          (route) => false,
+      (route) => false,
+      arguments: {
+        "successMessage": "User logged out successfully",
+      },
     );
   }
 
@@ -247,6 +255,102 @@ class _ProfileScreenState extends State<ProfileScreen> {
             };
 
     return '$day$suffix ${months[date.month - 1]}';
+  }
+
+  bool get _isCompanyUser => me?.roles.toLowerCase().trim() == "company";
+
+  String _formatCurrency(double amount) {
+    if (amount == amount.roundToDouble()) {
+      return "Rs ${amount.toStringAsFixed(0)}";
+    }
+    return "Rs ${amount.toStringAsFixed(2)}";
+  }
+
+  Widget _companyEarningsCard({
+    required double totalEarned,
+    required int totalCompletedBookings,
+    required int totalEventsHosted,
+  }) {
+    return Container(
+      width: double.infinity,
+      padding: EdgeInsets.all(18.w),
+      decoration: BoxDecoration(
+        color: AppColors.getContainerBoxColor(context),
+        borderRadius: BorderRadius.circular(18.r),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            children: [
+              Container(
+                padding: EdgeInsets.all(10.w),
+                decoration: BoxDecoration(
+                  color: Colors.green.withOpacity(0.12),
+                  borderRadius: BorderRadius.circular(14.r),
+                ),
+                child: const Icon(
+                  Icons.account_balance_wallet_outlined,
+                  color: Colors.green,
+                ),
+              ),
+              SizedBox(width: 12.w),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      "Total Money Earned",
+                      style: TextStyle(
+                        fontSize: 15.sp,
+                        fontWeight: FontWeight.w700,
+                      ),
+                    ),
+                    SizedBox(height: 4.h),
+                    Text(
+                      "From completed bookings on your events",
+                      style: TextStyle(
+                        fontSize: 12.sp,
+                        color: Colors.grey,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
+          SizedBox(height: 18.h),
+          Text(
+            _formatCurrency(totalEarned),
+            style: TextStyle(
+              fontSize: 28.sp,
+              fontWeight: FontWeight.w800,
+              color: Colors.green,
+            ),
+          ),
+          SizedBox(height: 14.h),
+          Row(
+            children: [
+              Expanded(
+                child: _infoRow(
+                  Icons.check_circle_outline,
+                  "$totalCompletedBookings completed bookings",
+                  Colors.green,
+                ),
+              ),
+              SizedBox(width: 10.w),
+              Expanded(
+                child: _infoRow(
+                  Icons.event_available_outlined,
+                  "$totalEventsHosted hosted events",
+                  Theme.of(context).colorScheme.primary,
+                ),
+              ),
+            ],
+          ),
+        ],
+      ),
+    );
   }
 
   Widget _buildProfileLoadingShimmer() {
@@ -412,8 +516,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
         ),
         actions: [
           IconButton(
-            onPressed: () {
-              Navigator.pushNamed(context, RouteName.addFriendScreen);
+            onPressed: () async {
+              await Navigator.pushNamed(context, RouteName.addFriendScreen);
+              if (!mounted) return;
+              await _loadStats();
             },
             icon: Icon(Icons.person_add, size: compactDimens.medium1),
           ),
@@ -466,8 +572,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     icon: Icons.person_outline,
                     value: isLoading ?"...": totalFriendsCount.toString(),
                     label: SharedRes.strings(context).totalFriends,
-                    onTap: () {
-                      Navigator.pushNamed(context, RouteName.totalFriendScreen);
+                    onTap: () async {
+                      await Navigator.pushNamed(context, RouteName.totalFriendScreen);
+                      if (!mounted) return;
+                      await _loadStats();
                     },
                   ),
                 ),
@@ -494,8 +602,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     icon: Icons.pending_outlined,
                     value: isLoading ? "...": pendingRequestCount.toString(),
                     label: SharedRes.strings(context).requestPending,
-                    onTap: () {
-                      Navigator.pushNamed(context, RouteName.acceptFriendScreen);
+                    onTap: () async {
+                      await Navigator.pushNamed(context, RouteName.acceptFriendScreen);
+                      if (!mounted) return;
+                      await _loadStats();
                     },
                   ),
                 ),
@@ -506,9 +616,22 @@ class _ProfileScreenState extends State<ProfileScreen> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 ViewAllRow(
-                  firstText: SharedRes.strings(context).recentBookedEvents,
-                  isViewAll: false,
-                  onPressed: (){},
+                  firstText: _isCompanyUser
+                      ? "Total Money Earned"
+                      : SharedRes.strings(context).recentBookedEvents,
+                  isViewAll: _isCompanyUser,
+                  onPressed: _isCompanyUser && me != null
+                      ? () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (_) => CompanyEventsBookedScreen(
+                                companyUserId: me!.id,
+                              ),
+                            ),
+                          );
+                        }
+                      : () {},
                 ),
                 SizedBox(height: 8.h),
                 FutureBuilder<List<dynamic>>(
@@ -522,7 +645,11 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     }
 
                     if (!snapshot.hasData) {
-                      return const Text("No bookings found");
+                      return Text(
+                        _isCompanyUser
+                            ? "No earnings data found"
+                            : "No bookings found",
+                      );
                     }
 
                     final bookings = snapshot.data![0] as List<Booking>;
@@ -531,6 +658,30 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     final eventMap = {
                       for (var e in events) e.eventId: e,
                     };
+
+                    if (_isCompanyUser) {
+                      final companyEvents = events
+                          .where((event) => event.companyUserId == me?.id)
+                          .toList();
+                      final companyEventIds = companyEvents
+                          .map((event) => event.eventId)
+                          .toSet();
+                      final completedCompanyBookings = bookings.where((booking) {
+                        return companyEventIds.contains(booking.eventId) &&
+                            booking.status.toLowerCase() == "completed";
+                      }).toList();
+
+                      final totalEarned = completedCompanyBookings.fold<double>(
+                        0,
+                        (sum, booking) => sum + booking.totalPrice,
+                      );
+
+                      return _companyEarningsCard(
+                        totalEarned: totalEarned,
+                        totalCompletedBookings: completedCompanyBookings.length,
+                        totalEventsHosted: companyEvents.length,
+                      );
+                    }
 
                     final completedBookings = bookings
                         .where(

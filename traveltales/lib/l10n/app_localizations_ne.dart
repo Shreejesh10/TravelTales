@@ -72,6 +72,9 @@ class AppLocalizationsNe extends AppLocalizations {
   String get bestPlaceToVisit => 'अहिले घुम्नका लागि उत्तम ठाउँहरू';
 
   @override
+  String get quickGateway => 'Quick Gateway (1-3 days)';
+
+  @override
   String get adventureAwaitsLetsGo => 'एडभेन्चर अवेट्स, लेट्स गो ';
 
   @override

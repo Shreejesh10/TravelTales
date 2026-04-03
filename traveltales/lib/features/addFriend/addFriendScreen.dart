@@ -28,13 +28,15 @@ class _AddFriendScreenState extends State<AddFriendScreen> {
   Timer? _debounce;
   int? _currentUserId;
   Set<int> _friendUserIds = {};
+  Map<int, FriendRequestModel> _outgoingPendingRequests = {};
 
   final Set<int> _sendingRequests = {};
+  final Set<int> _cancellingRequests = {};
 
   @override
   void initState() {
     super.initState();
-    _loadFriendIds();
+    _loadFriendState();
     _searchController.addListener(_onSearchChanged);
   }
 
@@ -55,11 +57,16 @@ class _AddFriendScreenState extends State<AddFriendScreen> {
     });
   }
 
-  Future<void> _loadFriendIds() async {
+  Future<void> _loadFriendState() async {
     try {
       final userIdString = await _storage.read(key: "user_id");
       final currentUserId = int.tryParse(userIdString ?? "");
-      final friends = await FriendApi.getFriends();
+      final results = await Future.wait([
+        FriendApi.getFriends(),
+        FriendApi.getOutgoingFriendRequests(),
+      ]);
+      final friends = results[0] as List<FriendModel>;
+      final outgoingRequests = results[1] as List<FriendRequestModel>;
 
       final friendIds = friends.map((friend) {
         if (currentUserId == null) {
@@ -71,11 +78,19 @@ class _AddFriendScreenState extends State<AddFriendScreen> {
             : friend.userId;
       }).toSet();
 
+      final outgoingPendingRequests = <int, FriendRequestModel>{};
+      for (final request in outgoingRequests) {
+        if (request.status.toLowerCase() == "pending") {
+          outgoingPendingRequests[request.receiverId] = request;
+        }
+      }
+
       if (!mounted) return;
 
       setState(() {
         _currentUserId = currentUserId;
         _friendUserIds = friendIds;
+        _outgoingPendingRequests = outgoingPendingRequests;
       });
     } catch (_) {
       // If friend ids fail to load, keep search usable rather than blocking UI.
@@ -132,9 +147,8 @@ class _AddFriendScreenState extends State<AddFriendScreen> {
 
       if (!mounted) return;
 
-      setState(() {
-        _users = _users.where((user) => user.id != receiverId).toList();
-      });
+      await _loadFriendState();
+      if (!mounted) return;
 
       AppFlushbar.success(context, "Friend request sent");
     } catch (e) {
@@ -150,6 +164,41 @@ class _AddFriendScreenState extends State<AddFriendScreen> {
 
       setState(() {
         _sendingRequests.remove(receiverId);
+      });
+    }
+  }
+
+  Future<void> _cancelFriendRequest(int receiverId) async {
+    final request = _outgoingPendingRequests[receiverId];
+    if (request == null) return;
+
+    setState(() {
+      _cancellingRequests.add(receiverId);
+    });
+
+    try {
+      await FriendApi.cancelFriendRequest(requestId: request.id);
+
+      if (!mounted) return;
+
+      setState(() {
+        _outgoingPendingRequests.remove(receiverId);
+      });
+
+      AppFlushbar.success(context, "Friend request removed");
+    } catch (e) {
+      if (!mounted) return;
+
+      AppFlushbar.errorFrom(
+        context,
+        e,
+        fallbackMessage: "Failed to remove friend request.",
+      );
+    } finally {
+      if (!mounted) return;
+
+      setState(() {
+        _cancellingRequests.remove(receiverId);
       });
     }
   }
@@ -245,7 +294,10 @@ class _AddFriendScreenState extends State<AddFriendScreen> {
           name: user.userName ?? "Unknown User",
           imageUrl: imageUrl,
           isSending: _sendingRequests.contains(user.id),
+          isPending: _outgoingPendingRequests.containsKey(user.id),
+          isCancelling: _cancellingRequests.contains(user.id),
           onAdd: () => _sendFriendRequest(user.id),
+          onRemoveRequest: () => _cancelFriendRequest(user.id),
         );
       },
     );
@@ -255,7 +307,10 @@ class _AddFriendScreenState extends State<AddFriendScreen> {
     required String name,
     required String imageUrl,
     required bool isSending,
+    required bool isPending,
+    required bool isCancelling,
     required VoidCallback onAdd,
+    required VoidCallback onRemoveRequest,
   }) {
     return Container(
       margin: EdgeInsets.only(bottom: 12.h),
@@ -315,32 +370,33 @@ class _AddFriendScreenState extends State<AddFriendScreen> {
               ),
             ),
           ),
-          ElevatedButton(
-            onPressed: isSending ? null : onAdd,
-            style: ElevatedButton.styleFrom(
-              padding: EdgeInsets.symmetric(
-                horizontal: 14.w,
-                vertical: 8.h,
-              ),
-              shape: RoundedRectangleBorder(
+          InkWell(
+            onTap: isSending || isCancelling
+                ? null
+                : (isPending ? onRemoveRequest : onAdd),
+            borderRadius: BorderRadius.circular(12.r),
+            child: Container(
+              width: 44.w,
+              height: 44.w,
+              decoration: BoxDecoration(
+                color: isPending
+                    ? Colors.red.withOpacity(0.12)
+                    : AppColors.getContainerBoxColor(context),
                 borderRadius: BorderRadius.circular(12.r),
               ),
-              backgroundColor: AppColors.getContainerBoxColor(context),
-              elevation: 0,
-            ),
-            child: isSending
-                ? SizedBox(
-              width: 18.w,
-              height: 18.w,
-              child: CircularProgressIndicator(
-                strokeWidth: 2,
-                color: AppColors.getIconColors(context),
-              ),
-            )
-                : Icon(
-              Icons.person_add,
-              size: 20.sp,
-              color: AppColors.getIconColors(context),
+              child: isSending || isCancelling
+                  ? Padding(
+                      padding: EdgeInsets.all(12.w),
+                      child: CircularProgressIndicator(
+                        strokeWidth: 2,
+                        color: isPending ? Colors.red : AppColors.getIconColors(context),
+                      ),
+                    )
+                  : Icon(
+                      isPending ? Icons.person_remove : Icons.person_add,
+                      size: 20.sp,
+                      color: isPending ? Colors.red : AppColors.getIconColors(context),
+                    ),
             ),
           ),
         ],

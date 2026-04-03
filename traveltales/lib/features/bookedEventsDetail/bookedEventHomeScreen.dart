@@ -46,6 +46,11 @@ class _BookedEventHomeScreenState extends State<BookedEventHomeScreen> {
     return DateTime(date.year, date.month, date.day);
   }
 
+  bool _shouldShowInBookedHome(Booking booking) {
+    final status = booking.status.toLowerCase().trim();
+    return status != "pending" && status != "failed";
+  }
+
   String _formatEventDate(DateTime date) {
     const months = [
       'January',
@@ -201,7 +206,9 @@ class _BookedEventHomeScreenState extends State<BookedEventHomeScreen> {
             return const Center(child: Text("Failed to load bookings"));
           }
 
-          final bookings = snapshot.data![0] as List<Booking>;
+          final bookings = (snapshot.data![0] as List<Booking>)
+              .where(_shouldShowInBookedHome)
+              .toList();
           final events = snapshot.data![1] as List<Event>;
 
           final Map<int, Event> eventMap = {

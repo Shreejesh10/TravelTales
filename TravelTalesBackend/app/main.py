@@ -27,7 +27,7 @@ MEDIA_DIR = BASE_DIR.parent / "media"        # TravelTalesBackend/media
 (MEDIA_DIR / "profile_photos").mkdir(parents=True, exist_ok=True)
 app.mount("/media", StaticFiles(directory=str(MEDIA_DIR)), name="media")
 
-print("Serving MEDIA from:", MEDIA_DIR)
+# print("Serving MEDIA from:", MEDIA_DIR)
 
 # # Run this after creating a new table in models
 # print("Ensuring all the tables are created")

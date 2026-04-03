@@ -23,10 +23,10 @@ def get_all_bookings(
     db: Session = Depends(get_db),
     current_user: User = Depends(get_current_user)
 ):
-    if current_user.roles != "admin":
+    if current_user.roles == "customer" :
         raise HTTPException(
             status_code=403,
-            detail="Only admin can access all bookings."
+            detail="Only company and admin can access all bookings."
         )
 
     bookings = db.query(Booking).all()
@@ -82,8 +82,6 @@ def esewa_failure():
     return {
         "message": "Payment failed or cancelled"
     }
-
-
 @router.get("/my", response_model=List[BookingResponse])
 def my_bookings(
     db: Session = Depends(get_db),

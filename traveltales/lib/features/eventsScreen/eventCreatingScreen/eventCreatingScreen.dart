@@ -230,9 +230,10 @@ class _EventCreatingScreenState extends State<EventCreatingScreen> {
 
       if (!mounted) return;
 
-      Navigator.pushNamed(
+      Navigator.pushNamedAndRemoveUntil(
         context,
         RouteName.companyDashboardScreen,
+        (route) => false,
         arguments: {
           'index': 2,
           'successMessage': 'Event created successfully',

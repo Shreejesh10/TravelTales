@@ -30,12 +30,14 @@ class _EventDetailScreenState extends State<EventDetailScreen> {
   final BookingApi _bookingService = BookingApi();
   final GlobalKey _eventDateKey = GlobalKey();
   final GlobalKey _checklistKey = GlobalKey();
+  final GlobalKey _bookedForKey = GlobalKey();
   late Future<List<Booking>> _bookingsFuture;
 
   double screenHeight = 1.sh;
   bool isDescriptionExpanded = false;
   bool isEventDateExpanded = false;
   bool isChecklistExpanded = false;
+  bool isBookedForExpanded = false;
   String? _userRole;
 
   Event get event => widget.event;
@@ -92,7 +94,6 @@ class _EventDetailScreenState extends State<EventDetailScreen> {
   @override
   Widget build(BuildContext context) {
     screenHeight = 1.sh;
-
 
     return Scaffold(
       extendBodyBehindAppBar: true,
@@ -153,13 +154,19 @@ class _EventDetailScreenState extends State<EventDetailScreen> {
                   ),
                 ],
               ),
-              child: CustomScrollView(
-                controller: _scrollController,
-                slivers: [
-                  SliverToBoxAdapter(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
+              child: FutureBuilder<List<Booking>>(
+                future: _bookingsFuture,
+                builder: (context, snapshot) {
+                  final bookings = snapshot.data ?? const <Booking>[];
+                  final matchingBooking = _findMatchingBooking(bookings);
+
+                  return CustomScrollView(
+                    controller: _scrollController,
+                    slivers: [
+                      SliverToBoxAdapter(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
                         Row(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
@@ -294,7 +301,9 @@ class _EventDetailScreenState extends State<EventDetailScreen> {
                           icon: Icons.verified_user_outlined,
                           value: SharedRes.strings(context).postedBy,
                           label:
-                              "Unknown Company",
+                              event.companyName.trim().isNotEmpty
+                                  ? event.companyName
+                                  : "Unknown Company",
                           iconColor: AppColors.getIconColors(context),
                           onTap: () {},
                         ),
@@ -394,11 +403,48 @@ class _EventDetailScreenState extends State<EventDetailScreen> {
                             ),
                           ),
                         ),
+                        if (matchingBooking != null &&
+                            matchingBooking.invitedFriends.isNotEmpty) ...[
+                          SizedBox(height: 12.h),
+                          Container(
+                            key: _bookedForKey,
+                            child: _contentBox(
+                              context,
+                              heading: "For whom it was booked",
+                              icon: Icons.groups_outlined,
+                              isExpanded: isBookedForExpanded,
+                              onTap: () {
+                                final willExpand = !isBookedForExpanded;
+                                setState(() {
+                                  isBookedForExpanded = willExpand;
+                                });
+                                if (willExpand) {
+                                  _scrollToSection(_bookedForKey);
+                                }
+                              },
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: matchingBooking.invitedFriends
+                                    .map(
+                                      (friend) => checklistItem(
+                                        context,
+                                        friend.userName.trim().isNotEmpty
+                                            ? friend.userName
+                                            : "User ${friend.id}",
+                                      ),
+                                    )
+                                    .toList(),
+                              ),
+                            ),
+                          ),
+                        ],
                         SizedBox(height: 12.h),
-                      ],
-                    ),
-                  ),
-                ],
+                          ],
+                        ),
+                      ),
+                    ],
+                  );
+                },
               ),
             ),
           ),
@@ -546,6 +592,16 @@ class _EventDetailScreenState extends State<EventDetailScreen> {
         ),
       ),
     );
+  }
+
+  Booking? _findMatchingBooking(List<Booking> bookings) {
+    for (final booking in bookings) {
+      if (booking.eventId == event.eventId &&
+          (booking.status == "pending" || booking.status == "completed")) {
+        return booking;
+      }
+    }
+    return null;
   }
 
   Widget _contentBox(

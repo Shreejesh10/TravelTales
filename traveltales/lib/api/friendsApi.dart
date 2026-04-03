@@ -97,6 +97,23 @@ class FriendApi {
     }
   }
 
+  static Future<FriendRequestModel> cancelFriendRequest({
+    required int requestId,
+  }) async {
+    final headers = await getHeaders();
+
+    final response = await http.delete(
+      Uri.parse("$basePath/request/$requestId"),
+      headers: headers,
+    );
+
+    if (response.statusCode == 200) {
+      return FriendRequestModel.fromJson(jsonDecode(response.body));
+    } else {
+      throw Exception("Failed to cancel friend request: ${response.body}");
+    }
+  }
+
   // Get friend list
   static Future<List<FriendModel>> getFriends() async {
     final headers = await getHeaders();
@@ -116,13 +133,16 @@ class FriendApi {
 
   // Remove friend
   static Future<Map<String, dynamic>> removeFriend({
-    required int friendshipId,
+    required int friendUserId,
   }) async {
     final headers = await getHeaders();
 
     final response = await http.delete(
-      Uri.parse("$basePath/$friendshipId"),
+      Uri.parse(basePath),
       headers: headers,
+      body: jsonEncode({
+        "friend_user_id": friendUserId,
+      }),
     );
 
     if (response.statusCode == 200) {

@@ -7,9 +7,11 @@ import 'package:traveltales/core/model/destination_model.dart';
 import 'package:traveltales/core/model/genre_model.dart';
 import 'package:traveltales/core/route_config/route_names.dart';
 import 'package:traveltales/core/ui/components/preference.dart';
+import 'package:traveltales/core/ui/localization/sharedRes.dart';
 import 'package:traveltales/core/ui/resources/theme/appColors.dart';
 import 'package:traveltales/core/ui/resources/theme/dimens.dart';
 import 'package:traveltales/api/destinationAPI.dart';
+import 'package:traveltales/features/homeScreen/home_provider.dart';
 
 class ViewAllScreen extends StatefulWidget {
   final String title;
@@ -23,6 +25,7 @@ class ViewAllScreen extends StatefulWidget {
 class _ViewAllScreenState extends State<ViewAllScreen> {
   late Future<List<Destination>> destinationsFuture;
   late Future<List<Genre>> genresFuture;
+  bool _hasInitialized = false;
   Map<String, int> genreIndexMap = {};
 
   String selectedGenre = "All";
@@ -30,16 +33,39 @@ class _ViewAllScreenState extends State<ViewAllScreen> {
   @override
   void initState() {
     super.initState();
-    destinationsFuture = _getDestinationsByTitle();
     genresFuture = fetchAllGenres();
+  }
 
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+
+    if (_hasInitialized) return;
+
+    destinationsFuture = _getDestinationsByTitle();
+    _hasInitialized = true;
   }
 
   Future<List<Destination>> _getDestinationsByTitle() {
-    if (widget.title.toLowerCase().contains('recommended')) {
+    final strings = SharedRes.strings(context);
+
+    if (widget.title == strings.recommendedForYou) {
       return getRecommendedDestinations();
     }
-    return getAllDestinations();
+
+    return getAllDestinations().then((destinations) {
+      if (widget.title == strings.quickGateway) {
+        return destinations.where(isQuickGetawayDestination).toList();
+      }
+
+      if (widget.title == strings.bestPlaceToVisit) {
+        return destinations
+            .where((destination) => !isQuickGetawayDestination(destination))
+            .toList();
+      }
+
+      return destinations;
+    });
   }
 
   bool matchesGenre(Destination destination, String selectedGenre) {

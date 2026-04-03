@@ -43,6 +43,7 @@ class Strings {
   String get trekking => _l10n.trekking;
   String get hiking => _l10n.hiking;
   String get bestPlaceToVisit => _l10n.bestPlaceToVisit;
+  String get quickGateway => _l10n.quickGateway;
   String get adventureAwaitsLetsGo => _l10n.adventureAwaitsLetsGo;
   String get explore => _l10n.explore;
   String get selectTheCategories => _l10n.selectTheCategories;

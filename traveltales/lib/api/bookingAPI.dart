@@ -33,17 +33,21 @@ class BookingApi {
   Future<Booking> createBooking({
     required int eventId,
     required int totalPeople,
+    List<int> friendUserIds = const [],
   }) async {
     final url = Uri.parse('$API_URL/bookings/create');
     final headers = await getHeaders();
 
+    final body = {
+      "event_id": eventId,
+      "total_people": totalPeople,
+      "friend_user_ids": friendUserIds,
+    };
+
     final response = await http.post(
       url,
       headers: headers,
-      body: jsonEncode({
-        "event_id": eventId,
-        "total_people": totalPeople,
-      }),
+      body: jsonEncode(body),
     );
 
     if (response.statusCode == 200 || response.statusCode == 201) {
@@ -51,7 +55,16 @@ class BookingApi {
     }
 
     log("Create booking failed: ${response.statusCode} ${response.body}");
-    throw Exception("Create booking failed");
+    String? detailMessage;
+    try {
+      final decodedBody = jsonDecode(response.body);
+      if (decodedBody is Map<String, dynamic>) {
+        detailMessage = decodedBody["detail"]?.toString();
+      }
+    } catch (_) {
+      // Fall back to the generic error below when the body is not JSON.
+    }
+    throw Exception(detailMessage ?? "Create booking failed");
   }
 
   Future<List<Booking>> getMyBookings() async {

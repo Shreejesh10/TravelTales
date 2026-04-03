@@ -90,13 +90,17 @@ class _ViewAllFriendScreenState extends State<ViewAllFriendScreen> {
 
   Future<void> _removeFriend(FriendModel friend) async {
     final friendUserId = _getOtherUserId(friend);
+    final friendName =
+        _friendUsers[friendUserId]?.userName?.trim().isNotEmpty == true
+            ? _friendUsers[friendUserId]!.userName!.trim()
+            : "User";
 
     setState(() {
       _removingFriendIds.add(friendUserId);
     });
 
     try {
-      await FriendApi.removeFriend(friendshipId: friend.id);
+      await FriendApi.removeFriend(friendUserId: friendUserId);
 
       if (!mounted) return;
 
@@ -107,7 +111,7 @@ class _ViewAllFriendScreenState extends State<ViewAllFriendScreen> {
         _friendUsers.remove(friendUserId);
       });
 
-      AppFlushbar.success(context, "Friend removed successfully");
+      AppFlushbar.success(context, "$friendName has been removed");
     } catch (e) {
       if (!mounted) return;
 

@@ -1,5 +1,6 @@
 import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 class CommonTextField extends StatelessWidget {
   final TextEditingController controller;
@@ -13,6 +14,8 @@ class CommonTextField extends StatelessWidget {
   final int maxLines;
   final Widget? suffixIcon;
   final VoidCallback? onTap;
+  final TextCapitalization textCapitalization;
+  final List<TextInputFormatter>? inputFormatters;
 
   const CommonTextField({
     super.key,
@@ -27,6 +30,8 @@ class CommonTextField extends StatelessWidget {
     this.maxLines = 1,
     this.suffixIcon,
     this.onTap,
+    this.textCapitalization = TextCapitalization.none,
+    this.inputFormatters,
   });
 
   String? _validateText(String? value) {
@@ -65,6 +70,8 @@ class CommonTextField extends StatelessWidget {
           onChanged: onChanged,
           maxLines: maxLines,
           onTap: onTap,
+          textCapitalization: textCapitalization,
+          inputFormatters: inputFormatters,
           style: TextStyle(
             fontSize: isWideScreen ? 16 : 16,
           ),

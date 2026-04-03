@@ -63,6 +63,15 @@ class _EsewaWebViewScreenState extends State<EsewaWebViewScreen> {
     }
   }
 
+  void _returnAsFailed() {
+    if (hasReturned) return;
+    hasReturned = true;
+    Navigator.pop(context, {
+      'success': false,
+      'url': '',
+    });
+  }
+
   bool _matchesRedirect(String currentUrl, String expectedPrefix) {
     if (currentUrl.startsWith(expectedPrefix)) {
       return true;
@@ -120,14 +129,26 @@ class _EsewaWebViewScreenState extends State<EsewaWebViewScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(title: const Text("Pay with eSewa")),
-      body: Stack(
-        children: [
-          WebViewWidget(controller: _controller),
-          if (isLoading)
-            const Center(child: CircularProgressIndicator()),
-        ],
+    return WillPopScope(
+      onWillPop: () async {
+        _returnAsFailed();
+        return false;
+      },
+      child: Scaffold(
+        appBar: AppBar(
+          title: const Text("Pay with eSewa"),
+          leading: IconButton(
+            icon: const Icon(Icons.arrow_back),
+            onPressed: _returnAsFailed,
+          ),
+        ),
+        body: Stack(
+          children: [
+            WebViewWidget(controller: _controller),
+            if (isLoading)
+              const Center(child: CircularProgressIndicator()),
+          ],
+        ),
       ),
     );
   }
