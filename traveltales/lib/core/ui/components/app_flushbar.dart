@@ -1,5 +1,6 @@
 import 'package:another_flushbar/flushbar.dart';
 import 'package:flutter/material.dart';
+import 'dart:convert';
 
 class AppFlushbar {
   AppFlushbar._();
@@ -42,7 +43,7 @@ class AppFlushbar {
   }) {
     return error(
       context,
-      error.toString(),
+      err.toString(),
       fallbackMessage: fallbackMessage,
     );
   }
@@ -56,14 +57,16 @@ class AppFlushbar {
         .replaceFirst('Failed: ', '')
         .trim();
 
+    final extracted = _extractReadableMessage(trimmed);
+    if (extracted != null && extracted.isNotEmpty) {
+      return extracted;
+    }
+
     final lower = trimmed.toLowerCase();
     final looksTechnical =
         lower.contains('traceback') ||
         lower.contains('http') ||
         lower.contains('sql') ||
-        lower.contains('detail') ||
-        lower.contains('{') ||
-        lower.contains('[') ||
         lower.contains('typeerror') ||
         lower.contains('valueerror') ||
         lower.contains('socket') ||
@@ -73,7 +76,35 @@ class AppFlushbar {
       return fallbackMessage ?? 'Something went wrong. Please try again.';
     }
 
-    return fallbackMessage ?? trimmed;
+    return trimmed;
+  }
+
+  static String? _extractReadableMessage(String message) {
+    final jsonStart = message.indexOf('{');
+    if (jsonStart >= 0) {
+      final prefix = message.substring(0, jsonStart).trim();
+      final jsonPart = message.substring(jsonStart).trim();
+      try {
+        final decoded = jsonDecode(jsonPart);
+        if (decoded is Map<String, dynamic>) {
+          final detail = decoded['detail']?.toString().trim();
+          if (detail != null && detail.isNotEmpty) {
+            return detail;
+          }
+
+          final messageValue = decoded['message']?.toString().trim();
+          if (messageValue != null && messageValue.isNotEmpty) {
+            return messageValue;
+          }
+        }
+      } catch (_) {
+        if (prefix.isNotEmpty) {
+          return prefix;
+        }
+      }
+    }
+
+    return null;
   }
 
   static Future<void> _show(

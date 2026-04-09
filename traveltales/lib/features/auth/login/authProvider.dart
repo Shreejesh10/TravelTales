@@ -40,15 +40,28 @@ class AuthProvider extends ChangeNotifier {
 
       _role = result["roles"]?.toString();
       _hasCompletedPreference = result["has_completed_preference"] == true;
-
       _userId = await getUserId();
-      _isLoggedIn = true;
 
-      try {
+      if (_isCompanyUser) {
         _userInfo = await fetchMeUserInfo();
-      } catch (_) {
-        _userInfo = null;
+        final blockedMessage = _companyLoginBlockMessage(_userInfo?.status);
+        if (blockedMessage != null) {
+          await _clearPersistedAuthState();
+          _clearLocalState();
+          _errorMessage = blockedMessage;
+          _isLoading = false;
+          notifyListeners();
+          return false;
+        }
+      } else {
+        try {
+          _userInfo = await fetchMeUserInfo();
+        } catch (_) {
+          _userInfo = null;
+        }
       }
+
+      _isLoggedIn = true;
       await NotificationService.instance.onUserAuthenticated();
 
       _isLoading = false;
@@ -74,11 +87,27 @@ class AuthProvider extends ChangeNotifier {
       final storedPreference = await _storage.read(key: 'has_completed_preference');
 
       if (token != null && token.isNotEmpty) {
-        _isLoggedIn = true;
         _role = storedRole;
         _userId = storedUserId;
         _hasCompletedPreference = storedPreference == "true";
-        await NotificationService.instance.onUserAuthenticated();
+        if (_isCompanyUser) {
+          try {
+            _userInfo = await fetchMeUserInfo();
+            if (_companyLoginBlockMessage(_userInfo?.status) != null) {
+              await _clearPersistedAuthState();
+              _clearLocalState();
+            } else {
+              _isLoggedIn = true;
+              await NotificationService.instance.onUserAuthenticated();
+            }
+          } catch (e) {
+            _errorMessage = e.toString().replaceFirst("Exception: ", "");
+            _clearLocalState();
+          }
+        } else {
+          _isLoggedIn = true;
+          await NotificationService.instance.onUserAuthenticated();
+        }
       } else {
         _clearLocalState();
       }
@@ -123,6 +152,27 @@ class AuthProvider extends ChangeNotifier {
   void clearError() {
     _errorMessage = null;
     notifyListeners();
+  }
+
+  bool get _isCompanyUser => _role?.toLowerCase().trim() == "company";
+
+  String? _companyLoginBlockMessage(String? status) {
+    final normalizedStatus = status?.trim().toLowerCase();
+    if (normalizedStatus == "pending" || normalizedStatus == "unverified") {
+      return "Your company is not verified yet. Please wait for admin verification.";
+    }
+    if (normalizedStatus == "rejected") {
+      return "Your company verification was rejected. Please contact the admin.";
+    }
+    return null;
+  }
+
+  Future<void> _clearPersistedAuthState() async {
+    await NotificationService.instance.onUserLoggedOut();
+    await logoutAndClearAuth();
+    await _storage.delete(key: 'user_id');
+    await _storage.delete(key: 'roles');
+    await _storage.delete(key: 'has_completed_preference');
   }
 
   void _clearLocalState() {

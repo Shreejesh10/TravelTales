@@ -114,7 +114,6 @@ class _BookmarkScreenState extends State<BookmarkScreen> {
                 ),
               ),
 
-              /// Gradient
               Positioned(
                 bottom: 0,
                 left: 0,

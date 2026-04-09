@@ -17,10 +17,8 @@ import 'package:traveltales/core/model/user_info.dart';
 import 'package:traveltales/core/route_config/route_names.dart';
 import 'package:traveltales/core/ui/components/actionDialogBox.dart';
 import 'package:traveltales/core/ui/components/app_flushbar.dart';
-import 'package:traveltales/core/ui/components/functions/dateTime/app_formatters.dart';
 import 'package:traveltales/core/ui/components/languageDialog.dart';
 import 'package:traveltales/core/ui/components/shimmerView.dart';
-import 'package:traveltales/core/ui/components/textField/passwordTextField.dart';
 import 'package:traveltales/core/ui/components/themeDialog.dart';
 import 'package:traveltales/core/ui/components/viewAllRow.dart';
 import 'package:traveltales/core/ui/localization/sharedRes.dart';
@@ -38,7 +36,6 @@ class ProfileScreen extends StatefulWidget {
 class _ProfileScreenState extends State<ProfileScreen> {
   final ImagePicker picker = ImagePicker();
   final BookingApi _bookingService = BookingApi();
-
 
   late Future<List<Booking>> _bookingsFuture;
   late Future<List<Event>> _eventsFuture;
@@ -144,7 +141,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
       setState(() {
         isLoading = false;
-
       });
 
       log("Failed to load stats: $e");
@@ -158,9 +154,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
       context,
       AuthRouteName.loginScreen,
       (route) => false,
-      arguments: {
-        "successMessage": "User logged out successfully",
-      },
+      arguments: {"successMessage": "User logged out successfully"},
     );
   }
 
@@ -244,15 +238,14 @@ class _ProfileScreenState extends State<ProfileScreen> {
     ];
 
     final day = date.day;
-    final suffix =
-        (day >= 11 && day <= 13)
-            ? 'th'
-            : switch (day % 10) {
-              1 => 'st',
-              2 => 'nd',
-              3 => 'rd',
-              _ => 'th',
-            };
+    final suffix = (day >= 11 && day <= 13)
+        ? 'th'
+        : switch (day % 10) {
+            1 => 'st',
+            2 => 'nd',
+            3 => 'rd',
+            _ => 'th',
+          };
 
     return '$day$suffix ${months[date.month - 1]}';
   }
@@ -309,10 +302,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     SizedBox(height: 4.h),
                     Text(
                       "From completed bookings on your events",
-                      style: TextStyle(
-                        fontSize: 12.sp,
-                        color: Colors.grey,
-                      ),
+                      style: TextStyle(fontSize: 12.sp, color: Colors.grey),
                     ),
                   ],
                 ),
@@ -497,8 +487,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
         ? me!.email
         : "guest@traveltales.com";
 
-    final profileImage = profilePhotoUrl ??
-        (me?.profilePictureUrl ?? "");
+    final profileImage = profilePhotoUrl ?? (me?.profilePictureUrl ?? "");
 
     return Scaffold(
       appBar: AppBar(
@@ -538,11 +527,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
         child: ListView(
           padding: EdgeInsets.symmetric(horizontal: compactDimens.small3),
           children: [
-            _profile(
-              imagePath: profileImage,
-              userName: userName,
-              email: email,
-            ),
+            _profile(imagePath: profileImage, userName: userName, email: email),
             SizedBox(height: 16.h),
 
             if (userError != null)
@@ -570,10 +555,13 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   child: _statCard(
                     iconColor: cs.primary,
                     icon: Icons.person_outline,
-                    value: isLoading ?"...": totalFriendsCount.toString(),
+                    value: isLoading ? "..." : totalFriendsCount.toString(),
                     label: SharedRes.strings(context).totalFriends,
                     onTap: () async {
-                      await Navigator.pushNamed(context, RouteName.totalFriendScreen);
+                      await Navigator.pushNamed(
+                        context,
+                        RouteName.totalFriendScreen,
+                      );
                       if (!mounted) return;
                       await _loadStats();
                     },
@@ -584,7 +572,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   child: _statCard(
                     iconColor: Colors.green,
                     icon: Icons.event_available_outlined,
-                    value: isLoading ? "..." : totalBookedEventsCount.toString(),
+                    value: isLoading
+                        ? "..."
+                        : totalBookedEventsCount.toString(),
                     label: SharedRes.strings(context).eventsBooked,
                     onTap: () {
                       Navigator.pushNamed(
@@ -600,10 +590,13 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   child: _statCard(
                     iconColor: Colors.red,
                     icon: Icons.pending_outlined,
-                    value: isLoading ? "...": pendingRequestCount.toString(),
+                    value: isLoading ? "..." : pendingRequestCount.toString(),
                     label: SharedRes.strings(context).requestPending,
                     onTap: () async {
-                      await Navigator.pushNamed(context, RouteName.acceptFriendScreen);
+                      await Navigator.pushNamed(
+                        context,
+                        RouteName.acceptFriendScreen,
+                      );
                       if (!mounted) return;
                       await _loadStats();
                     },
@@ -635,10 +628,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 ),
                 SizedBox(height: 8.h),
                 FutureBuilder<List<dynamic>>(
-                  future: Future.wait([
-                    _bookingsFuture,
-                    _eventsFuture,
-                  ]),
+                  future: Future.wait([_bookingsFuture, _eventsFuture]),
                   builder: (context, snapshot) {
                     if (snapshot.connectionState == ConnectionState.waiting) {
                       return _buildRecentBookingsLoadingShimmer();
@@ -655,9 +645,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     final bookings = snapshot.data![0] as List<Booking>;
                     final events = snapshot.data![1] as List<Event>;
 
-                    final eventMap = {
-                      for (var e in events) e.eventId: e,
-                    };
+                    final eventMap = {for (var e in events) e.eventId: e};
 
                     if (_isCompanyUser) {
                       final companyEvents = events
@@ -666,7 +654,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       final companyEventIds = companyEvents
                           .map((event) => event.eventId)
                           .toSet();
-                      final completedCompanyBookings = bookings.where((booking) {
+                      final completedCompanyBookings = bookings.where((
+                        booking,
+                      ) {
                         return companyEventIds.contains(booking.eventId) &&
                             booking.status.toLowerCase() == "completed";
                       }).toList();
@@ -685,8 +675,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
                     final completedBookings = bookings
                         .where(
-                          (b) => b.status == "completed" || b.status == "pending",
-                    )
+                          (b) =>
+                              b.status == "completed" || b.status == "pending",
+                        )
                         .take(3)
                         .toList();
 
@@ -700,7 +691,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         if (event == null) return const SizedBox.shrink();
 
                         final destination = event.destination;
-                        final List<String> images = destination.extraInfo.backdropPath;
+                        final List<String> images =
+                            destination.extraInfo.backdropPath;
 
                         final String imageUrl = images.isNotEmpty
                             ? "$API_URL${images.first}"
@@ -716,9 +708,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                 ? "Coming on ${_formatEventDate(event.fromDate)}"
                                 : "Completed on ${_formatEventDate(event.toDate)}",
                             organizerText:
-                            "Booked for ${booking.totalPeople} people",
+                                "Booked for ${booking.totalPeople} people",
                             difficultyText:
-                            destination.extraInfo.difficultyLevel ?? "Normal",
+                                destination.extraInfo.difficultyLevel ??
+                                "Normal",
                             onTap: () {
                               Navigator.pushNamed(
                                 context,
@@ -842,11 +835,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 ),
               ),
             ),
-            Icon(
-              Icons.arrow_forward,
-              size: 14.sp,
-              color: Colors.grey,
-            ),
+            Icon(Icons.arrow_forward, size: 14.sp, color: Colors.grey),
           ],
         ),
       ),
@@ -861,7 +850,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
     final cs = Theme.of(context).colorScheme;
 
     final String imageUrl =
-    (imagePath.isNotEmpty && imagePath.startsWith("http"))
+        (imagePath.isNotEmpty && imagePath.startsWith("http"))
         ? imagePath
         : (imagePath.isNotEmpty ? "$API_URL$imagePath" : "");
 
@@ -881,25 +870,22 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 ),
                 child: ClipOval(
                   child: profileImageFile != null
-                      ? Image.file(
-                    profileImageFile!,
-                    fit: BoxFit.cover,
-                  )
+                      ? Image.file(profileImageFile!, fit: BoxFit.cover)
                       : imageUrl.isNotEmpty
                       ? Image.network(
-                    imageUrl,
-                    fit: BoxFit.cover,
-                    errorBuilder: (_, __, ___) {
-                      return Image.asset(
-                        "assets/images/Annapurna.png",
-                        fit: BoxFit.cover,
-                      );
-                    },
-                  )
+                          imageUrl,
+                          fit: BoxFit.cover,
+                          errorBuilder: (_, __, ___) {
+                            return Image.asset(
+                              "assets/images/Annapurna.png",
+                              fit: BoxFit.cover,
+                            );
+                          },
+                        )
                       : Image.asset(
-                    "assets/images/Annapurna.png",
-                    fit: BoxFit.cover,
-                  ),
+                          "assets/images/Annapurna.png",
+                          fit: BoxFit.cover,
+                        ),
                 ),
               ),
               Positioned(
@@ -935,18 +921,12 @@ class _ProfileScreenState extends State<ProfileScreen> {
           SizedBox(height: 10.h),
           Text(
             userName,
-            style: TextStyle(
-              fontSize: 20.sp,
-              fontWeight: FontWeight.w600,
-            ),
+            style: TextStyle(fontSize: 20.sp, fontWeight: FontWeight.w600),
           ),
           SizedBox(height: 4.h),
           Text(
             email,
-            style: TextStyle(
-              fontSize: 12.sp,
-              color: Colors.grey,
-            ),
+            style: TextStyle(fontSize: 12.sp, color: Colors.grey),
           ),
         ],
       ),
@@ -976,10 +956,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
             SizedBox(height: 8.h),
             Text(
               value,
-              style: TextStyle(
-                fontSize: 20.sp,
-                fontWeight: FontWeight.w800,
-              ),
+              style: TextStyle(fontSize: 20.sp, fontWeight: FontWeight.w800),
             ),
             SizedBox(height: 2.h),
             Text(
@@ -999,14 +976,14 @@ class _ProfileScreenState extends State<ProfileScreen> {
   }
 
   Widget _bookedEventCard(
-      BuildContext context, {
-        required String imageAsset,
-        required String title,
-        required String statusText,
-        required String organizerText,
-        required String difficultyText,
-        required VoidCallback onTap,
-      }) {
+    BuildContext context, {
+    required String imageAsset,
+    required String title,
+    required String statusText,
+    required String organizerText,
+    required String difficultyText,
+    required VoidCallback onTap,
+  }) {
     return InkWell(
       onTap: onTap,
       borderRadius: BorderRadius.circular(14.r),
@@ -1024,25 +1001,25 @@ class _ProfileScreenState extends State<ProfileScreen> {
               borderRadius: BorderRadius.circular(12.r),
               child: imageAsset.isNotEmpty
                   ? Image.network(
-                imageAsset,
-                height: 54.w,
-                width: 54.w,
-                fit: BoxFit.cover,
-                errorBuilder: (_, __, ___) {
-                  return Image.asset(
-                    "assets/images/Annapurna.png",
-                    height: 54.w,
-                    width: 54.w,
-                    fit: BoxFit.cover,
-                  );
-                },
-              )
+                      imageAsset,
+                      height: 54.w,
+                      width: 54.w,
+                      fit: BoxFit.cover,
+                      errorBuilder: (_, __, ___) {
+                        return Image.asset(
+                          "assets/images/Annapurna.png",
+                          height: 54.w,
+                          width: 54.w,
+                          fit: BoxFit.cover,
+                        );
+                      },
+                    )
                   : Image.asset(
-                "assets/images/Annapurna.png",
-                height: 54.w,
-                width: 54.w,
-                fit: BoxFit.cover,
-              ),
+                      "assets/images/Annapurna.png",
+                      height: 54.w,
+                      width: 54.w,
+                      fit: BoxFit.cover,
+                    ),
             ),
             SizedBox(width: 12.w),
             Expanded(
@@ -1059,9 +1036,17 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     overflow: TextOverflow.ellipsis,
                   ),
                   SizedBox(height: 4.h),
-                  _infoRow(Icons.check_circle_outline, statusText, Colors.green),
+                  _infoRow(
+                    Icons.check_circle_outline,
+                    statusText,
+                    Colors.green,
+                  ),
                   SizedBox(height: 4.h),
-                  _infoRow(Icons.verified_outlined, organizerText, Colors.green),
+                  _infoRow(
+                    Icons.verified_outlined,
+                    organizerText,
+                    Colors.green,
+                  ),
                 ],
               ),
             ),
@@ -1095,10 +1080,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
         Expanded(
           child: Text(
             text,
-            style: TextStyle(
-              fontSize: 11.sp,
-              color: Colors.grey,
-            ),
+            style: TextStyle(fontSize: 11.sp, color: Colors.grey),
             maxLines: 1,
             overflow: TextOverflow.ellipsis,
           ),

@@ -208,11 +208,30 @@ class _TravelTalesState extends State<TravelTales> {
               ),
 
               timePickerTheme: TimePickerThemeData(
-                backgroundColor: Color(0xFFEDF0F7),
-
+                backgroundColor: Color(0xFFFFFFFF),
 
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(16),
+                ),
+
+
+                hourMinuteColor: Color(0x3300A6FF),
+                hourMinuteTextColor: Color(0xFF0A2A4A),
+
+                dayPeriodColor: Color(0xFF00A6FF),
+                dayPeriodTextColor: Colors.white,
+
+
+                dialBackgroundColor: Color(0xFFF2F5FA),
+                dialHandColor: Color(0xFF00A6FF),
+                dialTextColor: Color(0xFF0A2A4A),
+
+
+                confirmButtonStyle: TextButton.styleFrom(
+                  foregroundColor: Color(0xFF00A6FF),
+                ),
+                cancelButtonStyle: TextButton.styleFrom(
+                  foregroundColor: Color(0xFF0A2A4A),
                 ),
               ),
             ),
@@ -319,6 +338,23 @@ class _TravelTalesState extends State<TravelTales> {
 
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(16),
+                ),
+
+                hourMinuteColor: Color(0x3300A6FF),
+                hourMinuteTextColor: Color(0xFF0A2A4A),
+
+                dayPeriodColor: Color(0xFF00A6FF),
+                dayPeriodTextColor: Colors.white,
+
+                dialHandColor: Color(0xFF00A6FF),
+                dialBackgroundColor: Color(0xFFE3E7F0),
+                dialTextColor: Color(0xFF0A2A4A),
+
+                confirmButtonStyle: TextButton.styleFrom(
+                  foregroundColor: Color(0xFF00A6FF),
+                ),
+                cancelButtonStyle: TextButton.styleFrom(
+                  foregroundColor: Color(0xFF0A2A4A),
                 ),
               ),
             ),

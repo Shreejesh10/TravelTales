@@ -5,7 +5,6 @@ import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'dart:io';
 import 'package:http_parser/http_parser.dart';
 import 'package:path/path.dart' as p;
-import 'package:traveltales/core/model/destination_model.dart';
 import 'package:traveltales/core/model/event_create_model.dart';
 import 'package:traveltales/core/model/event_model.dart';
 import 'package:traveltales/core/model/genre_model.dart';
@@ -14,10 +13,9 @@ import 'package:traveltales/core/model/user_info.dart';
 
 final storage = FlutterSecureStorage();
 // const String API_URL = 'http://10.0.2.2:8000';
-final String API_URL = 'http://192.168.1.67:8000';
+final String API_URL = 'http://192.168.1.71:8000';
 // final String API_URL = 'http://172.20.10.4:8000';
 // final String API_URL = 'http://100.74.129.4:8000';
-
 
 Future<Map<String, String>> getHeaders() async {
   final accessToken = await storage.read(key: 'access_token');
@@ -31,6 +29,7 @@ Future<Map<String, String>> getHeaders() async {
     "Authorization": "Bearer $accessToken",
   };
 }
+
 Future<List<UserInfo>> getAllUsers() async {
   final url = Uri.parse('$API_URL/users/');
   final headers = await getHeaders();
@@ -45,9 +44,7 @@ Future<List<UserInfo>> getAllUsers() async {
     } else {
       final error = jsonDecode(response.body);
 
-      throw Exception(
-        error["detail"] ?? "Failed to fetch users",
-      );
+      throw Exception(error["detail"] ?? "Failed to fetch users");
     }
   } catch (e) {
     log("GET ALL USERS ERROR: $e");
@@ -83,7 +80,6 @@ Future<UserInfo> getUserById(int userId) async {
   }
 }
 
-
 Future<void> addUserData({
   required String userName,
   required String email,
@@ -91,10 +87,7 @@ Future<void> addUserData({
   try {
     final url = Uri.parse('$API_URL/add_user_data');
 
-    final body = jsonEncode({
-      "user_name": userName,
-      "email": email,
-    });
+    final body = jsonEncode({"user_name": userName, "email": email});
 
     final headers = await getHeaders();
 
@@ -103,9 +96,7 @@ Future<void> addUserData({
     if (response.statusCode == 200) {
       log(" User data sent successfully: ${response.body}");
     } else {
-      log(
-        " Failed to send user data: ${response.statusCode} ${response.body}",
-      );
+      log(" Failed to send user data: ${response.statusCode} ${response.body}");
     }
   } catch (e) {
     log("Error sending user data: $e");
@@ -145,10 +136,7 @@ Future<void> refreshAccessToken() async {
 
 Future<Map<String, dynamic>> login(String email, String password) async {
   final url = Uri.parse('$API_URL/users/login');
-  final body = jsonEncode({
-    "email": email,
-    "password": password,
-  });
+  final body = jsonEncode({"email": email, "password": password});
 
   try {
     final response = await http.post(
@@ -166,11 +154,7 @@ Future<Map<String, dynamic>> login(String email, String password) async {
       final String role = data['roles'] ?? "";
       final bool hasCompleted = data['has_completed_preference'] == true;
 
-
-      await storage.write(
-        key: 'user_id',
-        value: data['user_id'].toString(),
-      );
+      await storage.write(key: 'user_id', value: data['user_id'].toString());
       await storage.write(key: 'roles', value: role);
       await storage.write(
         key: 'has_completed_preference',
@@ -181,10 +165,7 @@ Future<Map<String, dynamic>> login(String email, String password) async {
       log("Login successful. has_completed_preference: $hasCompleted");
       log("Roles: $role");
 
-      return {
-        "roles": role,
-        "has_completed_preference": hasCompleted,
-      };
+      return {"roles": role, "has_completed_preference": hasCompleted};
     } else {
       log("Login failed: ${response.statusCode} ${response.body}");
       throw Exception("Login failed: ${response.body}");
@@ -194,33 +175,37 @@ Future<Map<String, dynamic>> login(String email, String password) async {
     rethrow;
   }
 }
-Future<void> signup(String email, String password, String userName, String roles) async {
+
+Future<void> signup(
+  String email,
+  String password,
+  String userName,
+  String roles,
+) async {
   final url = Uri.parse('$API_URL/users/signup');
   final body = jsonEncode({
     "email": email,
     "password": password,
     "user_name": userName,
-    "roles": roles
+    "roles": roles,
   });
 
-  try{
+  try {
     final response = await http.post(
       url,
       headers: {"Content-Type": "application/json"},
       body: body,
-
     );
 
-    if (response.statusCode == 201){
+    if (response.statusCode == 201) {
       final data = jsonDecode(response.body);
       log("Sign up successfully $data");
-
-    }else{
+    } else {
       final error = jsonDecode(response.body);
       log("Sign up failed: ${response.statusCode} $error");
       throw Exception("Sign up failed: ${response.body}");
     }
-  }catch(e){
+  } catch (e) {
     log("Error during signup: $e");
     rethrow;
   }
@@ -238,18 +223,13 @@ Future<List<UserInfo>> searchUsers(String query) async {
 
       return data.map((u) => UserInfo.fromJson(u)).toList();
     } else {
-      throw Exception(
-        "Search failed: ${response.statusCode} ${response.body}",
-      );
+      throw Exception("Search failed: ${response.statusCode} ${response.body}");
     }
   } catch (e) {
     log("SEARCH ERROR: $e");
     rethrow;
   }
 }
-
-
-
 
 Future<List<Genre>> fetchAllGenres() async {
   final url = Uri.parse('$API_URL/users/genres');
@@ -290,10 +270,11 @@ Future<UserInfo> fetchMeUserInfo() async {
     throw Exception("Unexpected user info format: ${response.body}");
   }
 
-  throw Exception("GET /users/me/user_information failed: "
-      "${response.statusCode} ${response.body}");
+  throw Exception(
+    "GET /users/me/user_information failed: "
+    "${response.statusCode} ${response.body}",
+  );
 }
-
 
 Future<List<int>> fetchUserPreferenceIds() async {
   final url = Uri.parse('$API_URL/users/get_preferences/me');
@@ -317,9 +298,7 @@ Future<void> saveUserPreferencesByIds(List<int> genreIds) async {
   final headers = await getHeaders();
 
   final body = jsonEncode({
-    "preferences": {
-      "genre_ids": genreIds,
-    }
+    "preferences": {"genre_ids": genreIds},
   });
 
   final res = await http.post(url, headers: headers, body: body);
@@ -367,7 +346,9 @@ Future<String> uploadProfilePicture(File imageFile) async {
     return relativeUrl;
   }
 
-  throw Exception("Upload failed: ${streamedResponse.statusCode} $responseBody");
+  throw Exception(
+    "Upload failed: ${streamedResponse.statusCode} $responseBody",
+  );
 }
 
 Future<UserInfo> updateUser({
@@ -377,17 +358,10 @@ Future<UserInfo> updateUser({
   final url = Uri.parse('$API_URL/users/me/update');
   final headers = await getHeaders();
 
-  final body = jsonEncode({
-    "user_name": userName,
-    "email": email,
-  });
+  final body = jsonEncode({"user_name": userName, "email": email});
 
   try {
-    final response = await http.put(
-      url,
-      headers: headers,
-      body: body,
-    );
+    final response = await http.put(url, headers: headers, body: body);
 
     log("UPDATE STATUS: ${response.statusCode}");
     log("UPDATE RESPONSE: ${response.body}");
@@ -399,15 +373,14 @@ Future<UserInfo> updateUser({
     } else {
       final error = jsonDecode(response.body);
 
-      throw Exception(
-        error["detail"] ?? "Failed to update user",
-      );
+      throw Exception(error["detail"] ?? "Failed to update user");
     }
   } catch (e) {
     log("UPDATE ERROR: $e");
     rethrow;
   }
 }
+
 Future<void> changePassword({
   required String currentPassword,
   required String newPassword,
@@ -421,11 +394,7 @@ Future<void> changePassword({
   });
 
   try {
-    final response = await http.put(
-      url,
-      headers: headers,
-      body: body,
-    );
+    final response = await http.put(url, headers: headers, body: body);
 
     log("CHANGE PASSWORD STATUS: ${response.statusCode}");
     log("CHANGE PASSWORD RESPONSE: ${response.body}");
@@ -456,9 +425,7 @@ Future<void> saveFcmToken(String token) async {
   final response = await http.post(
     url,
     headers: headers,
-    body: jsonEncode({
-      "token": token,
-    }),
+    body: jsonEncode({"token": token}),
   );
 
   if (response.statusCode == 200 || response.statusCode == 201) {
@@ -487,9 +454,6 @@ Future<void> removeFcmToken() async {
   );
 }
 
-
-
-
 Future<void> createEvent(EventCreateModel event) async {
   final headers = await getHeaders();
 
@@ -514,9 +478,7 @@ Future<EventCreateModel> getEventById(int eventId) async {
 
   final response = await http.get(
     url,
-    headers: {
-      "Content-Type": "application/json",
-    },
+    headers: {"Content-Type": "application/json"},
   );
 
   if (response.statusCode == 200) {
@@ -528,7 +490,10 @@ Future<EventCreateModel> getEventById(int eventId) async {
   }
 }
 
-Future<EventCreateModel> updateEvent(int eventId, Map<String, dynamic> updatedData) async {
+Future<EventCreateModel> updateEvent(
+  int eventId,
+  Map<String, dynamic> updatedData,
+) async {
   final headers = await getHeaders();
   final url = Uri.parse('$API_URL/events/$eventId');
 
@@ -552,10 +517,7 @@ Future<void> deleteEvent(int eventId) async {
   final headers = await getHeaders();
   final url = Uri.parse('$API_URL/events/$eventId');
 
-  final response = await http.delete(
-    url,
-    headers:headers
-  );
+  final response = await http.delete(url, headers: headers);
 
   if (response.statusCode == 204) {
     log("Event deleted successfully");
@@ -564,6 +526,7 @@ Future<void> deleteEvent(int eventId) async {
     throw Exception("Failed to delete event");
   }
 }
+
 Future<List<EventCreateModel>> getMyEvents() async {
   final url = Uri.parse('$API_URL/events/me');
   final headers = await getHeaders();
@@ -578,6 +541,7 @@ Future<List<EventCreateModel>> getMyEvents() async {
     throw Exception("Failed to load my events");
   }
 }
+
 Future<List<Event>> getAllEvents() async {
   final url = Uri.parse('$API_URL/events/all');
   final headers = await getHeaders();
@@ -650,9 +614,7 @@ Future<void> rejectCompany(int userId, String reason) async {
       "Content-Type": "application/json",
       "Authorization": "Bearer $token",
     },
-    body: jsonEncode({
-      "reason": reason,
-    }),
+    body: jsonEncode({"reason": reason}),
   );
 
   if (response.statusCode != 200) {

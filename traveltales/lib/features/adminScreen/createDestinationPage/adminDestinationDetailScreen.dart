@@ -103,9 +103,7 @@ class _AdminDestinationDetailScreenState
               ),
             );
 
-            if (result == true && mounted) {
-              Navigator.pop(context, true);
-            }
+
           },
         ),
       ],
