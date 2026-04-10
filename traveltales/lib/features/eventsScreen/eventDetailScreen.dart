@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:intl/intl.dart';
 import 'package:traveltales/api/api.dart';
 import 'package:traveltales/api/bookingAPI.dart';
 import 'package:traveltales/core/model/booking_model.dart';
 import 'package:traveltales/core/model/event_model.dart';
 import 'package:traveltales/core/route_config/route_names.dart';
+import 'package:traveltales/core/ui/components/actionDialogBox.dart';
+import 'package:traveltales/core/ui/components/app_flushbar.dart';
 import 'package:traveltales/core/ui/components/button.dart';
 import 'package:traveltales/core/ui/components/functions/dateTime/app_formatters.dart';
 import 'package:traveltales/core/ui/components/shimmerView.dart';
@@ -16,10 +17,7 @@ import 'package:traveltales/core/ui/resources/theme/appColors.dart';
 class EventDetailScreen extends StatefulWidget {
   final Event event;
 
-  const EventDetailScreen({
-    super.key,
-    required this.event,
-  });
+  const EventDetailScreen({super.key, required this.event});
 
   @override
   State<EventDetailScreen> createState() => _EventDetailScreenState();
@@ -39,23 +37,74 @@ class _EventDetailScreenState extends State<EventDetailScreen> {
   bool isChecklistExpanded = false;
   bool isBookedForExpanded = false;
   String? _userRole;
+  String? _currentUserId;
 
   Event get event => widget.event;
-
 
   @override
   void initState() {
     super.initState();
     _bookingsFuture = _bookingService.getMyBookings();
-    _loadUserRole();
+    _loadUser();
   }
 
-  Future<void> _loadUserRole() async {
+  Future<void> _loadUser() async {
     final role = await storage.read(key: 'roles');
+    final userId = await storage.read(key: 'user_id');
     if (!mounted) return;
     setState(() {
-      _userRole = role;
+      _userRole = role?.toLowerCase().trim();
+      _currentUserId = userId;
     });
+  }
+
+  bool get _canManageEvent =>
+      _userRole == 'company' &&
+      _currentUserId == event.companyUserId.toString();
+
+  Future<void> _deleteEvent() async {
+    await showAppActionDialog(
+      context: context,
+      title: "Delete Event",
+      isDestructive: true,
+      confirmText: "Yes",
+      cancelText: "No",
+      contentWidget: [
+        Text(
+          "Are you sure you want to delete this event?",
+          style: TextStyle(fontSize: 14.sp),
+        ),
+      ],
+      onConfirm: () async {
+        try {
+          await deleteEvent(event.eventId);
+          if (!mounted) return;
+
+          AppFlushbar.success(context, "Event deleted successfully");
+          Navigator.pop(context, true);
+        } catch (e) {
+          if (!mounted) return;
+          AppFlushbar.error(
+            context,
+            "Failed to delete event",
+            fallbackMessage: "Couldn't delete the event. Please try again.",
+          );
+        }
+      },
+    );
+  }
+
+  Future<void> _editEvent() async {
+    final updated = await Navigator.pushNamed(
+      context,
+      RouteName.editEventScreen,
+      arguments: event,
+    );
+
+    if (!mounted) return;
+    if (updated == true) {
+      Navigator.pop(context, true);
+    }
   }
 
   @override
@@ -89,8 +138,6 @@ class _EventDetailScreenState extends State<EventDetailScreen> {
     return DateTime(date.year, date.month, date.day);
   }
 
-
-
   @override
   Widget build(BuildContext context) {
     screenHeight = 1.sh;
@@ -118,14 +165,28 @@ class _EventDetailScreenState extends State<EventDetailScreen> {
             ),
           ),
         ),
+        actions: [
+          if (_canManageEvent) ...[
+            _appBarCircleButton(
+              icon: Icons.edit_outlined,
+              onPressed: _editEvent,
+            ),
+            SizedBox(width: 8.w),
+            _appBarCircleButton(
+              icon: Icons.delete_outline,
+              iconColor: Colors.red,
+              onPressed: _deleteEvent,
+            ),
+            SizedBox(width: 12.w),
+          ],
+        ],
       ),
       body: Stack(
         children: [
           SizedBox(
             height: screenHeight * 0.3,
             width: double.infinity,
-            child:
-                Image.network(
+            child: Image.network(
               bannerImageUrl,
               fit: BoxFit.cover,
               errorBuilder: (_, __, ___) {
@@ -136,7 +197,7 @@ class _EventDetailScreenState extends State<EventDetailScreen> {
                   ),
                 );
               },
-            )
+            ),
           ),
           Padding(
             padding: EdgeInsets.only(top: screenHeight * 0.25),
@@ -167,278 +228,305 @@ class _EventDetailScreenState extends State<EventDetailScreen> {
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                        Row(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            ClipRRect(
-                              borderRadius: BorderRadius.circular(12.r),
-                              child: SizedBox(
-                                height: 170.h,
-                                width: 135.w,
-                                child: Image.network(
-                                  cardImageUrl,
-                                  fit: BoxFit.cover,
-                                )
-
-                              ),
-                            ),
-                            SizedBox(width: 12.w),
-                            Expanded(
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text(
-                                    event.title,
-                                    style: TextStyle(
-                                      fontSize: 18.sp,
-                                      fontWeight: FontWeight.bold,
+                            Row(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                ClipRRect(
+                                  borderRadius: BorderRadius.circular(12.r),
+                                  child: SizedBox(
+                                    height: 170.h,
+                                    width: 135.w,
+                                    child: Image.network(
+                                      cardImageUrl,
+                                      fit: BoxFit.cover,
                                     ),
                                   ),
-                                  4.h.verticalSpace,
-                                  Row(
+                                ),
+                                SizedBox(width: 12.w),
+                                Expanded(
+                                  child: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
                                     children: [
-                                      Icon(
-                                        Icons.location_on,
-                                        size: 14.sp,
-                                        color: AppColors.getIconColors(context),
+                                      Text(
+                                        event.title,
+                                        style: TextStyle(
+                                          fontSize: 18.sp,
+                                          fontWeight: FontWeight.bold,
+                                        ),
                                       ),
-                                      4.w.horizontalSpace,
-                                      Expanded(
-                                        child: Text(
-                                          event.destination.location,
-                                          style: TextStyle(
-                                            fontSize: 12.sp,
-                                            fontWeight: FontWeight.w500,
-                                            color:
-                                            AppColors.getSmallTextColor(
+                                      4.h.verticalSpace,
+                                      Row(
+                                        children: [
+                                          Icon(
+                                            Icons.location_on,
+                                            size: 14.sp,
+                                            color: AppColors.getIconColors(
                                               context,
                                             ),
                                           ),
-                                        ),
+                                          4.w.horizontalSpace,
+                                          Expanded(
+                                            child: Text(
+                                              event.destination.location,
+                                              style: TextStyle(
+                                                fontSize: 12.sp,
+                                                fontWeight: FontWeight.w500,
+                                                color:
+                                                    AppColors.getSmallTextColor(
+                                                      context,
+                                                    ),
+                                              ),
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                      8.h.verticalSpace,
+                                      Row(
+                                        children: [
+                                          Expanded(
+                                            child: _statCard(
+                                              icon: Icons.schedule,
+                                              value:
+                                                  AppFormatters.formatDuration(
+                                                    event.fromDate,
+                                                    event.toDate,
+                                                  ),
+                                              label: SharedRes.strings(
+                                                context,
+                                              ).duration,
+                                              onTap: () {},
+                                              iconColor: const Color(
+                                                0xFF2ECC71,
+                                              ),
+                                            ),
+                                          ),
+                                          8.w.horizontalSpace,
+                                          Expanded(
+                                            child: _statCard(
+                                              icon: Icons.group_outlined,
+                                              value: "${event.maxPeople}",
+                                              label: SharedRes.strings(
+                                                context,
+                                              ).maxPeople,
+                                              onTap: () {},
+                                              iconColor: const Color(
+                                                0xFF2ECC71,
+                                              ),
+                                            ),
+                                          ),
+                                        ],
                                       ),
                                     ],
                                   ),
-                                  8.h.verticalSpace,
-                                  Row(
-                                    children: [
-                                      Expanded(
-                                        child: _statCard(
-                                          icon: Icons.schedule,
-                                          value: AppFormatters.formatDuration(event.fromDate, event.toDate),
-                                          label: SharedRes.strings(
-                                            context,
-                                          ).duration,
-                                          onTap: () {},
-                                          iconColor: const Color(0xFF2ECC71),
-                                        ),
-                                      ),
-                                      8.w.horizontalSpace,
-                                      Expanded(
-                                        child: _statCard(
-                                          icon: Icons.group_outlined,
-                                          value:
-                                          "${event.maxPeople}",
-                                          label: SharedRes.strings(context)
-                                              .maxPeople,
-                                          onTap: () {},
-                                          iconColor: const Color(0xFF2ECC71),
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                ],
-                              ),
+                                ),
+                              ],
                             ),
-                          ],
-                        ),
-                        SizedBox(height: 12.h),
-                        ViewAllRow(
-                          firstText: SharedRes.strings(context).aboutThePlace,
-                          onPressed: () {},
-                          isViewAll: false,
-                        ),
-                        SizedBox(height: 4.h),
-                        Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              event.eventDescription.trim().isNotEmpty == true
-                                  ? event.eventDescription
-                                  : "No description available",
-                              maxLines: isDescriptionExpanded ? null : 6,
-                              overflow: isDescriptionExpanded
-                                  ? TextOverflow.visible
-                                  : TextOverflow.ellipsis,
-                              style: TextStyle(
-                                fontSize: 13.sp,
-                                color: Colors.grey,
-                                height: 1.4,
-                              ),
+                            SizedBox(height: 12.h),
+                            ViewAllRow(
+                              firstText: SharedRes.strings(
+                                context,
+                              ).aboutThePlace,
+                              onPressed: () {},
+                              isViewAll: false,
                             ),
                             SizedBox(height: 4.h),
-                            GestureDetector(
-                              onTap: () {
-                                setState(() {
-                                  isDescriptionExpanded =
-                                  !isDescriptionExpanded;
-                                });
-                              },
-                              child: Text(
-                                isDescriptionExpanded
-                                    ? SharedRes.strings(context).seeLess
-                                    : SharedRes.strings(context).seeMore,
-                                style: TextStyle(
-                                  fontSize: 12.sp,
-                                  fontWeight: FontWeight.w600,
-                                  color: AppColors.getIconColors(context),
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
-                        SizedBox(height: 4.h),
-                        _fullDetailCard(
-                          icon: Icons.verified_user_outlined,
-                          value: SharedRes.strings(context).postedBy,
-                          label:
-                              event.companyName.trim().isNotEmpty
-                                  ? event.companyName
-                                  : "Unknown Company",
-                          iconColor: AppColors.getIconColors(context),
-                          onTap: () {},
-                        ),
-                        SizedBox(height: 12.h),
-                        _fullDetailCard(
-                          icon: Icons.calendar_today_outlined,
-                          value: AppFormatters.formatFullDate(event.fromDate),
-                          label: AppFormatters.formatTime(event.meetingTime),
-                          iconColor: AppColors.getIconColors(context),
-                          onTap: () {},
-                        ),
-                        SizedBox(height: 12.h),
-                        _fullDetailCard(
-                          icon: Icons.place,
-                          value: SharedRes.strings(context).meetupPoint,
-                          label: event.meetingPoint,
-                          iconColor: AppColors.getIconColors(context),
-                          onTap: () {},
-                        ),
-                        SizedBox(height: 12.h),
-                        ViewAllRow(
-                          firstText: SharedRes.strings(context).moreInformation,
-                          onPressed: () {},
-                          isViewAll: false,
-                        ),
-                        SizedBox(height: 4.h),
-                        Container(
-                          key: _eventDateKey,
-                          child: _contentBox(
-                            context,
-                            heading: SharedRes.strings(context).eventDate,
-                            icon: Icons.date_range,
-                            isExpanded: isEventDateExpanded,
-                            onTap: () {
-                              final willExpand = !isEventDateExpanded;
-                              setState(() {
-                                isEventDateExpanded = willExpand;
-                              });
-                              if (willExpand) {
-                                _scrollToSection(_eventDateKey);
-                              }
-                            },
-                            child: Column(
+                            Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                _fullDetailCard(
-                                  icon: Icons.golf_course,
-                                  value: SharedRes.strings(context).fromDate,
-                                  label: AppFormatters.formatDate(event.fromDate),
-                                  iconColor: Colors.green,
-                                  onTap: () {},
+                                Text(
+                                  event.eventDescription.trim().isNotEmpty ==
+                                          true
+                                      ? event.eventDescription
+                                      : "No description available",
+                                  maxLines: isDescriptionExpanded ? null : 6,
+                                  overflow: isDescriptionExpanded
+                                      ? TextOverflow.visible
+                                      : TextOverflow.ellipsis,
+                                  style: TextStyle(
+                                    fontSize: 13.sp,
+                                    color: Colors.grey,
+                                    height: 1.4,
+                                  ),
                                 ),
-                                SizedBox(height: 8.h),
-                                _fullDetailCard(
-                                  icon: Icons.pin_end_outlined,
-                                  value: SharedRes.strings(context).toDate,
-                                  label: AppFormatters.formatDate(event.fromDate),
-                                  iconColor: Colors.green,
-                                  onTap: () {},
-                                ),
-                              ],
-                            ),
-                          ),
-                        ),
-                        SizedBox(height: 12.h),
-                        Container(
-                          key: _checklistKey,
-                          child: _contentBox(
-                            context,
-                            heading:
-                            SharedRes.strings(context).essentialChecklist,
-                            icon: Icons.checklist,
-                            isExpanded: isChecklistExpanded,
-                            onTap: () {
-                              final willExpand = !isChecklistExpanded;
-                              setState(() {
-                                isChecklistExpanded = willExpand;
-                              });
-                              if (willExpand) {
-                                _scrollToSection(_checklistKey);
-                              }
-                            },
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: (event.whatToBring.isNotEmpty)
-                                  ? event.whatToBring
-                                  .map(
-                                    (item) => checklistItem(context, item),
-                              )
-                                  .toList()
-                                  : [
-                                checklistItem(
-                                  context,
-                                  "No checklist available",
+                                SizedBox(height: 4.h),
+                                GestureDetector(
+                                  onTap: () {
+                                    setState(() {
+                                      isDescriptionExpanded =
+                                          !isDescriptionExpanded;
+                                    });
+                                  },
+                                  child: Text(
+                                    isDescriptionExpanded
+                                        ? SharedRes.strings(context).seeLess
+                                        : SharedRes.strings(context).seeMore,
+                                    style: TextStyle(
+                                      fontSize: 12.sp,
+                                      fontWeight: FontWeight.w600,
+                                      color: AppColors.getIconColors(context),
+                                    ),
+                                  ),
                                 ),
                               ],
                             ),
-                          ),
-                        ),
-                        if (matchingBooking != null &&
-                            matchingBooking.invitedFriends.isNotEmpty) ...[
-                          SizedBox(height: 12.h),
-                          Container(
-                            key: _bookedForKey,
-                            child: _contentBox(
-                              context,
-                              heading: "For whom it was booked",
-                              icon: Icons.groups_outlined,
-                              isExpanded: isBookedForExpanded,
-                              onTap: () {
-                                final willExpand = !isBookedForExpanded;
-                                setState(() {
-                                  isBookedForExpanded = willExpand;
-                                });
-                                if (willExpand) {
-                                  _scrollToSection(_bookedForKey);
-                                }
-                              },
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: matchingBooking.invitedFriends
-                                    .map(
-                                      (friend) => checklistItem(
+                            SizedBox(height: 4.h),
+                            _fullDetailCard(
+                              icon: Icons.verified_user_outlined,
+                              value: SharedRes.strings(context).postedBy,
+                              label: event.companyName.trim().isNotEmpty
+                                  ? event.companyName
+                                  : "Unknown Company",
+                              iconColor: AppColors.getIconColors(context),
+                              onTap: () {},
+                            ),
+                            SizedBox(height: 12.h),
+                            _fullDetailCard(
+                              icon: Icons.calendar_today_outlined,
+                              value: AppFormatters.formatFullDate(
+                                event.fromDate,
+                              ),
+                              label: AppFormatters.formatTime(
+                                event.meetingTime,
+                              ),
+                              iconColor: AppColors.getIconColors(context),
+                              onTap: () {},
+                            ),
+                            SizedBox(height: 12.h),
+                            _fullDetailCard(
+                              icon: Icons.place,
+                              value: SharedRes.strings(context).meetupPoint,
+                              label: event.meetingPoint,
+                              iconColor: AppColors.getIconColors(context),
+                              onTap: () {},
+                            ),
+                            SizedBox(height: 12.h),
+                            ViewAllRow(
+                              firstText: SharedRes.strings(
+                                context,
+                              ).moreInformation,
+                              onPressed: () {},
+                              isViewAll: false,
+                            ),
+                            SizedBox(height: 4.h),
+                            Container(
+                              key: _eventDateKey,
+                              child: _contentBox(
+                                context,
+                                heading: SharedRes.strings(context).eventDate,
+                                icon: Icons.date_range,
+                                isExpanded: isEventDateExpanded,
+                                onTap: () {
+                                  final willExpand = !isEventDateExpanded;
+                                  setState(() {
+                                    isEventDateExpanded = willExpand;
+                                  });
+                                  if (willExpand) {
+                                    _scrollToSection(_eventDateKey);
+                                  }
+                                },
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    _fullDetailCard(
+                                      icon: Icons.golf_course,
+                                      value: SharedRes.strings(
                                         context,
-                                        friend.userName.trim().isNotEmpty
-                                            ? friend.userName
-                                            : "User ${friend.id}",
+                                      ).fromDate,
+                                      label: AppFormatters.formatDate(
+                                        event.fromDate,
                                       ),
-                                    )
-                                    .toList(),
+                                      iconColor: Colors.green,
+                                      onTap: () {},
+                                    ),
+                                    SizedBox(height: 8.h),
+                                    _fullDetailCard(
+                                      icon: Icons.pin_end_outlined,
+                                      value: SharedRes.strings(context).toDate,
+                                      label: AppFormatters.formatDate(
+                                        event.fromDate,
+                                      ),
+                                      iconColor: Colors.green,
+                                      onTap: () {},
+                                    ),
+                                  ],
+                                ),
                               ),
                             ),
-                          ),
-                        ],
-                        SizedBox(height: 12.h),
+                            SizedBox(height: 12.h),
+                            Container(
+                              key: _checklistKey,
+                              child: _contentBox(
+                                context,
+                                heading: SharedRes.strings(
+                                  context,
+                                ).essentialChecklist,
+                                icon: Icons.checklist,
+                                isExpanded: isChecklistExpanded,
+                                onTap: () {
+                                  final willExpand = !isChecklistExpanded;
+                                  setState(() {
+                                    isChecklistExpanded = willExpand;
+                                  });
+                                  if (willExpand) {
+                                    _scrollToSection(_checklistKey);
+                                  }
+                                },
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: (event.whatToBring.isNotEmpty)
+                                      ? event.whatToBring
+                                            .map(
+                                              (item) =>
+                                                  checklistItem(context, item),
+                                            )
+                                            .toList()
+                                      : [
+                                          checklistItem(
+                                            context,
+                                            "No checklist available",
+                                          ),
+                                        ],
+                                ),
+                              ),
+                            ),
+                            if (matchingBooking != null &&
+                                matchingBooking.invitedFriends.isNotEmpty) ...[
+                              SizedBox(height: 12.h),
+                              Container(
+                                key: _bookedForKey,
+                                child: _contentBox(
+                                  context,
+                                  heading: "For whom it was booked",
+                                  icon: Icons.groups_outlined,
+                                  isExpanded: isBookedForExpanded,
+                                  onTap: () {
+                                    final willExpand = !isBookedForExpanded;
+                                    setState(() {
+                                      isBookedForExpanded = willExpand;
+                                    });
+                                    if (willExpand) {
+                                      _scrollToSection(_bookedForKey);
+                                    }
+                                  },
+                                  child: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: matchingBooking.invitedFriends
+                                        .map(
+                                          (friend) => checklistItem(
+                                            context,
+                                            friend.userName.trim().isNotEmpty
+                                                ? friend.userName
+                                                : "User ${friend.id}",
+                                          ),
+                                        )
+                                        .toList(),
+                                  ),
+                                ),
+                              ),
+                            ],
+                            SizedBox(height: 12.h),
                           ],
                         ),
                       ),
@@ -473,8 +561,8 @@ class _EventDetailScreenState extends State<EventDetailScreen> {
           final bookings = snapshot.data!;
 
           final alreadyBooked = bookings.any(
-                (b) =>
-            b.eventId == event.eventId &&
+            (b) =>
+                b.eventId == event.eventId &&
                 (b.status == "pending" || b.status == "completed"),
           );
 
@@ -543,12 +631,38 @@ class _EventDetailScreenState extends State<EventDetailScreen> {
               height: 54.h,
               child: AppButton(
                 onPressed: () {
-                  Navigator.pushNamed(context, RouteName.eventBookingScreen, arguments: event);
+                  Navigator.pushNamed(
+                    context,
+                    RouteName.eventBookingScreen,
+                    arguments: event,
+                  );
                 },
                 text: SharedRes.strings(context).bookNow,
               ),
             ),
           ],
+        ),
+      ),
+    );
+  }
+
+  Widget _appBarCircleButton({
+    required IconData icon,
+    required VoidCallback onPressed,
+    Color iconColor = Colors.white,
+  }) {
+    return Center(
+      child: Container(
+        height: 40.h,
+        width: 40.h,
+        decoration: BoxDecoration(
+          shape: BoxShape.circle,
+          color: AppColors.leadingDetailPageColor,
+        ),
+        child: IconButton(
+          onPressed: onPressed,
+          icon: Icon(icon, color: iconColor),
+          padding: EdgeInsets.zero,
         ),
       ),
     );
@@ -605,13 +719,13 @@ class _EventDetailScreenState extends State<EventDetailScreen> {
   }
 
   Widget _contentBox(
-      BuildContext context, {
-        required String heading,
-        required bool isExpanded,
-        required VoidCallback onTap,
-        required Widget child,
-        required IconData icon,
-      }) {
+    BuildContext context, {
+    required String heading,
+    required bool isExpanded,
+    required VoidCallback onTap,
+    required Widget child,
+    required IconData icon,
+  }) {
     return Container(
       width: double.infinity,
       padding: EdgeInsets.all(16.w),
@@ -639,11 +753,7 @@ class _EventDetailScreenState extends State<EventDetailScreen> {
               padding: EdgeInsets.symmetric(vertical: 2.h),
               child: Row(
                 children: [
-                  Icon(
-                    icon,
-                    size: 20,
-                    color: AppColors.getIconColors(context),
-                  ),
+                  Icon(icon, size: 20, color: AppColors.getIconColors(context)),
                   SizedBox(width: 8.w),
                   Expanded(
                     child: Text(
@@ -696,11 +806,7 @@ class _EventDetailScreenState extends State<EventDetailScreen> {
               border: Border.all(color: const Color(0xFF22C55E)),
               color: const Color(0xFFECFDF5),
             ),
-            child: const Icon(
-              Icons.check,
-              size: 14,
-              color: Color(0xFF22C55E),
-            ),
+            child: const Icon(Icons.check, size: 14, color: Color(0xFF22C55E)),
           ),
           SizedBox(width: 10.w),
           Expanded(

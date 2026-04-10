@@ -13,9 +13,11 @@ import 'package:traveltales/features/bookmark/bookmarkScreen.dart';
 import 'package:traveltales/features/companyDashboard/companyDashboardScreen.dart';
 import 'package:traveltales/features/dashboard/dashboardScreen.dart';
 import 'package:traveltales/features/destinationDetailScreen/destinationDetailScreen.dart';
+import 'package:traveltales/features/eventsScreen/editEventScreen.dart';
 import 'package:traveltales/features/eventsScreen/eventBookingScreen/eventBookingScreen.dart';
 import 'package:traveltales/features/eventsScreen/eventCreatingScreen/eventCreatingScreen.dart';
 import 'package:traveltales/features/eventsScreen/eventDetailScreen.dart';
+import 'package:traveltales/features/eventsScreen/myEventsScreen.dart';
 import 'package:traveltales/features/homeScreen/homeScreen.dart';
 import 'package:traveltales/features/notification/notificationScreen.dart';
 import 'package:traveltales/features/onboardingScreen/onboardingScreen.dart';
@@ -78,6 +80,11 @@ class RouteConfig {
           builder: (_) => EventCreatingScreen(),
           settings: settings,
         );
+      case RouteName.myEventsScreen:
+        return MaterialPageRoute(
+          builder: (_) => const MyEventsScreen(),
+          settings: settings,
+        );
       case RouteName.eventDetailScreen:
         final event = settings.arguments as Event;
         return MaterialPageRoute(
@@ -106,6 +113,12 @@ class RouteConfig {
         return MaterialPageRoute(builder: (_) => BookmarkScreen());
       case RouteName.notificationScreen:
         return MaterialPageRoute(builder: (_) => NotificationScreen());
+      case RouteName.editEventScreen:
+        if (args is! Event) return _errorRoute();
+        return MaterialPageRoute(
+          builder: (_) => EditEventScreen(event: args),
+          settings: settings,
+        );
 
       default:
         return _errorRoute();

@@ -5,7 +5,7 @@ class AuthRouteName {
   static const String signupScreen = '/signup-screen';
 }
 
-class RouteName{
+class RouteName {
   RouteName._();
   static const String dashBoardScreen = '/dashboard-screen';
   static const String homeScreen = '/home-screen';
@@ -17,14 +17,16 @@ class RouteName{
   static const String bookedEventScreen = "/booked_detail_screen";
   static const String companyDashboardScreen = "/company_dashboard_screen";
   static const String eventCreatingScreen = "/event_creating_screen";
+  static const String myEventsScreen = "/my_events_screen";
   static const String eventDetailScreen = "/event_detail_screen";
   static const String addFriendScreen = "/add_friend_screen";
   static const String adminDashboardScreen = "/admin_dashboard_screen";
   static const String eventBookingScreen = "/event_booking_screen";
-  static const String adminDestinationDetailScreen = "/admin_destination_detail_screen";
+  static const String adminDestinationDetailScreen =
+      "/admin_destination_detail_screen";
   static const String totalFriendScreen = "/total_friend_screen";
   static const String acceptFriendScreen = "/accept_friend_screen";
   static const String bookmarkScreen = "/bookmark_screen";
   static const String notificationScreen = "/notification_screen";
-
+  static const String editEventScreen = "/edit_event_screen";
 }

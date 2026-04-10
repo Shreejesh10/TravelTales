@@ -490,10 +490,7 @@ Future<EventCreateModel> getEventById(int eventId) async {
   }
 }
 
-Future<EventCreateModel> updateEvent(
-  int eventId,
-  Map<String, dynamic> updatedData,
-) async {
+Future<void> updateEvent(int eventId, Map<String, dynamic> updatedData) async {
   final headers = await getHeaders();
   final url = Uri.parse('$API_URL/events/$eventId');
 
@@ -503,10 +500,9 @@ Future<EventCreateModel> updateEvent(
     body: jsonEncode(updatedData),
   );
 
-  if (response.statusCode == 200) {
-    final data = jsonDecode(response.body);
+  if (response.statusCode == 200 || response.statusCode == 204) {
     log("Event updated successfully");
-    return EventCreateModel.fromJson(data);
+    return;
   } else {
     log("Update event failed: ${response.statusCode} ${response.body}");
     throw Exception("Failed to update event");

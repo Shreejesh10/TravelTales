@@ -28,6 +28,7 @@ class _EventsScreenState extends State<EventsScreen> {
   late Future<List<Booking>> _bookingsFuture;
 
   String? currentCompanyId;
+  String? _currentRole;
 
   @override
   void initState() {
@@ -35,11 +36,20 @@ class _EventsScreenState extends State<EventsScreen> {
     _eventsFuture = getAllEvents();
     _bookingsFuture = _bookingService.getMyBookings();
     _loadCompanyId();
+    _loadRole();
   }
-  Future<void> _loadCompanyId() async{
-    currentCompanyId = await storage.read(key: 'user_id');
-    setState(() {
 
+  Future<void> _loadCompanyId() async {
+    currentCompanyId = await storage.read(key: 'user_id');
+    if (!mounted) return;
+    setState(() {});
+  }
+
+  Future<void> _loadRole() async {
+    final role = await storage.read(key: 'roles');
+    if (!mounted) return;
+    setState(() {
+      _currentRole = role?.toLowerCase().trim();
     });
   }
 
@@ -49,6 +59,7 @@ class _EventsScreenState extends State<EventsScreen> {
       _bookingsFuture = _bookingService.getMyBookings();
     });
   }
+
   Future<void> _deleteEvent(int eventId) async {
     await showAppActionDialog(
       context: context,
@@ -165,7 +176,6 @@ class _EventsScreenState extends State<EventsScreen> {
     );
   }
 
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -183,6 +193,17 @@ class _EventsScreenState extends State<EventsScreen> {
           ),
         ),
         actions: [
+          if (_currentRole == "company")
+            IconButton(
+              tooltip: "My Events",
+              onPressed: () {
+                Navigator.pushNamed(context, RouteName.myEventsScreen);
+              },
+              icon: Icon(
+                Icons.event_available_outlined,
+                size: compactDimens.medium1,
+              ),
+            ),
           IconButton(
             onPressed: () {},
             icon: Icon(Icons.notifications_none, size: compactDimens.medium1),
@@ -190,10 +211,7 @@ class _EventsScreenState extends State<EventsScreen> {
         ],
       ),
       body: FutureBuilder<List<dynamic>>(
-        future: Future.wait([
-          _eventsFuture,
-          _bookingsFuture,
-        ]),
+        future: Future.wait([_eventsFuture, _bookingsFuture]),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return _buildLoadingShimmer();
@@ -216,10 +234,7 @@ class _EventsScreenState extends State<EventsScreen> {
                       ),
                     ),
                     SizedBox(height: 8.h),
-                    AppButton(
-                      text: "Retry",
-                      onPressed: _reloadEvents,
-                    ),
+                    AppButton(text: "Retry", onPressed: _reloadEvents),
                   ],
                 ),
               ),
@@ -238,14 +253,12 @@ class _EventsScreenState extends State<EventsScreen> {
               .where((event) => !bookedEventIds.contains(event.eventId))
               .toList();
           final today = _dateOnly(DateTime.now());
-          final availableEvents =
-              events
-                  .where((event) => !_dateOnly(event.toDate).isBefore(today))
-                  .toList();
-          final expiredEvents =
-              events
-                  .where((event) => _dateOnly(event.toDate).isBefore(today))
-                  .toList();
+          final availableEvents = events
+              .where((event) => !_dateOnly(event.toDate).isBefore(today))
+              .toList();
+          final expiredEvents = events
+              .where((event) => _dateOnly(event.toDate).isBefore(today))
+              .toList();
           availableEvents.sort((a, b) => a.fromDate.compareTo(b.fromDate));
           expiredEvents.sort((a, b) => b.toDate.compareTo(a.toDate));
 
@@ -253,10 +266,7 @@ class _EventsScreenState extends State<EventsScreen> {
             return Center(
               child: Text(
                 "No events found",
-                style: TextStyle(
-                  fontSize: 16.sp,
-                  fontWeight: FontWeight.w500,
-                ),
+                style: TextStyle(fontSize: 16.sp, fontWeight: FontWeight.w500),
               ),
             );
           }
@@ -272,10 +282,12 @@ class _EventsScreenState extends State<EventsScreen> {
               physics: const AlwaysScrollableScrollPhysics(),
               children: [
                 if (availableEvents.isNotEmpty) ...[
-                  ...availableEvents.map((event) => Padding(
-                    padding: EdgeInsets.only(bottom: 16.h),
-                    child: _buildEventCard(event),
-                  )),
+                  ...availableEvents.map(
+                    (event) => Padding(
+                      padding: EdgeInsets.only(bottom: 16.h),
+                      child: _buildEventCard(event),
+                    ),
+                  ),
                 ] else ...[
                   _emptySection("No active events available right now."),
                 ],
@@ -287,10 +299,12 @@ class _EventsScreenState extends State<EventsScreen> {
                     isViewAll: false,
                   ),
                   SizedBox(height: 8.h),
-                  ...expiredEvents.map((event) => Padding(
-                    padding: EdgeInsets.only(bottom: 16.h),
-                    child: _buildEventCard(event, isExpired: true),
-                  )),
+                  ...expiredEvents.map(
+                    (event) => Padding(
+                      padding: EdgeInsets.only(bottom: 16.h),
+                      child: _buildEventCard(event, isExpired: true),
+                    ),
+                  ),
                 ] else ...[
                   SizedBox(height: 12.h),
                   const ViewAllRow(
@@ -345,7 +359,11 @@ class _EventsScreenState extends State<EventsScreen> {
           context,
           RouteName.eventDetailScreen,
           arguments: event,
-        );
+        ).then((updated) {
+          if (updated == true && mounted) {
+            _reloadEvents();
+          }
+        });
       },
     );
   }
@@ -400,9 +418,10 @@ class _EventsScreenState extends State<EventsScreen> {
                       ? Image.network(
                           imageUrl,
                           fit: BoxFit.cover,
-                          color: isExpired ? Colors.black.withOpacity(0.18) : null,
-                          colorBlendMode:
-                              isExpired ? BlendMode.darken : null,
+                          color: isExpired
+                              ? Colors.black.withOpacity(0.18)
+                              : null,
+                          colorBlendMode: isExpired ? BlendMode.darken : null,
                         )
                       : Container(
                           color: Colors.grey.shade300,
@@ -576,7 +595,7 @@ class _EventsScreenState extends State<EventsScreen> {
                     if (isMyEvent)
                       Container(
                         height: 42,
-                          width: 42,
+                        width: 42,
                         decoration: BoxDecoration(
                           border: Border.all(
                             color: AppColors.getBorderColor(context),
@@ -585,8 +604,11 @@ class _EventsScreenState extends State<EventsScreen> {
                         ),
                         child: IconButton(
                           onPressed: onDeleteTap,
-                          icon: const Icon(Icons.delete_outline, color: Colors.red,),
-                        )
+                          icon: const Icon(
+                            Icons.delete_outline,
+                            color: Colors.red,
+                          ),
+                        ),
                       ),
                     if (isMyEvent) const SizedBox(width: 12),
                     Container(
