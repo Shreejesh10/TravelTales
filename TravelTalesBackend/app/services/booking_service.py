@@ -1,6 +1,6 @@
 from fastapi import HTTPException, status
 from sqlalchemy.orm import Session, joinedload
-from sqlalchemy import func
+from sqlalchemy import func, or_
 from typing import List, Optional
 
 from app.model.models import Booking, Friend, Referral, TravelEvent
@@ -147,7 +147,12 @@ def get_my_bookings(db: Session, user_id: int) -> List[Booking]:
             joinedload(Booking.event).joinedload(TravelEvent.destination),
             joinedload(Booking.referrals).joinedload(Referral.referred_user),
         )
-        .filter(Booking.user_id == user_id)
+        .filter(
+            or_(
+                Booking.user_id == user_id,
+                Booking.referrals.any(Referral.referred_to == user_id),
+            )
+        )
         .order_by(Booking.booked_at.desc())
         .all()
     )

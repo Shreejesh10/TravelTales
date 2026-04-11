@@ -4,6 +4,7 @@ import 'package:traveltales/api/api.dart';
 import 'package:traveltales/api/bookingAPI.dart';
 import 'package:traveltales/core/model/booking_model.dart';
 import 'package:traveltales/core/model/event_model.dart';
+import 'package:traveltales/core/model/user_info.dart';
 import 'package:traveltales/core/route_config/route_names.dart';
 import 'package:traveltales/core/ui/components/actionDialogBox.dart';
 import 'package:traveltales/core/ui/components/app_flushbar.dart';
@@ -29,6 +30,7 @@ class _EventDetailScreenState extends State<EventDetailScreen> {
   final GlobalKey _eventDateKey = GlobalKey();
   final GlobalKey _checklistKey = GlobalKey();
   final GlobalKey _bookedForKey = GlobalKey();
+  final Map<int, Future<UserInfo>> _bookingOwnerFutures = {};
   late Future<List<Booking>> _bookingsFuture;
 
   double screenHeight = 1.sh;
@@ -44,7 +46,7 @@ class _EventDetailScreenState extends State<EventDetailScreen> {
   @override
   void initState() {
     super.initState();
-    _bookingsFuture = _bookingService.getMyBookings();
+    _bookingsFuture = _bookingService.getVisibleBookingsForCurrentUser();
     _loadUser();
   }
 
@@ -81,7 +83,7 @@ class _EventDetailScreenState extends State<EventDetailScreen> {
           if (!mounted) return;
 
           AppFlushbar.success(context, "Event deleted successfully");
-          Navigator.pop(context, true);
+          Navigator.pushNamed(context, RouteName.companyDashboardScreen);
         } catch (e) {
           if (!mounted) return;
           AppFlushbar.error(
@@ -136,6 +138,41 @@ class _EventDetailScreenState extends State<EventDetailScreen> {
 
   DateTime _dateOnly(DateTime date) {
     return DateTime(date.year, date.month, date.day);
+  }
+
+  int? get _currentUserIdAsInt => int.tryParse(_currentUserId ?? "");
+
+  bool _isBookingInvitedForCurrentUser(Booking booking) {
+    final currentUserId = _currentUserIdAsInt;
+    if (currentUserId == null) return false;
+
+    return booking.userId != currentUserId &&
+        booking.invitedFriends.any((friend) => friend.id == currentUserId);
+  }
+
+  Future<UserInfo> _getBookingOwner(int userId) {
+    return _bookingOwnerFutures.putIfAbsent(userId, () => getUserById(userId));
+  }
+
+  Widget _bookedByCard(Booking booking) {
+    return FutureBuilder<UserInfo>(
+      future: _getBookingOwner(booking.userId),
+      builder: (context, snapshot) {
+        final ownerName = snapshot.data?.userName.trim();
+        final displayName =
+            ownerName != null && ownerName.isNotEmpty
+                ? ownerName
+                : "User ${booking.userId}";
+
+        return _fullDetailCard(
+          icon: Icons.person_outline,
+          value: "Event is booked by",
+          label: displayName,
+          iconColor: Colors.green,
+          onTap: () {},
+        );
+      },
+    );
   }
 
   @override
@@ -400,6 +437,13 @@ class _EventDetailScreenState extends State<EventDetailScreen> {
                               iconColor: AppColors.getIconColors(context),
                               onTap: () {},
                             ),
+                            if (matchingBooking != null &&
+                                _isBookingInvitedForCurrentUser(
+                                  matchingBooking,
+                                )) ...[
+                              SizedBox(height: 12.h),
+                              _bookedByCard(matchingBooking),
+                            ],
                             SizedBox(height: 12.h),
                             ViewAllRow(
                               firstText: SharedRes.strings(

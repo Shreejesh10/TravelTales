@@ -32,7 +32,7 @@ class _BookedEventHomeScreenState extends State<BookedEventHomeScreen> {
 
 
   void _loadData() {
-    _bookingsFuture = _bookingService.getMyBookings();
+    _bookingsFuture = _bookingService.getVisibleBookingsForCurrentUser();
     _eventsFuture = getAllEvents();
   }
 

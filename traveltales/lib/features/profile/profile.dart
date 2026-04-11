@@ -68,7 +68,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
       if (_isCompanyUser) {
         return await _bookingService.getAllBookings();
       }
-      return await _bookingService.getMyBookings();
+      return await _bookingService.getVisibleBookingsForCurrentUser();
     } catch (e) {
       log("Failed to load bookings: $e");
       return [];
@@ -119,7 +119,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
       final results = await Future.wait([
         FriendApi.getFriends(),
         FriendApi.getIncomingFriendRequests(),
-        _bookingService.getMyBookings(),
+        _bookingService.getVisibleBookingsForCurrentUser(),
       ]);
 
       final friends = results[0] as List<FriendModel>;

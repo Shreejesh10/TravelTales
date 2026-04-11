@@ -34,7 +34,7 @@ class _EventsScreenState extends State<EventsScreen> {
   void initState() {
     super.initState();
     _eventsFuture = getAllEvents();
-    _bookingsFuture = _bookingService.getMyBookings();
+    _bookingsFuture = _bookingService.getVisibleBookingsForCurrentUser();
     _loadCompanyId();
     _loadRole();
   }
@@ -56,7 +56,7 @@ class _EventsScreenState extends State<EventsScreen> {
   Future<void> _reloadEvents() async {
     setState(() {
       _eventsFuture = getAllEvents();
-      _bookingsFuture = _bookingService.getMyBookings();
+      _bookingsFuture = _bookingService.getVisibleBookingsForCurrentUser();
     });
   }
 

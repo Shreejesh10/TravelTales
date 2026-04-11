@@ -6,6 +6,9 @@ import 'package:traveltales/core/model/booking_model.dart';
 import 'package:traveltales/core/model/esewa_payment_response.dart';
 
 class BookingApi {
+  Future<List<Booking>> getVisibleBookingsForCurrentUser() async {
+    return getMyBookings();
+  }
 
   Future<List<Booking>> getAllBookings() async {
     final url = Uri.parse('$API_URL/bookings/');
